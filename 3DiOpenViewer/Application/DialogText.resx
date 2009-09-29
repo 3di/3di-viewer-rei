@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AcceptRingingMessage" xml:space="preserve">
+    <value>An incoming call was received. Do you accept it?</value>
+  </data>
+  <data name="Cache" xml:space="preserve">
+    <value>Cache</value>
+  </data>
+  <data name="CacheDeleteConfirm" xml:space="preserve">
+    <value>Please restart your browser.</value>
+  </data>
+  <data name="CacheDeleteMessage" xml:space="preserve">
+    <value>Please restart your browser.</value>
+  </data>
+  <data name="CacheInformationMessage" xml:space="preserve">
+    <value>For faster displaying, some data is
+stored on your machine.</value>
+  </data>
+  <data name="CacheUnitMessage" xml:space="preserve">
+    <value>Cache (MB)</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DisabledSkyShader" xml:space="preserve">
+    <value>Your environment does not support sky displaying.</value>
+  </data>
+  <data name="EN" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="ErrorConnectionMessage" xml:space="preserve">
+    <value>Network error
+You have been disconnected from the server.
+Please log out.</value>
+  </data>
+  <data name="ErrorFinalMessageme00" xml:space="preserve">
+    <value>A fatal error has occured
+Restart the viewer?</value>
+  </data>
+  <data name="ErrorGraphicDriverCaption" xml:space="preserve">
+    <value>Creating graphics device failed.</value>
+  </data>
+  <data name="ErrorGraphicDriverMessage" xml:space="preserve">
+    <value>Please check if your graphics card's driver is the latest version and update if necessary.</value>
+  </data>
+  <data name="ErrorLoginMessageme00" xml:space="preserve">
+    <value>Login error.
+ 
+Please check your
+username and password
+and try logging in in a short while.</value>
+  </data>
+  <data name="ErrorLoginMessageme01" xml:space="preserve">
+    <value>Login error
+You seem to be already logged in.
+Please try again.</value>
+  </data>
+  <data name="ErrorTeleportMessage" xml:space="preserve">
+    <value>Teleport has failed.
+Please log in again.</value>
+  </data>
+  <data name="Firstname" xml:space="preserve">
+    <value>Firstname</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Graphics" xml:space="preserve">
+    <value>Graphics</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="JP" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="Lastname" xml:space="preserve">
+    <value>Lastname</value>
+  </data>
+  <data name="Locale" xml:space="preserve">
+    <value>Locale</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="MenuDisconnectMessage" xml:space="preserve">
+    <value>DISCONNECTED</value>
+  </data>
+  <data name="MenuPositionMessage" xml:space="preserve">
+    <value>Pos x:</value>
+  </data>
+  <data name="MenuRegionMessage" xml:space="preserve">
+    <value>Region:</value>
+  </data>
+  <data name="MessageWindowCaption" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PortError" xml:space="preserve">
+    <value>The specified port is not usable.</value>
+  </data>
+  <data name="RegionName" xml:space="preserve">
+    <value>Region Name</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="SeaShader" xml:space="preserve">
+    <value>Sea Shader</value>
+  </data>
+  <data name="ServerURI" xml:space="preserve">
+    <value>Server URL</value>
+  </data>
+  <data name="SettingMessage" xml:space="preserve">
+    <value>Your settings have been saved
+(The new settings are applied after
+the browser is restarted)</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SkyShader" xml:space="preserve">
+    <value>Sky Shader</value>
+  </data>
+  <data name="Teleport" xml:space="preserve">
+    <value>Teleport</value>
+  </data>
+  <data name="UserFolder" xml:space="preserve">
+    <value>UserFolder</value>
+  </data>
+  <data name="ValidationEmpty" xml:space="preserve">
+    <value>is empty</value>
+  </data>
+  <data name="ValidationInvalidChar" xml:space="preserve">
+    <value>invalid character</value>
+  </data>
+  <data name="ValidationMaxLength" xml:space="preserve">
+    <value>Maximum lenght</value>
+  </data>
+  <data name="ValidationOver" xml:space="preserve">
+    <value>item is too long.</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Voice" xml:space="preserve">
+    <value>Voice</value>
+  </data>
+  <data name="WarningGraphicCardCaption" xml:space="preserve">
+    <value>Please confirm that your system meets the System Requirements of 3Di OpenViewer.</value>
+  </data>
+  <data name="WarningGraphicCardMessage" xml:space="preserve">
+    <value>Your graphics card is currently not supported.
+You might encounter unexpected behaviour. Do you want to continue?</value>
+  </data>
+  <data name="WarningTeleportMessage" xml:space="preserve">
+    <value>The region does not exist.</value>
+  </data>
+  <data name="WarningVoiceBusyMessage" xml:space="preserve">
+    <value>he callee is busy now. 
+Please try again later.</value>
+  </data>
+</root>

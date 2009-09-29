@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Prebuild xmlns="http://dnpb.sourceforge.net/schemas/prebuild-1.7.xsd" version="1.7">
+  <Solution name="3DiOpenViewer" activeConfig="Debug" path="./" version="0.4.0-svn">
+    <Configuration name="Debug">
+      <Options>
+        <CompilerDefines>TRACE;DEBUG</CompilerDefines>
+        <OptimizeCode>false</OptimizeCode>
+        <CheckUnderflowOverflow>false</CheckUnderflowOverflow>
+        <AllowUnsafe>false</AllowUnsafe>
+        <WarningLevel>4</WarningLevel>
+        <WarningsAsErrors>false</WarningsAsErrors>
+        <SuppressWarnings></SuppressWarnings>
+        <OutputPath>bin</OutputPath>
+        <DebugInformation>true</DebugInformation>
+        <IncrementalBuild>true</IncrementalBuild>
+        <NoStdLib>false</NoStdLib>
+      </Options>
+    </Configuration>
+    <Configuration name="Release">
+      <Options>
+        <CompilerDefines>TRACE</CompilerDefines>
+        <OptimizeCode>true</OptimizeCode>
+        <CheckUnderflowOverflow>false</CheckUnderflowOverflow>
+        <AllowUnsafe>false</AllowUnsafe>
+        <WarningLevel>4</WarningLevel>
+        <WarningsAsErrors>false</WarningsAsErrors>
+        <SuppressWarnings></SuppressWarnings>
+        <OutputPath>bin</OutputPath>
+        <DebugInformation>false</DebugInformation>
+        <IncrementalBuild>true</IncrementalBuild>
+        <NoStdLib>false</NoStdLib>
+      </Options>
+    </Configuration>
+
+    <Project name="IrrParseLib" path="3DiOpenViewer/Lib/IrrParseLib" type="Library">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+
+      <ReferencePath>../../bin/</ReferencePath>
+      <Reference name="System"/>
+      <Reference name="System.Data"/>
+      <Reference name="System.Drawing"/>
+      <Reference name="System.Xml"/>
+      <Files>
+        <Match pattern="*.cs" recurse="true"/>
+        <Match pattern="*.resx" buildAction="EmbeddedResource" recurse="true"/>
+      </Files>
+    </Project>    
+
+    <Project name="Lib3Di" path="3DiOpenViewer/Lib/Lib3Di" type="Library">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+
+      <ReferencePath>../../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+      <Reference name="OpenMetaverse.dll" />
+      <Reference name="OpenMetaverseTypes.dll" />
+      <Reference name="System.Data" />
+      <Files>
+      	<Match pattern="*.cs" recurse="true"/>
+        <Match pattern="*.resx" buildAction="EmbeddedResource" recurse="true"/>
+      </Files>
+    </Project>
+
+    <Project name="Interfaces" path="3DiOpenViewer/Interfaces" type="Library">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+
+      <ReferencePath>../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+      <Reference name="System.Drawing" localCopy="false"/> 
+      <Reference name="System.Xml"/>
+      <Reference name="System.Web"/>
+      <Reference name="XMLRPC.dll"/>
+      <Reference name="Nini.dll" />
+      <Reference name="log4net.dll" />
+      <Reference name="irrKlang.NET2.0.dll" />
+      <Reference name="Irrlicht.NET.dll" />
+      <Reference name="Irrlicht.Extensions.dll" />
+      <Reference name="Mono.Addins.dll" />
+      <Reference name="IrrParseLib" />
+      <Reference name="OpenViewer.bootstrap" /> 
+      <Reference name="OpenViewerVoice" />
+      <Reference name="OpenMetaverse.dll" />
+      <Reference name="OpenMetaverseTypes.dll" />
+      <Reference name="OpenMetaverse.Utilities.dll" />
+      <Reference name="Microsoft.DirectX.dll" />
+      <Reference name="Microsoft.DirectX.AudioVideoPlayback.dll" />
+      <Reference name="Microsoft.DirectX.Direct3D.dll" />
+      <Reference name="Microsoft.DirectX.Direct3DX.dll" />
+      <Reference name="PrimMesher.dll" />
+      <Reference name="System.Windows.Forms" />
+      <Reference name="System.Data" />
+      <Reference name="Lib3Di" />
+      <Reference name="SmartThreadPool" />
+      <Files>
+      	<Match pattern="*.cs" recurse="true"/>
+        <Match pattern="*.resx" buildAction="EmbeddedResource" recurse="true"/>
+      </Files>
+    </Project>
+
+    <Project name="OpenViewer" path="3DiOpenViewer/Application" type="Library">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+
+      <ReferencePath>../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+      <Reference name="System.Drawing" localCopy="false"/> 
+      <Reference name="System.Xml"/>
+      <Reference name="System.Web"/>
+      <Reference name="XMLRPC.dll"/>
+      <Reference name="Nini.dll" />
+      <Reference name="log4net.dll" />
+      <Reference name="irrKlang.NET2.0.dll" />
+      <Reference name="Irrlicht.NET.dll" />
+      <Reference name="Irrlicht.Extensions.dll" />
+      <Reference name="Mono.Addins.dll" />
+      <Reference name="IrrParseLib" />
+      <Reference name="OpenViewer.bootstrap" /> 
+      <Reference name="OpenViewerVoice" />
+      <Reference name="OpenMetaverse.dll" />
+      <Reference name="OpenMetaverseTypes.dll" />
+      <Reference name="OpenMetaverse.Utilities.dll" />
+      <Reference name="Microsoft.DirectX.dll" />
+      <Reference name="Microsoft.DirectX.AudioVideoPlayback.dll" />
+      <Reference name="Microsoft.DirectX.Direct3D.dll" />
+      <Reference name="Microsoft.DirectX.Direct3DX.dll" />
+      <Reference name="PrimMesher.dll" />
+      <Reference name="System.Windows.Forms" />
+      <Reference name="System.Data" />
+      <Reference name="Lib3Di" />
+      <Reference name="SmartThreadPool" />
+      <Reference name="Adapter.dll" />
+      <Reference name="Interfaces" />
+      <Files>
+      	<Match pattern="*.cs" recurse="true"/>
+        <Match pattern="*.resx" buildAction="EmbeddedResource" recurse="true"/>
+      </Files>
+    </Project>
+
+    <Project name="TestPlugin" path="3DiOpenViewer/Plugins/TestPlugin" type="Library">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+
+      <ReferencePath>../../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+      <Reference name="System.Drawing" localCopy="false"/> 
+      <Reference name="System.Xml"/>
+      <Reference name="System.Web"/>
+      <Reference name="log4net.dll" />
+      <Reference name="Mono.Addins.dll" />
+      <Reference name="Irrlicht.NET.dll" />
+      <Reference name="Irrlicht.Extensions.dll" />
+      <Reference name="OpenViewer" />
+      <Reference name="Adapter.dll" />
+      <Reference name="Interfaces" />
+      <Files>
+         <Match pattern="*.cs" recurse="true"/>
+         <Match path="Resources" pattern="*.xml" buildAction="EmbeddedResource"/>
+      </Files>
+    </Project>
+
+    <Project name="VoicePlugin" path="3DiOpenViewer/Plugins/VoicePlugin" type="Library">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+
+      <ReferencePath>../../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+      <Reference name="System.Drawing" localCopy="false"/> 
+      <Reference name="System.Xml"/>
+      <Reference name="System.Web"/>
+      <Reference name="log4net.dll" />
+      <Reference name="Mono.Addins.dll" />
+      <Reference name="OpenMetaverse.dll" />
+      <Reference name="OpenMetaverseTypes.dll" />
+      <Reference name="OpenMetaverse.Utilities.dll" />
+      <Reference name="Irrlicht.NET.dll" />
+      <Reference name="Irrlicht.Extensions.dll" />
+      <Reference name="OpenViewer" />
+      <Reference name="Adapter.dll" />
+      <Reference name="Interfaces" />
+      <Files>
+         <Match pattern="*.cs" recurse="true"/>
+         <Match path="Resources" pattern="*.xml" buildAction="EmbeddedResource"/>
+      </Files>
+    </Project>
+
+    <Project name="OpenViewerAX" path="3DiOpenViewer/ActiveX" type="Library">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+          <RegisterComInterop>true</RegisterComInterop>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+          <RegisterComInterop>true</RegisterComInterop>
+        </Options>
+      </Configuration>
+
+      <ReferencePath>../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+      <Reference name="System.Drawing" localCopy="false"/>
+      <Reference name="System.Xml"/>
+      <Reference name="XMLRPC.dll"/>
+      <Reference name="Nini.dll" />
+      <Reference name="log4net.dll" />
+      <Reference name="Irrlicht.NET.dll" />
+      <Reference name="Irrlicht.Extensions.dll" />
+      <Reference name="IrrParseLib" />
+      <Reference name="OpenMetaverse.dll" />
+      <Reference name="OpenMetaverseTypes.dll" />
+      <Reference name="PrimMesher.dll" />
+      <Reference name="System.Windows.Forms" />
+      <Reference name="System.Data" />
+      <Reference name="Lib3Di" />
+      <Reference name="OpenViewer" /> 
+      <Reference name="OpenViewer.bootstrap" /> 
+      <Reference name="Adapter.dll" />
+      <Reference name="Interfaces" />
+     <Files>
+      	<Match pattern="*.cs" recurse="true"/>
+        <Match pattern="*.resx" buildAction="EmbeddedResource" recurse="true"/>
+      </Files>
+    </Project>
+
+    <Project name="OpenViewerHost" path="3DiOpenViewer/Host" type="Exe">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <ReferencePath>../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+      <Reference name="System.Drawing" localCopy="false"/>
+      <Reference name="System.Xml"/>
+      <Reference name="XMLRPC.dll"/>
+      <Reference name="Nini.dll" />
+      <Reference name="log4net.dll" />
+      <Reference name="Irrlicht.NET.dll" />
+      <Reference name="Irrlicht.Extensions.dll" />
+      <Reference name="IrrParseLib" />
+      <Reference name="OpenMetaverse.dll" />
+      <Reference name="OpenMetaverseTypes.dll" />
+      <Reference name="PrimMesher.dll" />
+      <Reference name="System.Windows.Forms" />
+      <Reference name="System.Data" />
+      <Reference name="Lib3Di" />
+      <Reference name="OpenViewer" /> 
+      <Reference name="Adapter.dll" />
+      <Reference name="Interfaces" />
+     <Files>
+      	<Match pattern="*.cs" recurse="true"/>
+        <Match pattern="*.resx" buildAction="EmbeddedResource" recurse="true"/>
+      </Files>
+    </Project>
+
+    <Project name="unreg" path="3DiOpenViewer/Unreg" type="Exe">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <ReferencePath>../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+      <Reference name="System.Windows.Forms" />
+      <Reference name="OpenViewer" /> 
+      <Reference name="OpenViewerAX" /> 
+     <Files>
+      	<Match pattern="*.cs" recurse="true"/>
+        <Match pattern="*.resx" buildAction="EmbeddedResource" recurse="true"/>
+      </Files>
+    </Project>
+
+    <Project name="keepalive" path="3DiOpenViewer/KeepAlive" type="Exe">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <ReferencePath>../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+      <Reference name="OpenViewer" /> 
+     <Files>
+      	<Match pattern="*.cs" recurse="true"/>
+      </Files>
+    </Project>
+
+    <Project name="OpenViewer.bootstrap" path="3DiOpenViewer/bootstrap" type="Library">
+      <Configuration name="Debug">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../bin/</OutputPath>
+        </Options>
+      </Configuration>
+      <ReferencePath>../../bin/</ReferencePath>
+      <Reference name="System" localCopy="false"/>
+     <Files>
+      	<Match pattern="*.cs" recurse="true"/>
+      </Files>
+    </Project>
+  </Solution>
+</Prebuild>
+
+

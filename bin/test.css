@@ -1,0 +1,66 @@
+body
+{
+	background-color: #ddddff;
+	
+    margin: 0px;
+    padding: 0px;    
+    margin-top: 16px;
+    margin-left: 16px;
+}
+
+input
+{
+	width: 128px;
+}
+
+#js_debug_text_fix
+{
+	position: absolute;
+	z-index: 1;
+}
+
+#js_object_fix
+{
+	background-color: #808080;
+	position: absolute;
+	
+	z-index: 2;
+}
+
+#js_cotain_fix
+{
+	position: absolute;
+	width: 520px;	
+	
+	z-index: 0;
+}
+
+.box
+{
+    margin: 0px;
+    padding: 0px;
+    width: 128px;
+    height: 64px;
+    
+    float: left;
+}
+
+.float_clear
+{
+	clear: both;
+}
+
+.type00
+{
+	background-color: #aaaaff;
+    margin: 0px;
+    padding: 4px;
+}
+
+.type01
+{
+	background-color: #ccccff;
+    margin: 0px;
+    padding: 4px;
+}
+

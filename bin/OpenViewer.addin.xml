@@ -1,0 +1,8 @@
+<Addin id="OpenViewer" isroot="true" version="0.5">
+    <Runtime>
+        <Import assembly="OpenViewer.dll"/>
+    </Runtime>
+    <ExtensionPoint path = "/OpenViewer/Managers">
+        <ExtensionNode name="Plugin" type="OpenViewer.PluginExtensionNode" objectType="OpenViewer.IManagerPlugin"/>
+    </ExtensionPoint>
+</Addin>

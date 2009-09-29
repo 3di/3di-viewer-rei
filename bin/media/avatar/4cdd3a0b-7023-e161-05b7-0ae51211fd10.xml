@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<node type="animatedMesh">
+<attributes name="Name" value="4cdd3a0b-7023-e161-05b7-0ae51211fd10">
+<animation>
+	<string name="Name" value="standing"/><int name="Start" value="0"/><int name="End" value="60"/><int name="Speed" value="30"/>
+</animation>
+	
+<animation>
+	<string name="Name" value="walking"/><int name="Start" value="187"/><int name="End" value="217"/><int name="Speed" value="30"/>
+</animation>
+
+<animation>
+	<string name="Name" value="running"/><int name="Start" value="218"/><int name="End" value="238"/><int name="Speed" value="30"/>
+</animation>
+
+<animation>
+	<string name="Name" value="sitting"/><int name="Start" value="92"/><int name="End" value="152"/><int name="Speed" value="30"/>
+</animation>
+
+<animation>
+	<string name="Name" value="standup"/><int name="Start" value="153"/><int name="End" value="183"/><int name="Speed" value="30"/>
+</animation>
+
+<animation>
+	<string name="Name" value="sitstart"/><int name="Start" value="61"/><int name="End" value="91"/><int name="Speed" value="30"/>
+</animation>
+
+</attributes></node>

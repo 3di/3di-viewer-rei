@@ -1,0 +1,22 @@
+Contributors to 3Di Viewer "Rei" include the following organizations
+and/or individuals:
+
+* 3Di, Inc. (http://3di.jp)
+
+Additionally, 3Di Viewer "Rei" uses portions of source code from
+the project IdealistViewer, as described in LICENSE.TXT.
+Currently the following projects have contributed to IdealistViewer
+* Independant Jpeg Group (Irrlicht license requirement)
+* OpenSimulator
+* OpenViewer
+* LibOpenMetaverse
+
+Primary Developers (alphabetical order)
+* Charles Krinke aka 'ckrinke'
+* Dahlia Trimble
+* Teravus Ousley
+
+Patches
+* Daedius Moskvitch
+* MW (Michael Wright)
+

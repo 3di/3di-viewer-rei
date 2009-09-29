@@ -1,0 +1,26 @@
+This document provides information about where to locate the source
+code for the binary files located in the bin/ directory. Also, please
+see the file ThirdPartyLicenses.txt for information about the licenses
+of these files.
+
+Adapter.dll - See github project 3di-viewer-rei-adapter
+irrKlang.NET.dll - Closed source. See http://www.ambiera.com/irrklang/license.html
+irrKlang.NET2.0.dll - Closed source. See http://www.ambiera.com/irrklang/license.html
+Irrlicht.dll - See github project 3di-viewer-rei-libs
+Irrlicht.Extensions.dll - See github project 3di-viewer-rei-libs
+Irrlicht.NET.dll - See github project 3di-viewer-rei-libs
+IrrlichtW.dll - See github project 3di-viewer-rei-libs
+log4net.dll - http://logging.apache.org/log4net/index.html
+Mono.Addins.dll - http://www.mono-project.com/Mono.Addins
+Mono.PEToolkit.dll - http://anonsvn.mono-project.com/viewvc/old-code/Mono.PEToolkit/
+Nini.dll - http://nini.sourceforge.net/
+openjpeg-dotnet.dll - Part of libomv; see github project 3di-viewer-rei-libs
+OpenMetaverse.dll - See github project 3di-viewer-rei-libs
+OpenMetaverse.Http.dll - See github project 3di-viewer-rei-libs
+OpenMetaverse.StructuredData.dll - See github project 3di-viewer-rei-libs
+OpenMetaverse.Utilities.dll - See github project 3di-viewer-rei-libs
+OpenMetaverseTypes.dll - See github project 3di-viewer-rei-libs
+Prebuild.exe - See the Prebuild/ directory
+PrimMesher.dll - http://forge.opensimulator.org/gf/project/primmesher/
+SmartThreadPool.dll - http://www.codeplex.com/smartthreadpool
+XMLRPC.dll - http://www.xml-rpc.net

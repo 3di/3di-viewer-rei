@@ -1,0 +1,453 @@
+Compile and install instructions for 3Di Viewer "Rei".
+Copyright (C) 2009 3Di, Inc. All Rights Reserved.
+
+                         System requirements
+                         ===================
+
+Requirements for running
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following runtime system configurations are supported by 3Di
+Viewer "Rei".
+
+Operating System
+================
+- Windows XP
+- Windows Vista
+
+Additional required software and files
+--------------------------------------
+* MSVC runtime (MSVCRT711.DLL)
+  This file should be automatically installed if you have Microsoft
+  Visual C++ installed.  You can also install the file manually from
+  here:
+  [http://www.microsoft.com/downloads/details.aspx?FamilyID=200b2fd9-ae1a-4a14-984d-389c36f85647&displaylang=en]
+* Direct3D (D3DX9_40.dll)
+  Please install the runtimes from the DirectX November 2008 or
+  later. You can download the November 2008 files here:
+  [http://www.microsoft.com/downloads/details.aspx?FamilyId=886ACB56-C91A-4A8E-8BB8-9F20F1244A8E&displaylang=en]
+
+Other operating systems
+-----------------------
+Mac and Linux versions are not currently available but should be
+technically possible to implement.  The underlying 3D rendering
+library, Irrlicht.NETCP, is a cross-platform solution and can render
+using either Direct3D or OpenGL. If you are interested in contributing
+to this development, we would be interested in hearing from you!
+
+Web browser
+===========
+- Internet Explorer 7.0
+- Firefox 3.0
+- Firefox 3.5
+
+Requirements for developing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The following list describes the development tools necessary to do
+development on 3Di Viewer "Rei".  To install the development tools,
+just download the installer, double click on the file, and install
+with default options. If you want to continue using the compilers
+longer than the trial period you need to register your copies. This is
+free of charge and the compilers will prompt you once the trial period
+expires.
+
+Required SDK
+============
+
+Standard developers kit for DirectX (November 2008)
+---------------------------------------------------
+This can be downloaded from:
+[http://www.microsoft.com/downloads/details.aspx?FamilyId=5493F76A-6D37-478D-BA17-28B1CCA4865A&displaylang=en]
+
+Required tool
+=============
+The source code is stored in git repositories, and to download the
+latest version you need a git client program. msysgit is a console
+based git client program can be found here:
+[http://code.google.com/p/msysgit/downloads/list]
+
+Required compiler (main viewer and Internet Explorer ActiveX control)
+=====================================================================
+The main viewer can be compiled with Visual C# express edition. It can
+be downloaded free of charge here: Visual C# 2008:
+[http://www.microsoft.com/express/vcsharp/]
+
+Required compiler (support libraries and Firefox plugin)
+========================================================
+To compile the main viewer, all of the support libraries, and the
+Firefox plugin, in addition to Visual C# 2008, you also need Visual
+C++ 2008. The express edition can be downloaded free of charge here:
+Visual C++ 2008 express: [http://www.microsoft.com/express/vc/]
+
+Next steps
+==========
+After preparing your development environment, you are ready to
+[download] and [compile] the source code.
+
+                              Downloads
+                              =========
+
+Before you start
+~~~~~~~~~~~~~~~~
+
+The source code is stored in git repositories, and to download the
+latest version you need a git client program. msysgit is a console
+based git client program can be found here:
+[http://code.google.com/p/msysgit/downloads/list]
+
+Downloading the source code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Structure of the code repositories
+==================================
+The source code for 3Di Viewer "Rei" consists of four packages:
+1. Application, including in-browser ActiveX control for Internet Explorer
+2. Libraries
+3. API code
+4. Firefox plugin
+
+These packages need to be downloaded separately, as they are stored in
+different git repositories.
+
+It is not necessary to download the source code for the libraries (2)
+and API code (3), since these are included in binary form as DLL files
+distributed with the main application (1). And, you only need to
+download the Firefox plugin source code (4) if you are interested in
+compiling Firefox support; Internet Explorer support by means of
+ActiveX is already included in the main application (1).
+
+If you want to compile everything from source code, you should
+download (clone) all of the repositories, as described below.
+
+Using git to clone the repositories
+===================================
+Create a folder somewhere which will contain the source files (from
+now on called the SRC folder), and open a command window
+(terminal). Use "cd" to navigate to the SRC folder and download the
+source using these commands:
+
+- git clone git://github.com/3di-viewer-rei
+- git clone git://github.com/3di-viewer-rei-libs
+- git clone git://github.com/3di-viewer-rei-api
+- git clone git://github.com/3di-viewer-rei-firefox
+
+Please note that the source code licenses are approximately as follows:
+- 3di-viewer-rei: BSD license
+- 3di-viewer-rei-libs: zlib or BSD license
+- 3di-viewer-rei-api: LGPL license
+- 3di-viewer-rei-firefox: MPL license
+
+Please see the license documentation in each project for more information.
+
+The compilation instructions for each package are covered in the
+[compilation instructions].
+
+                      Compiling 3Di Viewer "Rei"
+                      ==========================
+
+Before you start
+~~~~~~~~~~~~~~~~
+1. Confirm that your system meets the [System Requirements] for running
+   and developing 3Di Viewer "Rei".
+2. [Download] the source code. We'll assume you downloaded into a
+   directory named SRC.
+3. Open Windows Explorer, browse to SRC/3di-viewer-rei/, and double
+   click on "*runprebuild2008.bat*". *This will create the necessary
+   solution and project files.*
+
+Compiling and executing the main application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To get started with compiling and developing 3Di Viewer "Rei", you
+only need to compile and run the main application, as described in
+this section. Compiling other packages (e.g. libraries) is optional,
+since the libraries are included as binary DLL files in the source
+code distribution.
+
+From the command-line
+=====================
+1. Start a command prompt or terminal window. Note: On Windows
+   *Vista*, you must run the command prompt *as administrator*. This
+   is because 3Di Viewer "Rei" registers an ActiveX control, which
+   requires administrator privileges.
+2. Change the current directory to SRC/3di-viewer-rei.
+3. Execute COMPILE.BAT. Compilation should complete with some warnings
+   but no errors.
+
+From within Visual Studio
+=========================
+1. Start Microsoft Visual C# 2008 Express Edition. Note: On Windows
+   *Vista*, you must run the program *as administrator* to register
+   the ActiveX control.
+2. Select File->Open Project from the main menu.
+3. Select SRC/3di-viewer-rei/3DiOpenViewer.sln from the dialog box and
+   click Open.
+4. Press Ctrl+Shift+B to build the entire solution. The build should
+   succeed with some warnings but no errors.
+
+Executing the compiled viewer
+=============================
+After successful compilation, you can run the viewer in one of two
+ways:
+1. Standalone: Execute the file
+   SRC/3di-viewer-rei/bin/OpenViewerHost.exe, which runs a stand-alone
+   viewer, OR
+2. In-browser: Open the file SRC/3di-viewer-rei/bin/test.html in
+   Internet Explorer, which should launch the ActiveX control
+   automatically. NOTE: in *Windows Vista, you must run Internet
+   Explorer as Administrator*, or else the ActiveX control will not
+   function properly.
+
+For standalone mode (option 1), you can either run OpenViewerHost.exe
+in three ways:
+- Directly invoke the EXE file from a command prompt, or
+- Double click the file in Windows explorer, or
+- Run the file from within Visual C#. To do this, in the Solution
+Explorer window, right-click the OpenViewerHost project and select
+"Set as Startup Project". Then press F5 to compile and run.  After
+successfully starting the viewer, you should then see the viewer login
+screen, in which you can enter grid and user information to login to
+an OpenSim server.
+
+For in-browser mode (option 2), IE will display a warning bar
+indicating the presence of an ActiveX control on the test.html
+page. Click the warning bar, then choose the menu option to allow the
+ActiveX control to execute, and confirm your choice in the
+confirmation dialog.  The viewer should then start inside the browser,
+and you should see a splash screen. Using the text fields at the
+right-hand side of the screen, you can enter grid and user information
+to login to an OpenSim server.
+
+How to use the viewer
+=====================
+Please see the [Frequently Asked Questions] for links where you can get
+more information.
+
+Compiling libraries and API
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[Compiling the support libraries and API]
+
+Compiling the Firefox plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[Compiling the Firefox plugin]
+
+             Compiling 3Di Viewer "Rei" libraries and API
+             ============================================
+
+Before you start
+~~~~~~~~~~~~~~~~
+
+Please confirm that you are able to [compile the main application] for
+3Di Viewer "Rei", before attempting to compile the libraries and API
+described on this page.
+
+In this page SRC will refer to the directory where you [downloaded] the
+source code.
+
+Compilation instructions
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section describes how to compile the main support libraries and
+JavaScript API for 3Di Viewer "Rei". This is only necessary if you
+want to change or debug the libraries, since the pre-compiled
+libraries are already provided in binary form with the source code of
+3Di Viewer "Rei".
+
+This section covers the following libraries used by 3Di Viewer "Rei":
+- Irrlicht (C++ 3D engine)
+- IrrlichtW (C++ <--> C# wrapping layer for Irrlicht)
+- Irrlicht.NETCP (C# API for Irrlicht)
+- libopenmetaverse (network communication library for OpenSim virtual
+  world servers)
+- Adapter (C# <--> JavaScript API for viewer)
+
+Note that this list only includes the main libraries used by 3Di
+Viewer "Rei", not all of the libraries. For a list of all of the
+libraries used by 3Di Viewer "Rei", please see the file
+ThirdPartyLicenses.txt in the [source code distribution].
+
+Compiling Irrlicht
+==================
+
+1. Start the Visual C++ 2008 express compiler.
+2. Select Open Project, and select the following solution file:
+ - SRC/3di-viewer-rei-libs/irrlich_*/Irrlicht SDK/source/Irrlicht/Irrlicht9.0.sln
+3. Change the project type to "release" in the toolbar.
+4. Select Build/Build Solution to compile the source files.
+
+Compiling IrrlichtW
+===================
+1. Start the Visual C++ 2008 express compiler.
+2. Select Open Project, and select the following solution file:
+ - SRC/idealistviewer-libs/irrlich_*/irrlichtW/IrrlichtW.sln
+3. Change the project type to "release" in the toolbar.
+4. Select Build/Build Solution to compile the source files.
+
+Compiling Irrlicht.NETCP
+========================
+1. Start the Visual C# 2008 express compiler.
+2. By default the debug/release switch is disabled in Visual C# 2008
+   express edition. To enable it, select to Tools/Options/Project,
+   select Solutions/General, and enable "Show advanced build
+   configurations."
+3. Select Open Project, and select the following solution file:
+ - SRC/idealistviewer-libs/irrlich_*/Irrlicht.NET/Irrlicht.NET.sln
+4. Make sure that the project type is "release" in the toolbar.
+5. Select Build/Build Solution to compile the source files.
+
+Compiling libopenmetaverse
+==========================
+1. Create the libomv build files as follows:
+ - Open Windows Explorer
+ - Browse to SRC/idealistviewer-libs/libomv_*/trunk
+ - Double click on "runprebuild2008.bat". This will create the
+   necessary solution and project files.
+2. Start the Visual C# 2008 express compiler.
+3. Select Open Project, and select the following solution file:
+ - SRC/idealistviewer-libs/libomv_*/trunk/OpenMetaverse.sln
+4. Select Build/Build Solution to compile the source files.
+
+Compiling JavaScript API
+========================
+Note that the source code in this repository is LGPL-licensed.
+
+1. Create the build files as follows:
+ - Open Windows Explorer
+ - Browse to SRC/3di-viewer-rei-api/
+ - Double click on "runprebuild2008.bat". This will create the
+   necessary solution and project files.
+2. Compile the main viewer application following the [compilation
+   instructions]. The JavaScript API *requires that the main viewer
+   application be compiled first*.
+ - Note: more specifically, the JavaScript API depends only on the
+   files OpenViewer.dll and Interfaces.dll from the main viewer
+   application; if these 2 files are compiled, it is enough to compile
+   the JavaScript API.
+3. *Copy the following compiled files* from the main viewer
+   application bin/ directory into the JavaScript API bin/ directory
+   as follows:
+ - copy SRC/3di-viewer-rei/bin/OpenViewer.dll SRC/3di-viewer-rei-api/bin
+ - copy SRC/3di-viewer-rei/bin/Interfaces.dll SRC/3di-viewer-rei-api/bin
+4. Start the Visual C# 2008 express compiler.
+5. Select Open Project, and select the following solution file:
+ - SRC/3di-viewer-rei-api/3DiOpenViewer-api.sln
+6. Select Built/Build Solution to compile.
+
+Alternatively, this project can also be compiled from the command line
+by invoking COMPILE.BAT after executing steps 1-3.
+
+Using the compiled libraries
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+After compiling the libraries as described above, you need to *copy
+all of the following compiled binary files* into
+SRC/3di-viewer-rei/bin/:
+ - SRC/3di-viewer-rei-libs/irrlich*/bin/Release/* (excluding Prebuild.exe)
+ - SRC/3di-viewer-rei-libs/libomv*/trunk/bin/OpenMetaverse.dll
+ - SRC/3di-viewer-rei-api/bin/Adapter.dll
+
+After copying the binary files in this fashion, the main application
+3Di Viewer "Rei" will use the newly compiled versions of the library
+files.
+
+              Compiling 3Di Viewer "Rei" Firefox Plugin
+              =========================================
+
+Overview
+~~~~~~~~
+
+By default, compiling 3Di Viewer "Rei" creates an ActiveX control that
+can be used in the Internet Explorer web browser. Additionally, there
+is a separate project that can be compiled to create a Firefox plugin.
+This page describes how to compile the Firefox plugin. Please note
+that the source code in this repository is LGPL-licensed.
+
+Before you start
+~~~~~~~~~~~~~~~~
+
+Please confirm that you are able to [compile the main application] for
+3Di Viewer "Rei", before attempting to compile the Firefox plugin.
+
+Compiling the Firefox plugin requires both the Microsoft Visual C#
+2008 compiler and the Microsoft Visual C++ 2008 compiler. The express
+editions can be downloaded for free as explained earlier in the [system 
+requirements] page.
+
+In this page SRC will refer to the directory where you [downloaded] the
+source code.
+
+Additional libraries
+~~~~~~~~~~~~~~~~~~~~
+
+Download the XULRunner SDK 1.9.0.xx for Win32: 
+https://developer.mozilla.org/en/Gecko_SDK#Downloading
+
+Note: these instructions were tested with 1.9.0.11; probably any 1.9.0
+release will be compatible.
+
+Unpack the ZIP archive in the SRC/ directory. This should create a
+subdirectory *SRC/xulrunner-sdk*. The XULRunner SDK *must be in this
+directory* because the Firefox plugin uses a relative directory path
+to access the SDK.
+
+Compilation instructions
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+First, compile the bootstrap project as follows:
+1. Copy the following files from SRC/3di-viewer-rei/bin into
+   SRC/3di-viewer-rei-firefox/bin. If some files do not exist in the
+   source folder, you need to first [compile the main application].
+ - OpenViewer.dll
+ - Interfaces.dll
+ - Adapter.dll
+ - OpenMetaverse.dll
+ - OpenMetaverseTypes.dll
+ - Nini.dll
+2. Start the Visual C# 2008 express compiler.
+3. Select Open Project, and select the following project file:
+ - SRC/3di-viewer-rei-firefox/3DiOpenViewer/bootstrap/OpenViewer.bootstrap.csproj
+4. In the Solution Explorer, right-click the project
+   OpenViewer.bootstrap and select "Build" from the pop-up menu. A
+   dialog box will appear to save the project file; click OK to accept
+   the defaults.
+5. Build should complete without errors.
+
+Next, compile the main Firefox plugin as follows:
+1. Start the Visual C++ 2008 express compiler.
+2. Select Open Project, and select the following project file:
+ - SRC/3di-viewer-rei-firefox/npOpenViewer/npOpenViewer.vcproj
+3. Dismiss the two error dialog boxes that appear, informing you that
+   the express edition of VC++ cannot open C# projects.
+4. In the Solution Explorer, right-click on the project npOpenViewer
+   and select "Build" from the pop-up menu.
+5. Build should complete without errors.
+
+Installation instructions
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the following instructions, the string MOZ will refer to the
+location where you installed Firefox, which is typically C:/Program
+Files/Mozilla Firefox.
+
+1. If you have installed the 3Di OpenViewer plugin from [http://3di.jp],
+   uninstall it first. If you do not do this, it is conceivable that
+   the existence of some files from the official 3Di OpenViewer may
+   interfere with correct operation of the open source 3Di Viewer
+   "Rei", which is why it is recommended to uninstall 3Di OpenViewer
+   before attempting to install the open source 3Di Viewer "Rei".
+2. Copy the following files from SRC/3di-viewer-rei-firefox/bin/ to
+   MOZ/plugins/
+ - npOpenViewer.dll
+ - npOpenViewer.xpt
+3. Copy the following files from SRC/3di-viewer-rei-firefox/bin/ to
+   MOZ/
+ - bootstrap.dll
+4. Copy the entire folder contents (including subfolders) from
+   SRC/3di-viewer-rei/bin to MOZ/
+
+Testing the Firefox plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Start Firefox and open the file
+   SRC/3di-viewer-rei-firefox/test.html
+2. You should see the viewer splash screen. Using the text entry forms
+   on the right-hand side of the HTML page, you can specify grid and
+   login information and login to a simulator.

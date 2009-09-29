@@ -1,0 +1,10 @@
+PrimMesher project
+http://forge.opensimulator.org/gf/project/primmesher/
+
+According to this project's project page (see above URL), PrimMesher
+is licensed under the BSD license. See file PrimMesher-License.pdf,
+which is an image of the PrimMesher webpage that specifies the BSD
+license.  As of this writing, 2009-09-08, no specific BSD license text
+could be found within the source code of the PrimMesher project;
+therefore, a specific license text is not included here.
+

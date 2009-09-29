@@ -1,0 +1,9 @@
+<Config>
+	<!-- 
+		Version represents the SecondLife version
+		specify as 122 for 1.22 and 121 for 1.21
+		Messages have changed between 1.21 and 1.22
+	-->
+	<LogLevel>DEBUG</LogLevel>
+	<LogFilter>ParticipantPropertiesEvent</LogFilter>
+</Config>

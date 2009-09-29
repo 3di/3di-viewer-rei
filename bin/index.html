@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="test.css" />
+<title>3Di-OpenViewer Test Page</title>
+<script type="text/javascript" src="opvwjs/opvw.js" language="javascript"></script>
+<script type="text/javascript" src="<!-- js_version -->.js" language="javascript"></script>
+</head>
+<!--
+**********************************************
+Page Body.
+**********************************************
+-->
+<body onLoad="init();" onResize="CalcObject();" onScroll="CalcObject();">
+	<input id="js_debug_text_fix" type="text" name="debug_info" value=""/>
+	
+	<div id="js_object_fix"></div>
+
+	<div id="js_cotain_fix">
+
+		<div class="type00">
+			<h3>!--0. Debug sample.--</h3>
+			<input type="button" value="GetPluginInfo" onclick="GetPluginInfo();" />
+		</div>
+		
+		<div class="type00">
+			<h3>!--1. Login / Logout sample.--</h3>
+			<input type="text" id="server" value="10.0.1.81:10001"/>
+			<input type="text" id="loginLocation" value="uri:Region0&250&250&30"/>
+			<br>
+			<input type="text" id="first" value="test"/>
+			<input type="text" id="last" value="test"/>
+			<input type="password" id="password" value="testtest"/>
+			<br>
+			<input type="button" value="Login" onclick="Login();" />
+			<input type="button" value="Logout" onclick="Logout();" />
+		</div>
+
+		<div class="type01">
+			<h3>!--2. Touch sample.--</h3>
+			<input type="text" id="touch_res" style="width:256"/>
+			<input type="button" value="Touch" onclick="TouchTo();"/>
+		</div>
+
+		<div class="type00">
+			<h3>!--3. Sit sample.--</h3>
+			<input type="button" value="Sit" onclick="SitOn();"/>
+
+			<input type="button" value="StandUp" onclick="StandUp();"/>
+		</div>
+
+		<div class="type01">
+			<h3>!--4. Chat sample.--</h3>
+			<select size="8" id="chat_history" style="width:256"></select>
+			<br>
+			<input type="text" id="chat_message" style="width:256"/>
+			<input type="button" value="Send" onclick="SendChat();"/>
+		</div>
+
+		<div class="type00">
+			<h3>!--5. Teleport sample.--</h3>
+			<div class="box">
+			R:<br>
+			<input type="text" id="tel_region" value=""/>
+			</div>
+			
+			<div class="box">
+			X:<br>
+			<input type="text" id="tel_x" value="128"/>
+			</div>
+
+			<div class="box">
+			Y:<br>
+
+			<input type="text" id="tel_y" value="128"/>
+			</div>
+
+			<div class="box">
+			Z:<br>
+			<input type="text" id="tel_z" value="128"/>
+			</div>
+
+			<br>
+
+			<input type="button" value="Teleport" onclick="Teleport();" class="float_clear"/>
+		</div>
+
+
+		<div class="type01">
+			<h3>!--6. .--</h3>
+		</div>
+
+
+		<div class="type00">
+
+			<h3>!--7. User avatar control sample.--</h3>
+			<input type="text" id="avatar_anim_index" value="0" style="width:32"/>
+			<input type="button" value="StartAnim" onclick="StartCustomAnimation();" />
+			<br>
+			<input type="text" id="user_avatar_res" style="width:256"/>
+			<br>
+			<input type="button" value="GetUUID" onclick="GetUserUUID();" />
+			<input type="button" value="GetPosition" onclick="GetUserAvatarPosition();" />
+
+			<br>
+			<input type="button" value="GetAvatarUUID" onclick="GetUserAvatarUUID();" />
+			<input type="button" value="GetAvatarName" onclick="GetUserAvatarName();" />
+			<br>
+			<br>
+			
+			<input type="button" value=""/>
+			<input type="button" value="U" onclick="UserAvatarUp();" />
+			<input type="button" value=""/>
+			<br>
+
+			<input type="button" value="L" onclick="UserAvatarLeft();" />
+			<input type="button" value=""/>
+			<input type="button" value="R" onclick="UserAvatarRight();" />	
+			<br>
+			<input type="button" value=""/>
+			<input type="button" value="D" onclick="UserAvatarDown();" />
+			<input type="button" value=""/>
+			<br>
+		</div>
+
+
+		<div class="type01">
+			<h3>!--8. Common sample.--</h3>
+			State:<br>
+			<input type="text" id="state_message"/>
+			<br>
+			<input type="button" value="fps" onclick="GetFPS();" />
+			<input type="button" value="primitive" onclick="GetPrimitiveCount();" />
+
+			<input type="button" value="texture" onclick="GetTextureCount();" />
+		</div>
+
+
+		<div class="type00">
+			<h3>!--9. Camera sample.--</h3>
+			<input type="button" value="CameraSet" onclick="CameraLookAt();"/>
+			<input type="button" value="CameraPosition" onclick="GetCameraPosition();"/>
+			<input type="button" value="CameraTarget" onclick="GetCameraTarget();"/>
+
+			<br>
+			<input type="button" value="GetDistance" onclick="GetCameraDistance();"/>
+			<input type="button" value="GetFOV" onclick="GetCameraFOV();"/>
+			<input type="button" value="GetOffsetY" onclick="GetCameraOffsetY();"/>
+			<br>
+			<input type="button" value="GetAngleY" onclick="GetCameraAngleY();"/>
+			<br>
+			<input type="text" id="camera_distance" value="5"/>
+			<input type="button" value="SetDistance" onclick="SetCameraDistance();"/>
+
+			<br>
+			<input type="text" id="camera_fov" value="1.0"/>
+			<input type="button" value="SetFOV" onclick="SetCameraFOV();"/>
+			<input type="button" value="SetFOVDegree" onclick="SetCameraFOVDegree();"/>
+			<input type="text" id="camera_offset_y" value="1"/>
+			<input type="button" value="SetOffsetY" onclick="SetCameraOffsetY();"/>
+			<br>
+			<input type="text" id="camera_angle_min_y" value="0.785"/>
+			<input type="text" id="camera_angle_max_y" value="1.57"/>
+
+			<input type="button" value="SetAngleY" onclick="SetCameraAngleY();"/>
+			<br>
+			<input type="text" id="avatar_disappear_distance" value="2"/>
+			<input type="button" value="SetAvatarDisappear" onclick="SetAvatarDisappearDistance();"/>
+		</div>
+		
+		<div class="type01">
+			<h3>!--10. World sample.--</h3>
+			<input type="button" value="GetAvatarCount" onclick="GetAvatarCount();"/>
+
+			<input type="button" value="GetObjectCount" onclick="GetObjectCount();"/>
+			<br>
+			<input type="button" value="GetRegionName" onclick="GetRegionName();"/>
+			<input type="button" value="GetWorldTime" onclick="GetWorldTime();"/>
+			<br>
+			<input type="text" id="world_time" value="10:00:00"/>
+			<input type="button" value="SetWorldTime" onclick="SetWorldTime();"/>
+			<br>
+			<input type="button" value="TickOn" onclick="SetTick('true');"/>
+
+			<input type="button" value="TickOff" onclick="SetTick('false');"/>
+			<br>
+			<input type="text" id="world_ambient_color" value="0.5,0.5,0.5"/>
+			<input type="button" value="SetAmbient" onclick="SetWorldAmbientColor();"/>
+		</div>
+
+		<div class="type00">
+			<h3>!--11. Fix directional sample.--</h3>
+			<input type="button" value="FixDOn" onclick="SetFixDirectional('true');"/>
+
+			<input type="button" value="FixDOff" onclick="SetFixDirectional('false');"/>
+			<br>
+			<input type="text" id="fix_directional_rotation" value="1.75,0,0"/>
+			<input type="button" value="SetFixDR" onclick="SetFixDirectionalRotation();"/>
+			<br>
+			<input type="text" id="fix_directional_diffuse" value="1.0,0.4,0.4"/>
+			<input type="button" value="SetFixDD" onclick="SetFixDirectionalDiffuseColor();"/>
+			<br>
+			<input type="text" id="fix_directional_ambient" value="0.2,0.08,0.08"/>
+
+			<input type="button" value="SetFixDA" onclick="SetFixDirectionalAmbientColor();"/>
+		</div>
+
+		<div class="type01">
+			<h3>!--12. Voice sample.--</h3>
+			State: / PrivateChatState:<br>
+			<input type="text" id="voice_state_message" value="0"/>
+			<input type="text" id="voice_private_chat_state_message" value="0"/>
+
+			<br>
+			<input type="button" value="IsEnabled" onclick="IsVoiceEnabled();"/>
+			<input type="button" value="Start" onclick="StartVoiceChat();"/>
+			<input type="button" value="End" onclick="EndVoiceChat();"/>
+			<br>
+			<input type="text" id="target_avatar_firstname" value="" style="width:130"/>
+			<input type="text" id="target_avatar_lastname" value="" style="width:130"/>
+			<br>
+			<input type="text" id="target_avatar_uuid" value="" style="width:261"/>
+			<input type="button" value="Call" onclick="StartPrivateVoiceChat();"/>
+			<br>
+			<input type="button" value="Stop" onclick="StopPrivateVoiceChat();"/>
+
+			<br>
+			<input type="button" value="IsMute" onclick="IsVoiceMute();"/>
+			<input type="button" value="MuteOn" onclick="VoiceMuteOn();"/>
+			<input type="button" value="MuteOff" onclick="VoiceMuteOff();"/>
+			<br>
+			<input type="text" id="mic_volume_level" value="" style="width:32"/>
+			<input type="button" value="Mic" onclick="VoiceMicVolume();"/>
+			<br>
+			<input type="text" id="speaker_volume_level" value="" style="width:32"/>
+			<input type="button" value="Speaker" onclick="VoiceSpeakerVolume();"/>
+
+		</div>
+	</div>
+</body>
+</html>

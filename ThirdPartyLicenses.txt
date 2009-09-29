@@ -1,0 +1,27 @@
+This document provides a summary of the licenses of the binary files
+in the bin/ directory. This summary of licenses should be treated as a
+guide only. For the exact license text that applies to each file,
+please see the actual license files in the ThirdPartyLicenses/
+directory, as indicated below next to each filename.
+
+Adapter.dll - LGPL license. See Adapter.txt
+irrKlang.NET.dll - Non-commercial use only. See IrrKlang.txt
+irrKlang.NET2.0.dll - Non-commercial use only. See IrrKlang.txt
+Irrlicht.dll - zlib license. See Irrlicht.txt
+Irrlicht.Extensions.dll - zlib license. See IrrlichtNETCP.txt
+Irrlicht.NET.dll - zlib license. See IrrlichtNETCP.txt
+IrrlichtW.dll - zlib license. See IrrlichtNETCP.txt
+log4net.dll - Apache license. See Log4Net.txt
+Mono.Addins.dll - MIT X11 license. See Mono-Addins.txt
+Mono.PEToolkit.dll - MIT X11 license. See Mono-PE.txt
+Nini.dll - MIT X11 license. See Nini.txt
+openjpeg-dotnet.dll - BSD license. See OpenJpeg.txt
+OpenMetaverse.dll - BSD license. See libOpenMetaverse.txt
+OpenMetaverse.Http.dll - BSD license. See libOpenMetaverse.txt
+OpenMetaverse.StructuredData.dll - BSD license. See libOpenMetaverse.txt
+OpenMetaverse.Utilities.dll - BSD license. See libOpenMetaverse.txt
+OpenMetaverseTypes.dll - BSD license. See libOpenMetaverse.txt
+Prebuild.exe - BSD license. See Prebuild.txt and Prebuild/ subdirectory.
+PrimMesher.dll - BSD license. See PrimMesher.txt
+SmartThreadPool.dll - Microsoft Public License. See SmartThreadPool.txt
+XMLRPC.dll - MIT X11 license. See XML-RCP.NET.txt

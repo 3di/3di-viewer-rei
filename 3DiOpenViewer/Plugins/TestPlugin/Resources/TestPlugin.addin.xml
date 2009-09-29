@@ -1,0 +1,11 @@
+<Addin id="OpenViewer.Plugins.TestPlugin" version="0.1">
+    <Runtime>
+        <Import assembly="TestPlugin.dll"/>
+    </Runtime>
+    <Dependencies>
+        <Addin id="OpenViewer" version="0.5" />
+    </Dependencies>
+    <Extension path = "/OpenViewer/Managers">
+        <Plugin id="TestPlugin" type="OpenViewer.Plugins.TestPlugin" />
+    </Extension>
+</Addin>
