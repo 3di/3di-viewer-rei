@@ -122,7 +122,10 @@ namespace OpenViewer.Managers
                             }
                         }
 
-                        TerrainSceneNode tsn = Reference.SceneManager.AddTerrainSceneNode(Util.TerrainFolder + sim + ".bmp",
+                        float[,] h = ResizeTerrain512Interpolation(landmaps[sim]);
+
+                        TerrainSceneNode tsn = Reference.SceneManager.AddTerrainSceneNodeFromRawData(h,
+                                                                                          514,
                                                                                           ParentNode,
                                                                                           -1,
                                                                                           new Vector3D(-1f, 0, -1f),
@@ -193,6 +196,7 @@ namespace OpenViewer.Managers
 
         public void GenerateTerrain(ulong sim)
         {
+            /*
             float[,] currentTerrain;
 
             lock (landmaps)
@@ -225,7 +229,7 @@ namespace OpenViewer.Managers
 
                 bm.Save(Util.TerrainFolder + sim + ".bmp", System.Drawing.Imaging.ImageFormat.Bmp);
             }
-
+            */
             lock (terrainReady) 
             { 
                 if (!terrainReady.Contains(sim))
