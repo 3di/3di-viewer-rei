@@ -1102,6 +1102,9 @@ namespace OpenViewer
                         }
                     }
                 }
+                catch (System.Threading.ThreadAbortException)
+                {
+                }
                 catch (Exception e)
                 {
                     m_log.Fatal("RenderLoop", e);
