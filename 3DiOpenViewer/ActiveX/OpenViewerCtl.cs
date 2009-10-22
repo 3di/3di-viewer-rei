@@ -1627,7 +1627,8 @@ namespace OpenViewerAX
         protected override void WndProc(ref Message m)
         {
             const int WM_PAINT = 0xf;
-
+            const int WM_NCCREATE = 0x81;
+            
             if (m.Msg == WM_PAINT)
             {
                 Keys keyCode = (Keys)m.WParam & Keys.KeyCode;
@@ -1635,6 +1636,10 @@ namespace OpenViewerAX
                 InvalidateRect(p, IntPtr.Zero, true);
             }
 
+            if (m.Msg == WM_NCCREATE)
+            {
+                Size = new Size(wwidth, wheight);
+            }
 
             base.WndProc(ref m);
             if (m.Msg == 2)
