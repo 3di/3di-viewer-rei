@@ -454,6 +454,11 @@ namespace OpenViewer
             get { return m_user.Network.Connected; }
         }
 
+        public void SendIM(string _target_uuid, string _message)
+        {
+            m_user.Self.InstantMessage(new UUID(_target_uuid), _message);
+        }
+
         public void SendChat(string _message, int _channel, int _range)
         {
             m_user.Self.Chat(_message, _channel, (ChatType)_range);

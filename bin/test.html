@@ -62,7 +62,12 @@ Page Body.
 			<select size="8" id="chat_history" style="width:256"></select>
 			<br>
 			<input type="text" id="chat_message" style="width:256"/>
-			<input type="button" value="Send" onclick="SendChat();"/>
+			<input type="button" value="Send (Chat)" onclick="SendChat();"/>
+			To (uuid):<br>
+			<input type="text" id="im_target" style="width:256"/>
+			<br>
+			<input type="text" id="im_rcpt" style="width:256"/>
+			<input type="button" value="Send (IM)" onclick="SendIM();"/>
 		</div>
 
 		<div class="type00">

@@ -42,6 +42,16 @@ opvw.API.TextChat = opvw.API.TextChat || {
 	},
 	
 	/**
+	 * Send a user an instant message
+	 * 
+	 * @param (string) uuid
+	 * @param (string) message  Chat message
+	 */
+	SendIM : function( uuid, message ){
+		opvw.API.plugin.SendIM( uuid, message );
+	},	
+	
+	/**
 	 * Get all stored message count.
 	 * 
 	 * @return (number) all message count.
@@ -52,6 +62,7 @@ opvw.API.TextChat = opvw.API.TextChat || {
 	
 };
 opvw.APIWrapper["SendChat"] = opvw.API.TextChat.SendChat;
+opvw.APIWrapper["SendIM"] = opvw.API.TextChat.SendIM;
 opvw.APIWrapper["GetMessageFromHistory"] = opvw.API.TextChat.GetMessageFromHistory;
 opvw.APIWrapper["GetMessageHistoryLength"] = opvw.API.TextChat.GetMessageHistoryLength;
 

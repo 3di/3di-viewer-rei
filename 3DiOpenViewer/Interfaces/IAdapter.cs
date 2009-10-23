@@ -41,13 +41,10 @@ namespace OpenViewer
 
         #endregion
 
-
         #region 0. Debug
 
         void CallDebugMessage(string _message);
         #endregion
-
-
 
         #region 1. Login / Logout
         /// <summary>
@@ -97,6 +94,13 @@ namespace OpenViewer
         #endregion
 
         #region 4. Text Chat
+
+        /// <summary>
+        /// Send InstantMessage via DHTM
+        /// </summary>
+        /// <param name="_target_uuid">target user uuid</param>
+        /// <param name="_message">message</param>
+         void CallSendIM(string _target_uuid, string _message);
 
         /// <summary>
         /// Send text chat message via DHTM

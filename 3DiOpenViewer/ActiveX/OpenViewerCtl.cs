@@ -1068,6 +1068,16 @@ namespace OpenViewerAX
         public event OpenViewer.OnReceiveMessageListener OnReceivedMessage;
 
         // From javascript.
+        public void SendIM(string _target_uuid, string _message)
+        {
+            if (OV.IsDHTMLRelationEnable == false)
+                return;
+
+            DebugMessageEventHandler("IN: SendIM UUID:" + _target_uuid + " MSG: " + _message);
+
+            OV.Adapter.CallSendIM(_target_uuid, _message);
+        }
+
         public void SendChat(string _message, int _range)
         {
             if (OV.IsDHTMLRelationEnable == false)

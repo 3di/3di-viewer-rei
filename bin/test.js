@@ -229,6 +229,13 @@ function SendChat()
 	ctrl.SendChat(chat_message.value, 1);
 }
 
+function SendIM()
+{
+	var im_target = document.getElementById("im_target");
+	var im_rcpt = document.getElementById("im_rcpt");
+	ctrl.SendIM(im_target.value, im_rcpt.value);
+}
+
 function GetChatMessage()
 {
     var chat_history_select = document.getElementById("chat_history");

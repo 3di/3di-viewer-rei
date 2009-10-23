@@ -779,6 +779,11 @@ namespace OpenViewer.Managers
             Reference.Viewer.ChatManager.Add(message, audible, type, sourcetype, fromName, id, ownerid, position);
         }
 
+        public void SendIM(string _target_uuid, string _message)
+        {
+            avatarConnection.SendIM(_target_uuid, _message);
+        }
+
         public void SendChat(string _message, int _range)
         {
             if (_message.Length > maxMessageLength)
