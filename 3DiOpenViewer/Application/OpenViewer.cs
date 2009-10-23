@@ -267,7 +267,7 @@ namespace OpenViewer
         public Vector3D DirectionalRotation = new Vector3D();
         public Colorf DirectionalDiffuseColor = new Colorf();
         public Colorf DirectionalAmbientColor = new Colorf();
-
+        public int DebugVoiceWaitTime { get; set; }
         public long TeleportTimeout { get; set; }
 
         #endregion
@@ -2068,6 +2068,8 @@ namespace OpenViewer
                     sw.WriteLine("[Shader]");
                     sw.WriteLine("sea_quality = low");
                     sw.WriteLine("sky_quality = low");
+                    sw.WriteLine("[Debug]");
+                    sw.WriteLine("voice_wait_time = 1");
                 }
                 catch (Exception e)
                 {

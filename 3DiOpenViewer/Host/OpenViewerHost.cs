@@ -80,6 +80,14 @@ namespace OpenViewerHost
             string skyQuality = m_config.Source.Configs["Shader"].Get("sky_quality", "low");
             long teleportTimeout = m_config.Source.Configs["Startup"].GetLong("teleport_timeout", 20);
 
+            // Read Debug config.
+            Nini.Config.IConfig debug = m_config.Source.Configs["Debug"];
+            int voice_wait_time = 1; // sec
+            if (debug != null)
+            {
+                viewer.DebugVoiceWaitTime = debug.GetInt("voice_wait_time", voice_wait_time);
+            }
+
             viewer.HelpURL = helpURL;
             viewer.Locale = locale;
             viewer.IsVisibleDebutTab = (debugTab == "true" ? true : false);
