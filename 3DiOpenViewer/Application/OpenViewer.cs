@@ -534,11 +534,13 @@ namespace OpenViewer
                     string warningMessage = DialogText.WarningGraphicCardMessage;
                     string warningCaption = DialogText.WarningGraphicCardCaption;
 
+                    /*
                     System.Windows.Forms.DialogResult yesno = System.Windows.Forms.MessageBox.Show(warningMessage, warningCaption, System.Windows.Forms.MessageBoxButtons.YesNo);
                     if (System.Windows.Forms.DialogResult.Yes != yesno)
                     {
                         return;
                     }
+                    */
                 }
             }
 
