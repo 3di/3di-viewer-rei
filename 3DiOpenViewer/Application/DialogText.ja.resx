@@ -152,8 +152,8 @@
     <value>米国語</value>
   </data>
   <data name="ErrorConnectionMessage" xml:space="preserve">
-    <value>通信エラー
-Serverとの通信が切断されました。\nログアウトしてください。</value>
+    <value>通信エラーServerとの通信が切断されました。
+ログアウトしてください。</value>
   </data>
   <data name="ErrorFinalMessageme00" xml:space="preserve">
     <value>致命的なエラーが発生しました。
