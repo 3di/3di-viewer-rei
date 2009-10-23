@@ -552,7 +552,7 @@ namespace OpenViewer.Managers
                 }
             }
 
-            if (!isSculpt || sculptTexture == null)
+            if (vObj._3DiIrrfileUUID == UUID.Zero && (!isSculpt || sculptTexture == null))
             {
                 isMeshCopied = meshFactory.GetMeshInstance(vObj.Prim, out vObj.Mesh);
             }
@@ -605,8 +605,7 @@ namespace OpenViewer.Managers
             }
 
             // from now on we no longer change the UpdateFullYN status - we just read it.
-
-            if (vObj.UpdateFullYN)
+            if (vObj._3DiIrrfileUUID == UUID.Zero && vObj.UpdateFullYN)
             {
                 //node = Reference.SceneManager.AddOctTreeSceneNode(vObj.Mesh, parentNode, (int)vObj.Prim.LocalID, 128);
                 node = Reference.SceneManager.AddMeshSceneNode(vObj.Mesh, workNode, (int)vObj.Prim.LocalID);
