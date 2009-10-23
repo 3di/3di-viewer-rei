@@ -63,77 +63,15 @@ using System.Text;
 using IrrlichtNETCP;
 using IrrParseLib;
 using OpenMetaverse;
+using OpenViewer.Utility;
 
 namespace OpenViewer.Managers
 {
-    public class Pair<TKey, TValue>
-    {
-        public TKey Key;
-        public TValue Value;
-
-        public Pair(TKey key, TValue value)
-        {
-            Key = key;
-            Value = value;
-        }
-    }
-
-    public class HashedQueue<TKey, TValue>
-    {
-        private Dictionary<TKey, Pair<TKey, TValue>> hashtable;
-        private Queue<Pair<TKey, TValue>> queue;
-
-        public HashedQueue()
-        {
-            hashtable = new Dictionary<TKey, Pair<TKey, TValue>>();
-            queue = new Queue<Pair<TKey, TValue>>();
-        }
-
-        public HashedQueue(int capacity)
-        {
-            hashtable = new Dictionary<TKey, Pair<TKey, TValue>>(capacity * 2);
-            queue = new Queue<Pair<TKey, TValue>>(capacity);
-        }
-
-        public void Clear()
-        {
-            hashtable.Clear();
-            queue.Clear();
-        }
-
-        public int Count
-        {
-            get {
-                return queue.Count;
-            }
-        }
-
-        public bool TryGetValue(TKey key, out Pair<TKey, TValue> pair)
-        {
-            return hashtable.TryGetValue(key, out pair);
-        }
-
-        public void Enqueue(TKey key, TValue value)
-        {
-            Pair<TKey, TValue> pair = new Pair<TKey, TValue>(key, value);
-            hashtable.Add(key, pair);
-            queue.Enqueue(pair);
-        }
-
-        public TValue Dequeue()
-        {
-            Pair<TKey, TValue> pair;
-
-            pair = queue.Dequeue();
-            hashtable.Remove(pair.Key);
-            return pair.Value;
-        }
-    }
-
     public class AvatarManager : BaseManager
     {
         private const string ANIMATION_NAME_STANDING_SPEAK = "standing_speak";
         private const string ANIMATION_NAME_SITTING_SPEAK = "sitting_speak";
+        private const uint SPEAK_WAIT_TIME = 30 * 2; // FPS * Second
 
         //********************************************************
         // Element.
@@ -160,6 +98,8 @@ namespace OpenViewer.Managers
         private uint updateRate = 1;
         private uint updateCount = 200;
 
+        private uint speakingCount = 0;
+        private bool speaking = false;
         private bool avatarNameVisible = true;
 
         // User avatar.
@@ -719,7 +659,7 @@ namespace OpenViewer.Managers
 
                     string requestAnimationName = string.Empty;
 
-                    if (vobj.VoiceLevel > 0)
+                    if (vobj.VoiceLevel > 0 || speaking)
                     {
                         switch (vobj.AnimationName)
                         {
@@ -730,6 +670,17 @@ namespace OpenViewer.Managers
                             case "sitting":
                                 requestAnimationName = ANIMATION_NAME_SITTING_SPEAK;
                                 break;
+                        }
+
+                        if (vobj.VoiceLevel > 0)
+                        {
+                            speakingCount = 0;
+                            speaking = true;
+                        }
+                        else
+                        {
+                            if ((speakingCount++ > SPEAK_WAIT_TIME) || !UtilityAnimation.IsPossibleVoiceAnimation(vobj.AnimationName))
+                                speaking = false;
                         }
                     }
                     else
@@ -818,8 +769,6 @@ namespace OpenViewer.Managers
 
         private void ProcessObjectQueueAddToNode(VObject _obj)
         {
-            Reference.Log.Debug("Try to add avatar: Name:" + ((Avatar)_obj.Prim).Name);
-
             // Get irr file uuid.
             if (string.IsNullOrEmpty(Reference.Viewer.ProtocolManager.AvatarConnection.m_user.Network.AssetServerUri))
             {
@@ -949,11 +898,7 @@ namespace OpenViewer.Managers
             }
             else
             {
-                Reference.Log.Debug("PrentLocalID:" + parentID.ToString());
-
                 ulong regionID = Reference.Viewer.ProtocolManager.AvatarConnection.m_user.Network.CurrentSim.Handle;
-
-                Reference.Log.Debug("PrentRegionID:" + regionID.ToString());
 
                 if (Reference.Viewer.EntityManager.Entities.ContainsKey(regionID.ToString() + parentID.ToString()))
                 {
@@ -961,7 +906,6 @@ namespace OpenViewer.Managers
 
                     if (parentObj != null)
                     {
-                        Reference.Log.Debug("Attach");
                         _obj.ParentPosition = parentObj.Prim.Position;
 
                         IrrlichtNETCP.Quaternion iquParent = new IrrlichtNETCP.Quaternion
@@ -1015,118 +959,45 @@ namespace OpenViewer.Managers
 
                     if (avatarLoaded)
                     {
-                        bool stopCustom = false;
-                        if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_00)
+                        if (StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_00) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_01) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_02) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_03) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_04) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_05) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_06) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_07) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_08) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_09) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_10) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_11) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_12) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_13) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_14) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_15) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_16) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_17) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_18) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_19) ||
+                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_20)
+                            )
                         {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_00);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_01)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_01);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_02)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_02);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_03)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_03);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_04)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_04);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_05)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_05);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_06)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_06);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_07)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_07);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_08)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_08);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_09)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_09);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_10)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_10);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_11)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_11);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_12)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_12);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_13)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_13);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_14)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_14);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_15)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_15);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_16)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_16);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_17)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_17);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_18)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_18);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_19)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_19);
-                            stopCustom = true;
-                        }
-                        else if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_20)
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(VObject.CUSTOMIZE_ANIM_20);
-                            stopCustom = true;
-                        }
-
-                        if (stopCustom)
                             Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStart(Animations.STAND);
+                        }
                     }
                 }
             }
+        }
+
+        private bool StopAnimationIfIsKeyCurrentAnimation(UUID _animationUUID)
+        {
+            if (userObject.CurrentAnimationUUID == _animationUUID)
+            {
+                Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(_animationUUID);
+                return true;
+            }
+
+            return false;
         }
 
         private void ProcessObjectQueueDeleteToNode(VObject _obj)
@@ -1199,7 +1070,7 @@ namespace OpenViewer.Managers
             switch (_key)
             {
                 case "sitstart":
-                    _obj.SetNextAnimation("sitting");
+                    _obj.SetNextAnimation("sitting", true);
                     if (_obj.PickNode != null)
                     {
                         _obj.PickNode.Position = new Vector3D(-0.35f, 0.1f, 0);
@@ -1303,8 +1174,6 @@ namespace OpenViewer.Managers
 
             _obj.AnimationSpeed = animFramesPerSecond;
             _obj.SetAnimation(_key, startFrame, endFrame, loopFlag);
-
-            Reference.Log.Debug("ContainsKey:" + _key + " Speed:" + animFramesPerSecond.ToString() + " Start:" + startFrame.ToString() + " End:" + endFrame.ToString());
         }
 
         private string GetAnimationKey(UUID _uuid)
@@ -1327,70 +1196,12 @@ namespace OpenViewer.Managers
             {
                 foreach (UUID animID in newAnims)
                 {
-                    if (animID == Animations.STAND
-                        || animID == Animations.STAND_1
-                        || animID == Animations.STAND_2
-                        || animID == Animations.STAND_3
-                        || animID == Animations.STAND_4)
-                    {
-                        key = "standing";
-                    }
+                    key = UtilityAnimation.GetAnimationKeyFromAnimationUUID(animID);
 
-                    else if (animID == Animations.CROUCHWALK)
-                    {
-                        key = "crouchwalk";
-                    }
-
-                    else if (animID == Animations.WALK
-                        || animID == Animations.FEMALE_WALK)
-                    {
-                        key = "walking";
-                    }
-
-                    else if (animID == Animations.RUN)
-                    {
-                        key = "running";
-                    }
-
-                    else if (animID == Animations.SIT
-                        || animID == Animations.SIT_FEMALE
-                        || animID == Animations.SIT_GENERIC
-                        || animID == Animations.SIT_GROUND
-                        || animID == Animations.SIT_GROUND_staticRAINED)
-                    {
-                        key = "sitstart";
-                    }
-
-                    else if (animID == Animations.STANDUP
-                        || animID == Animations.SIT_TO_STAND)
-                    {
-                        key = "standup";
-                    }
-
-                    else if (animID == Animations.FLY
-                        || animID == Animations.FLYSLOW)
-                    {
-                        key = "flying";
-                    }
-
-                    else if (animID == Animations.HOVER
-                        || animID == Animations.HOVER_DOWN
-                        || animID == Animations.HOVER_UP)
-                    {
-                        key = "hover";
-                    }
-
-                    else if (animID == Animations.CROUCH)
-                    {
-                        key = "crouching";
-                    }
-
-                    // customize
-                    else
-                    {
+                    // customize animation.
+                    if (string.IsNullOrEmpty(key))
                         if (customizeAnimationKey.ContainsKey(animID))
                             key = customizeAnimationKey[animID];
-                    }
 
                     Reference.Log.Debug("UUID:" + _uuid + " Key:" + key);
                 }
@@ -1408,7 +1219,7 @@ namespace OpenViewer.Managers
         public void Standup()
         {
             lock (userObject)
-                userObject.SetNextAnimation(string.Empty);
+                userObject.SetNextAnimation(string.Empty, true);
 
             Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(Animations.SIT);
             Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(Animations.SIT_FEMALE);

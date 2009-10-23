@@ -76,6 +76,20 @@ namespace OpenViewer
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         private static extern uint SHGetKnownFolderPath(ref Guid rfid, uint dwFlags, IntPtr hToken, out StringBuilder path);
 
+        #region Const
+        /// <summary>
+        /// Asset cache directory for Avatar's data.
+        /// </summary>
+        public const string AssetDirectory = "assets";
+
+        /// <summary>
+        /// Sound cache directory.
+        /// </summary>
+        public const string SoundDirectory = "sounds";
+        public const string AvatarAnimationExtension = ".xml";
+        public const string SoundExtension = ".ogg";
+        #endregion
+
         public static string ApplicationDataDirectory
         {
             get

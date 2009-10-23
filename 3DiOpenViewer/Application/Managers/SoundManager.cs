@@ -95,7 +95,7 @@ namespace OpenViewer.Managers
 
         private void GetAsset(UUID _uuid)
         {
-            Reference.Viewer.IrrManager.IrrFileCreateCache(_uuid.ToString() + Const.SoundExtension, workDirectory);
+            Reference.Viewer.IrrManager.IrrFileCreateCache(_uuid.ToString() + Util.SoundExtension, workDirectory);
 
             if (requestList.Contains(_uuid))
                 requestList.Remove(_uuid);
@@ -154,7 +154,7 @@ namespace OpenViewer.Managers
 
             if (soundList.Contains(_uuid))
             {
-                string path = workDirectory + "/" + _uuid.ToString() + Const.SoundExtension;
+                string path = workDirectory + "/" + _uuid.ToString() + Util.SoundExtension;
 
                 flag = Play(path, _loop, _is3d, _position);
             }

@@ -101,6 +101,13 @@ namespace OpenViewer
         }
         private bool[] updateFlags = new bool[(int)UpdateType.Length];
         private KeyframeSet frameSet = new KeyframeSet(string.Empty, 0, 0, 0);
+        private UUID requestIrrrileUUID;
+        private bool requesting = false;
+        private bool updateFullYN = false;
+        private bool isGhost = false;
+        private string animationName = string.Empty;
+        private string nextAnimation = string.Empty;
+        private bool nextAnimationLoop = true;
 
         public IrrMeshParam BaseParam = new IrrMeshParam(string.Empty);
         public Vector3 ParentPosition = new Vector3();
@@ -121,20 +128,31 @@ namespace OpenViewer
         public UUID CurrentAnimationUUID;
         public UUID _3DiIrrfileUUID;
         public IrrDatas IrrData; // reference to parsed .irr data. We need this when we receive a textureComplete callback, in order to figure out which texture slot references the just-arrived texture.
-        private UUID requestIrrrileUUID;
-        private bool requesting = false;
         public bool requestTexturesDirectlyFromAssetServerWithoutJ2KConversion;
-        private bool updateFullYN = false;
-        private bool isGhost = false;
-        private string animationName = string.Empty;
-        private string nextAnimation = string.Empty;
-
-        public string AnimationName { get { return animationName; } }
 
         /// <summary>
         /// In case prim is Avatar, gets or sets whether this VObject represents a child agent.
         /// </summary>
         public bool IsChildAgent = false;
+
+        #region Property
+        public string AnimationName { get { return animationName; } }
+        public bool UpdateFullYN { get { return updateFullYN; } set { updateFullYN = value; } }
+        public bool IsGhost { get { return isGhost; } set { isGhost = value; } }
+        public bool Requesting { get { return requesting; } set { requesting = value; } }
+        public UUID RequestIrrfileUUID { get { return requestIrrrileUUID; } set { requestIrrrileUUID = value; } }
+        public int AnimationSpeed
+        {
+            get { return frameSet.AnimationSpeed; }
+            set
+            {
+                frameSet.AnimationSpeed = value;
+                updateFlags[(int)UpdateType.AnimationSpeed] = true;
+
+                MeshNode.AnimationSpeed = frameSet.AnimationSpeed;
+            }
+        }
+        #endregion
 
         public  VObject()
         {
@@ -174,9 +192,10 @@ namespace OpenViewer
                 updateFlags[i] = false;
         }
 
-        public void SetNextAnimation(string _key)
+        public void SetNextAnimation(string _key, bool _loop)
         {
             nextAnimation = _key;
+            nextAnimationLoop = _loop;
         }
 
         public void AnimationEndHandler(AnimatedMeshSceneNode _node)
@@ -190,10 +209,8 @@ namespace OpenViewer
                     int animFramesPerSecond = FrameSetList[nextAnimation].AnimationSpeed;
 
                     AnimationSpeed = animFramesPerSecond;
-                    SetAnimation(nextAnimation, startFrame, endFrame, true);
+                    SetAnimation(nextAnimation, startFrame, endFrame, nextAnimationLoop);
                     SyncToChilds(_node);
-
-                    VUtil.LogConsole(this.ToString(), "AnimationEndHandler: ContainsKey:" + nextAnimation + " Speed:" + animFramesPerSecond.ToString() + " Start:" + startFrame.ToString() + " End:" + endFrame.ToString());
                 }
             }
             finally
@@ -212,42 +229,6 @@ namespace OpenViewer
 
             MeshNode.SetFrameLoop(frameSet.StartFrame, frameSet.EndFrame);
             MeshNode.LoopMode = _loop;
-        }
-
-        public int AnimationSpeed
-        {
-            get { return frameSet.AnimationSpeed; }
-            set
-            {
-                frameSet.AnimationSpeed = value;
-                updateFlags[(int)UpdateType.AnimationSpeed] = true;
-
-                MeshNode.AnimationSpeed = frameSet.AnimationSpeed;
-            }
-        }
-
-        public bool UpdateFullYN
-        {
-            get { return updateFullYN; }
-            set { updateFullYN = value; }
-        }
-
-        public bool IsGhost
-        {
-            get { return isGhost; }
-            set { isGhost = value; }
-        }
-
-        public bool Requesting
-        {
-            get { return requesting; }
-            set { requesting = value; }
-        }
-
-        public UUID RequestIrrfileUUID
-        {
-            get { return requestIrrrileUUID; }
-            set { requestIrrrileUUID = value; }
         }
     }
 }
