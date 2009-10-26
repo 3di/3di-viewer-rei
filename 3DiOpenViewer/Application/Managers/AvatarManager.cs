@@ -201,7 +201,7 @@ namespace OpenViewer.Managers
                 if (frame % 10 == 0)
                     EventControlProcess();
 
-                if (frame % updateRate == 0)
+                if (frame % updateRate == 0 && userObject != null)
                 {
                     lock (userObject)
                     {
@@ -288,7 +288,7 @@ namespace OpenViewer.Managers
                         }
                     }
                 }
-                if (userObject.Node != null)
+                if (userObject != null && userObject.Node != null)
                 {
                     if (Reference.Viewer.StateManager.State == State.CONNECTED)
                     {
