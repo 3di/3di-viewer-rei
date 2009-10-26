@@ -282,6 +282,9 @@ namespace OpenViewer.Managers
                                 if (obj.TargetPosition.DistanceFrom(nowPosition) > 0.1f)
                                     obj.Node.Position = Util.Lerp(nowPosition, obj.TargetPosition, amount);
                             }
+
+                            if (obj.MeshNode != null)
+                                obj.MeshNode.AnimateJoints(true);
                         }
                     }
                 }
@@ -419,8 +422,7 @@ namespace OpenViewer.Managers
             //    return;
 
             _avatar.RegionHandle = _regionHandle;
-
-            string key = _regionHandle.ToString() + _avatar.LocalID.ToString();
+            string key = VUtil.GetEntitiesKeyFromPrim(_avatar);
 
             VObject newObj = new VObject();
             newObj.Prim = _avatar;
@@ -934,10 +936,11 @@ namespace OpenViewer.Managers
                                 AnimatedMeshSceneNode animeNode = Reference.Viewer.IrrManager.IrrFileLoad(datas, Reference.SceneManager, _obj, "tmpmesh_" + _obj.Prim.LocalID.ToString() + "_");
                                 if (animeNode != null)
                                 {
+                                    animeNode.AnimationEnd += animeNode_AnimationEnd;
+                                    //animeNode.SetTransitionTime(0.1f); // <<--------------- I'll implement to IrrlichtNET.dll
+
                                     _obj.Mesh = animeNode.AnimatedMesh.GetMesh(0);
                                     SetAnimation(_obj, "standing");
-                                    animeNode.AnimationEnd += animeNode_AnimationEnd;
-                                    animeNode.AnimationEnd += _obj.AnimationEndHandler;
                                 }
                             }
                         }

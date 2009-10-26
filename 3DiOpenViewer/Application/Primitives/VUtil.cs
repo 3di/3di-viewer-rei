@@ -79,6 +79,11 @@ namespace OpenViewer
             return _prim.RegionHandle.ToString() + _prim.LocalID.ToString();
         }
 
+        public static string GetEntitiesParentKeyFromPrim(Primitive _prim)
+        {
+            return _prim.RegionHandle.ToString() + _prim.ParentID.ToString();
+        }
+
         public static VObject NewVObject(Primitive pPrim, VObject pOldObj)
         {   
             VObject returnVObject = null;

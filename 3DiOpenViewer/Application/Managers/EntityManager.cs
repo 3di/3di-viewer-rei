@@ -538,8 +538,9 @@ namespace OpenViewer.Managers
 
         private void ProcessObjectQueue(VObject vObj, Operations op) // // TODO: refactor different operations into totally different functions
         {
-            string objId = vObj.Prim.RegionHandle.ToString() + vObj.Prim.LocalID.ToString();
-            string parId = vObj.Prim.RegionHandle.ToString() + vObj.Prim.ParentID.ToString();
+            string objId = VUtil.GetEntitiesKeyFromPrim(vObj.Prim);
+            string parId = VUtil.GetEntitiesParentKeyFromPrim(vObj.Prim);
+
             // Prim object
             bool isMeshCopied = false;
             bool isSculpt = false;
