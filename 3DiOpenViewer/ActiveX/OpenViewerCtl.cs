@@ -829,6 +829,7 @@ namespace OpenViewerAX
                     OV.Adapter.OnOpenWindow += OpenWindowEventHandler;
                     OV.Adapter.OnAvatarPicked += AvatarPickEventHandler;
                     OV.Adapter.OnImageLoaded += ImageLoadedEventHandler;
+                    OV.Adapter.OnAnimationEnd += AvatarAnimationEndHandler;
                     OV.Adapter.OnStateChanged += StateChangedEventHandler;
                     OV.Adapter.OnDispatch += DispatchHandler;
                 }
@@ -1205,6 +1206,7 @@ namespace OpenViewerAX
 
         #region 7. User avatar
         public event OpenViewer.AvatarPickListener OnAvatarPicked;
+        public event OpenViewer.AvatarAnimationEndListener OnAnimationEnd;
 
         // To javascript.
         private void AvatarPickEventHandler(string _userInformation)
@@ -1216,6 +1218,18 @@ namespace OpenViewerAX
 
             if (OnAvatarPicked != null)
                 OnAvatarPicked(_userInformation);
+        }
+
+        private void AvatarAnimationEndHandler(string _animationName)
+        {
+            if (OV.IsDHTMLRelationEnable == false)
+                return;
+
+            DebugMessageEventHandler("EVE: AvatarAnimationEndHandler");
+
+            if (OnAnimationEnd != null)
+                OnAnimationEnd(_animationName);
+
         }
 
         public string GetLoggedinAvatarUUIDList()

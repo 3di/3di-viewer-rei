@@ -89,6 +89,9 @@ namespace OpenViewerAX
         [DispId(70)]
         void OnAvatarPicked(string _uuid);
 
+        [DispId(71)]
+        void OnAnimationEnd(string _animationName);
+
         [DispId(80)]
         void OnStateChanged(int _state);
 

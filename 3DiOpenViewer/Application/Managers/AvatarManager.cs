@@ -1035,6 +1035,8 @@ namespace OpenViewer.Managers
             if (targetVObj == null || targetVObj.MeshNode == null)
                 return;
 
+            Reference.Viewer.Adapter.CallAnimationEndEvent(userObject.AnimationCurrentName);
+
             if (userObject != null && userObject.MeshNode.Raw == targetVObj.MeshNode.Raw)
             {
                 if (StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_00) ||
@@ -1060,8 +1062,6 @@ namespace OpenViewer.Managers
                     StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_20)
                     )
                 {
-                    Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStart(Animations.STAND);
-                    return;
                 }
             }
 
@@ -1074,11 +1074,12 @@ namespace OpenViewer.Managers
 
         private bool StopAnimationIfIsKeyCurrentAnimation(UUID _animationUUID)
         {
+            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(_animationUUID);
+
             lock (userObject)
             {
                 if (userObject.CurrentAnimationUUID == _animationUUID)
                 {
-                    Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(_animationUUID);
                     return true;
                 }
             }

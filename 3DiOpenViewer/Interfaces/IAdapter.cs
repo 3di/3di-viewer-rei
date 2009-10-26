@@ -16,6 +16,7 @@ namespace OpenViewer
     public delegate void TeleportListener(string _uuid, string _avatar, int _x, int _y, int _z);
     public delegate void OpenWindowListener(string _target, string _uri);
     public delegate void AvatarPickListener(string _uuid);
+    public delegate void AvatarAnimationEndListener(string _animationName);
     public delegate void StateChangedListener(int _state);
     public delegate void ImageDownloadedListener(string texname);
 
@@ -37,6 +38,7 @@ namespace OpenViewer
         event TeleportListener OnTeleported;
         event OpenWindowListener OnOpenWindow;
         event AvatarPickListener OnAvatarPicked;
+        event AvatarAnimationEndListener OnAnimationEnd;
         event ImageDownloadedListener OnImageLoaded;
         event StateChangedListener OnStateChanged;
         event DispatchListener OnDispatch;
@@ -195,6 +197,8 @@ namespace OpenViewer
          void CallAvatarPicked(string _avatarInformation);
 
          void CallAvatarCustomizeAnimation(int _index);
+
+         void CallAnimationEndEvent(string _animationName);
 
          string CallGetUserAvatarAnimationName();
 
