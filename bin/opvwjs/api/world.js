@@ -47,7 +47,7 @@ opvw.API.World = opvw.API.World || {
 	 * @param (boolean) flag true : streaming / false : stopping
 	 */
 	SetTickOn : function(flag){
-		opvw.API.plugin.SetWorldTime(flag);
+		opvw.API.plugin.SetTickOn(flag);
 	},
 	/**
 	 * Set world ambient color
