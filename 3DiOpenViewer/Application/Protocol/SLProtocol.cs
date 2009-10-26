@@ -77,6 +77,7 @@ namespace OpenViewer
         public delegate void GridConnected();
         public delegate void Chat(string message, ChatAudibleLevel audible, ChatType type, ChatSourceType sourcetype,
                                   string fromName, UUID id, UUID ownerid, Vector3 position);
+        public delegate void IM(UUID senderID, string fromName, string message);
         public delegate void LandPatch(Simulator sim, int x, int y, int width, float[] data);
         public delegate void NewAvatar(Simulator sim, Avatar avatar, ulong regionHandle, ushort timeDilation);
         public delegate void NewPrim(Simulator sim, Primitive prim, ulong regionHandle, ushort timeDilation);
@@ -105,6 +106,7 @@ namespace OpenViewer
 
         public event NewAvatar OnNewAvatar;
         public event Chat OnChat;
+        public event IM OnIM;
         public event GridConnected OnGridConnected;
         public event SimConnected OnSimConnected;
         public event SimDisconnected OnSimDisconnected;
@@ -186,6 +188,7 @@ namespace OpenViewer
 
             //-- Self event.--------------------------------------------
             m_user.Self.OnChat += chatCallback;
+            m_user.Self.OnInstantMessage += Self_OnInstantMessage;
             m_user.Self.OnAvatarSitResponse += avatarSitResponseCallback;
             m_user.Self.OnTeleport += Self_OnTeleport;
             m_user.Terrain.OnLandPatch += landPatchCallback;
@@ -499,6 +502,12 @@ namespace OpenViewer
             loginParams.Start = startlocation;
 
             return loginParams;
+        }
+
+        private void Self_OnInstantMessage(InstantMessage im, Simulator simulator)
+        {
+            if (OnIM != null)
+                OnIM(im.FromAgentID, im.FromAgentName, im.Message);
         }
         
         private void chatCallback(string message, ChatAudibleLevel audible, ChatType type, ChatSourceType sourcetype,

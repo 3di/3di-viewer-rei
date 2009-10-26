@@ -97,6 +97,7 @@ namespace OpenViewer.Managers
 
             // - miscellanious
             avatarConnection.OnChat += OnChat;
+            avatarConnection.OnIM += OnIM;
             avatarConnection.OnLoadURL += OnLoadURL;
             avatarConnection.OnRegisterLoginRespons += RegisterLoginResponseHandler;
 
@@ -826,6 +827,11 @@ namespace OpenViewer.Managers
         public void OnChat(string message, ChatAudibleLevel audible, ChatType type, ChatSourceType sourcetype, string fromName, UUID id, UUID ownerid, Vector3 position)
         {
             Reference.Viewer.ChatManager.Add(message, audible, type, sourcetype, fromName, id, ownerid, position);
+        }
+
+        public void OnIM(UUID senderID, string fromName, string message)
+        {
+            Reference.Viewer.Adapter.CallReceiveInstantMessaged(senderID.ToString(), fromName, message);
         }
 
         public void SendIM(string _target_uuid, string _message)

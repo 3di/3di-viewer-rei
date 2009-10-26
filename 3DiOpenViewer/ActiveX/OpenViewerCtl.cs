@@ -823,6 +823,7 @@ namespace OpenViewerAX
                     OV.Adapter.OnDebugMessage += DebugMessageEventHandler;
                     OV.Adapter.OnTouched += TouchedEventHandler;
                     OV.Adapter.OnReceiveMessage += ReceiveMessageEventHandler;
+                    OV.Adapter.OnReceiveInstantMessage += ReceiveInstantMessageEventHandler;
                     OV.Adapter.OnTeleport += TeleportEventHandler;
                     OV.Adapter.OnTeleported += TeleportedEventHandler;
                     OV.Adapter.OnOpenWindow += OpenWindowEventHandler;
@@ -1078,6 +1079,7 @@ namespace OpenViewerAX
 
         #region 4. Text Chat
         public event OpenViewer.OnReceiveMessageListener OnReceivedMessage;
+        public event OpenViewer.OnReceiveMessageListener OnReceivedInstantMessage;
 
         // From javascript.
         public void SendIM(string _target_uuid, string _message)
@@ -1110,6 +1112,18 @@ namespace OpenViewerAX
 
             if (OnReceivedMessage != null)
                 OnReceivedMessage(_uuid, _avatarName, _message);
+        }
+
+        private void ReceiveInstantMessageEventHandler(string _uuid, string _avatarName, string _message)
+        {
+            if (OV.IsDHTMLRelationEnable == false)
+                return;
+
+            DebugMessageEventHandler("EVE: ReceiveInstantMessageEventHandler");
+
+
+            if (OnReceivedInstantMessage != null)
+                OnReceivedInstantMessage(_uuid, _avatarName, _message);
         }
 
         public string GetMessageFromHistory(int _index)

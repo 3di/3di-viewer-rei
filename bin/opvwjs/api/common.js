@@ -78,4 +78,11 @@ opvw.APIWrapper["SetTexture"] = opvw.API.Common.SetTexture;
  * 10: EXITING
  */
 //function OnStateChanged( status );
-//function OnAssetLoaded( texturename );
+
+
+/**
+ * When loaded texture, this function will be called.
+ *
+ * @param (string) texturename
+ */
+//function OnImageLoaded( texturename );

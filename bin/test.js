@@ -14,6 +14,9 @@ function init(){
 	  OnReceivedMessage : function() {
 	    GetChatMessage();
 	  },
+	  OnReceivedInstantMessage : function(uuid, avatarName, message) {
+	    GetInstantMessage(message);
+	  },	  
 	  OnTeleport : function(regionName, x, y, z) {
 	    var touch_res = document.getElementById("touch_res");
 	    touch_res.value = regionName + " X:" + x.toString() + " Y:" + y.toString() + " Z:" + z.toString();
@@ -257,6 +260,12 @@ function GetChatMessage()
 		//chat_history.add(addParam,null);
 		chat_history_select.appendChild( addParam );
 	}
+}
+
+function GetInstantMessage(message)
+{
+    var rcpt = document.getElementById("im_rcpt");
+    rcpt.value = message;
 }
 
 //----------------------------------------------------------

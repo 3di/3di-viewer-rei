@@ -32,6 +32,7 @@ namespace OpenViewer
         event TouchToListener OnTouched;
         event TouchToListener OnDebugMessage;
         event OnReceiveMessageListener OnReceiveMessage;
+        event OnReceiveMessageListener OnReceiveInstantMessage;
         event TeleportToListener OnTeleport;
         event TeleportListener OnTeleported;
         event OpenWindowListener OnOpenWindow;
@@ -122,6 +123,8 @@ namespace OpenViewer
         /// <param name="_avatarName">Name of avatar</param>
         /// <param name="_message">Received message</param>
          void CallReceiveMessaged(string _uuid, string _avatarName, string _message);
+
+         void CallReceiveInstantMessaged(string _uuid, string _avatarName, string _message);
 
         /// <summary>
         /// Get all stored message count.

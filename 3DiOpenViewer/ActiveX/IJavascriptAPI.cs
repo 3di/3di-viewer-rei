@@ -74,6 +74,9 @@ namespace OpenViewerAX
         [DispId(40)]
         void OnReceivedMessage(string _uuid, string _avatarName, string _message);
 
+        [DispId(41)]
+        void OnReceivedInstantMessage(string _uuid, string _avatarName, string _message);
+
         [DispId(50)]
         void OnTeleport(string _regionName, int _x, int _y, int _z);
 
