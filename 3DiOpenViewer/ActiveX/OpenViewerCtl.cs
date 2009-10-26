@@ -808,10 +808,9 @@ namespace OpenViewerAX
 
                 // Read Debug config.
                 Nini.Config.IConfig debug = m_config.Source.Configs["Debug"];
-                int voice_wait_time = 1; // sec
                 if (debug != null)
                 {
-                    OV.DebugVoiceWaitTime = debug.GetInt("voice_wait_time", voice_wait_time);
+                    OV.VoiceWaitTime = debug.GetInt("voice_wait_time", Viewer.DEFAULT_DEBUG_VOICE_WAIT_TIME);
                 }
 
                 // activex --> javascript.

@@ -102,6 +102,8 @@ namespace OpenViewer
         private const float DEFAULT_AVATAR_DISAPPEAR_DISTANCE = 2;
         private const int DEFAULT_CACHE_MB_SIZE = 300;
 
+        public const int DEFAULT_DEBUG_VOICE_WAIT_TIME = 1; // sec
+
         #region Private members
         private RenderForm f = null;
         private static readonly ILog m_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -263,12 +265,13 @@ namespace OpenViewer
         public bool IsCameraPitchReverse { get; set; }
         public ShaderLevelType SeaQuality { get; set; }
         public ShaderLevelType SkyQuality { get; set; }
+        public long TeleportTimeout { get; set; }
+        public int VoiceWaitTime { get; set; }
         public Colorf AmbientLightColor = new Colorf();
         public Vector3D DirectionalRotation = new Vector3D();
         public Colorf DirectionalDiffuseColor = new Colorf();
         public Colorf DirectionalAmbientColor = new Colorf();
         public int DebugVoiceWaitTime { get; set; }
-        public long TeleportTimeout { get; set; }
 
         #endregion
 
@@ -395,6 +398,7 @@ namespace OpenViewer
             SkyQuality = ShaderLevelType.Low;
 
             TeleportTimeout = 20 * 10000000; // 20s by default
+            VoiceWaitTime = DEFAULT_DEBUG_VOICE_WAIT_TIME;
         }
 
         public void Startup(IntPtr target)
@@ -2068,6 +2072,7 @@ namespace OpenViewer
                     sw.WriteLine("[Shader]");
                     sw.WriteLine("sea_quality = low");
                     sw.WriteLine("sky_quality = low");
+                    sw.WriteLine();
                     sw.WriteLine("[Debug]");
                     sw.WriteLine("voice_wait_time = 1");
                 }

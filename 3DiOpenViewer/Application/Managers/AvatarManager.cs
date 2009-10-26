@@ -71,7 +71,6 @@ namespace OpenViewer.Managers
     {
         private const string ANIMATION_NAME_STANDING_SPEAK = "standing_speak";
         private const string ANIMATION_NAME_SITTING_SPEAK = "sitting_speak";
-        private const uint SPEAK_WAIT_TIME = 30 * 2; // FPS * Second
 
         //********************************************************
         // Element.
@@ -701,7 +700,8 @@ namespace OpenViewer.Managers
                         }
                         else
                         {
-                            if ((speakingCount++ > SPEAK_WAIT_TIME) || !UtilityAnimation.IsPossibleVoiceAnimation(vobj.AnimationCurrent.Key))
+                            const int fps = 30;
+                            if ((speakingCount++ > (Reference.Viewer.VoiceWaitTime * fps)) || !UtilityAnimation.IsPossibleVoiceAnimation(vobj.AnimationCurrent.Key))
                             {
                                 vobj.SetAnimationLoop(false);
                                 speaking = false;
