@@ -85,6 +85,7 @@ function init(){
 	plugin.loadAllAPI();
 	
 	var setting = {};
+	setting["AvatarNameType"] = 0;
 	/*
 	// General settings
 	setting["BackgroundColor"] = "ffff0000";
@@ -107,6 +108,7 @@ function init(){
 	//setting["LoginLocation"] = "uri:10.0.1.81&128&128&128";
 	
 	// Draw setting
+	setting["AvatarNameType"] = 0;
 	setting["DrawSea"] = "false";
 	setting["DrawTerrain"] = "false";
 	setting["DrawSky"] = "false";

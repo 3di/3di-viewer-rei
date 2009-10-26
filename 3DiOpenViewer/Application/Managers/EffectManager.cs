@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+//#define BILLBOARD_NAME
 using System;
 using System.Collections.Generic;
 using IrrlichtNETCP;
@@ -36,6 +37,13 @@ namespace OpenViewer.Managers
 {
     public class EffectManager : BaseComponent
     {
+        public enum AvatarNameType
+        {
+            FirstAndLast,
+            First,
+            Last,
+            None,
+        }
 
         private Dictionary<IntPtr, ParticleEmitter> emitterCleanup = new Dictionary<IntPtr, ParticleEmitter>();
         private Dictionary<IntPtr, ParticleAffector> affectorCleanup = new Dictionary<IntPtr, ParticleAffector>();
@@ -118,21 +126,53 @@ namespace OpenViewer.Managers
                 _parentNode.SetMaterialTexture(0, voiceEffectTexture[_level]);
         }
 
-        public SceneNode AddNameSceneNode(SceneNode _parentNode, string _name, bool _frame)
+
+        /// <summary>
+        /// This function add avatar name to target node.
+        /// </summary>
+        /// <param name="_parentNode">target node</param>
+        /// <param name="_name"></param>
+        /// <param name="_frame"></param>
+        /// <param name="_type"></param>
+        /// <returns></returns>
+        public SceneNode AddNameSceneNode(SceneNode _parentNode, string _first, string _last, bool _frame, AvatarNameType _type)
         {
+            if (_type == AvatarNameType.None)
+                return null;
+
             SceneNode node = Reference.SceneManager.AddEmptySceneNode(_parentNode, -1);
             node.Position = new Vector3D(0, 1.9f, 0);
 
-            //TextSceneNode textNode = Reference.SceneManager.AddTextSceneNode(Reference.GUIEnvironment.BuiltInFont, _name, Color.White, node);
-            TextSceneNode textNode = Reference.SceneManager.AddTextSceneNode(Reference.GUIEnvironment.Skin.Font, _name, Color.White, node);
-//            textNode.Scale = new Vector3D(1.5f, 1.5f, 1);
+            string name = _first + " " + _last;
+            Dimension2Df size = new Dimension2Df(0.4f, 0.1f);
+            switch (_type)
+            {
+                case AvatarNameType.FirstAndLast:
+                    // default
+                    break;
+                case AvatarNameType.First:
+                    name = _first;
+                    size = new Dimension2Df(0.2f, 0.1f);
+                    break;
+                case AvatarNameType.Last:
+                    name = _last;
+                    size = new Dimension2Df(0.2f, 0.1f);
+                    break;
+            }
+
+#if BILLBOARD_NAME
+            TextSceneNode textNode = Reference.SceneManager.AddBillboardTextSceneNodeW(Reference.GUIEnvironment.BuiltInFont, name, node, size, new Vector3D(), -1, Color.White, Color.White);
+#else
+            TextSceneNode textNode = Reference.SceneManager.AddTextSceneNode(Reference.GUIEnvironment.Skin.Font, name, Color.White, node);
+#endif
 
             // If _frame is true, set font shadow.
             if (_frame)
             {
-                //textNode = Reference.SceneManager.AddTextSceneNode(Reference.GUIEnvironment.BuiltInFont, _name, Color.Black, node);
-                textNode = Reference.SceneManager.AddTextSceneNode(Reference.GUIEnvironment.Skin.Font, _name, Color.Black, node);
-//                textNode.Scale = new Vector3D(1.6f, 1.6f, 1);
+#if BILLBOARD_NAME
+#else
+                textNode = Reference.SceneManager.AddTextSceneNode(Reference.GUIEnvironment.Skin.Font, name, Color.Black, node);
+#endif
             }
 
             return node;

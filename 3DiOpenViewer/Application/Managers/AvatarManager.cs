@@ -870,7 +870,8 @@ namespace OpenViewer.Managers
             _obj.IsGhost = true;
             if (avatarNameVisible)
             {
-                Reference.Viewer.EffectManager.AddNameSceneNode(_obj.Node, ((Avatar)_obj.Prim).Name, false);
+                Avatar a = _obj.Prim as Avatar;
+                Reference.Viewer.EffectManager.AddNameSceneNode(_obj.Node, a.FirstName, a.LastName, false, (EffectManager.AvatarNameType)Reference.Viewer.AvatarNameType);
                 _obj.VoiceNode = Reference.Viewer.EffectManager.AddVoiceEffectSceneNode(_obj.Node);
             }
 

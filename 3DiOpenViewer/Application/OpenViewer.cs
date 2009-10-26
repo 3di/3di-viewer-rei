@@ -73,6 +73,7 @@ namespace OpenViewer
 {
     public class Viewer
     {
+        private const int DEFAULT_AVATAR_NAME_TYPE = 0; // 0:[first last] 1:[first] 2:[last] 3:none
         private const float DEFAULT_FIRST_DISTANCE = 5f;
         private const float DEFAULT_MIN_DISTANCE = 2f;
         private const float DEFAULT_MAX_DISTANCE = 32f;
@@ -208,6 +209,7 @@ namespace OpenViewer
         public string DrawMenu { get; set; }
         public string TickOn { get; set; }
         public string WorldAmbientColor { get; set; }
+        public int AvatarNameType { get; set; }
         public string FixDirectional { get; set; }
         public string FixDirectionalRotation { get; set; }
         public string FixDirectionalDiffuseColor { get; set; }
@@ -345,6 +347,7 @@ namespace OpenViewer
             DrawMenu = "true";
             TickOn = "true";
             WorldAmbientColor = "0.5,0.5,0.5";
+            AvatarNameType = DEFAULT_AVATAR_NAME_TYPE;
             FixDirectional = "false";
             FixDirectionalRotation = "1.75,0,0";
             FixDirectionalDiffuseColor = "1.0,0.4,0.4";

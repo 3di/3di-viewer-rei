@@ -262,6 +262,10 @@ namespace OpenViewerAX
         [ComVisible(true)]
         public string WorldAmbientColor { get { return (this.worldAmbientColor); } set { this.worldAmbientColor = value; OV.WorldAmbientColor = value; } }
 
+        private int avatarNameType;
+        [ComVisible(true)]
+        public int AvatarNameType { get { return (this.avatarNameType); } set { this.avatarNameType = value; OV.AvatarNameType = value; } }
+
         #region 11. Fix directional
         private string isFixDirectional;
         [ComVisible(true)]
