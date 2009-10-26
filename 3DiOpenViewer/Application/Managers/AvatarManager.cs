@@ -169,6 +169,8 @@ namespace OpenViewer.Managers
 
         public override void Initialize()
         {
+            userObject = new VObject();
+
             Reference.Viewer.ProtocolManager.OnTextureFromWebLoaded -= ProtocolManager_OnTextureFromWebLoaded;
             Reference.Viewer.ProtocolManager.OnTextureFromWebLoaded += ProtocolManager_OnTextureFromWebLoaded;
             Reference.Viewer.TextureManager.OnTextureLoaded -= TextureManager_OnTextureLoaded;
@@ -335,7 +337,8 @@ namespace OpenViewer.Managers
 
         public override void Cleanup()
         {
-            userObject = null;
+            // initialize userObject.
+            Start();
 
             OnRequest = null;
 
