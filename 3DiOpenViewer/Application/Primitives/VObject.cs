@@ -63,6 +63,7 @@ using System.Text;
 using OpenMetaverse;
 using IrrlichtNETCP;
 using IrrParseLib;
+using OpenViewer.Primitives;
 
 namespace OpenViewer
 {
@@ -99,15 +100,15 @@ namespace OpenViewer
 
             Length,
         }
+
+        private Animation animationCurrent = Animation.Empty;
+        private Animation animationNext = Animation.Empty;
         private bool[] updateFlags = new bool[(int)UpdateType.Length];
         private KeyframeSet frameSet = new KeyframeSet(string.Empty, 0, 0, 0);
         private UUID requestIrrrileUUID;
         private bool requesting = false;
         private bool updateFullYN = false;
         private bool isGhost = false;
-        private string animationName = string.Empty;
-        private string nextAnimation = string.Empty;
-        private bool nextAnimationLoop = true;
 
         public IrrMeshParam BaseParam = new IrrMeshParam(string.Empty);
         public Vector3 ParentPosition = new Vector3();
@@ -119,8 +120,8 @@ namespace OpenViewer
         public SceneNode Node; // Reference to empty scene node
         public SceneNode VoiceNode; // Reference to voice effect node
         public SceneNode PickNode; // Reference to pick object node
-        public int VoiceLevel = 0;
         public AnimatedMeshSceneNode MeshNode; // Reference to graphics node
+        public int VoiceLevel = 0;
         public Primitive Prim; // Avatar Extend the primative type
         public Mesh Mesh; // Reference to graphics mesh
         public bool NeedToReload3DiMesh = false;
@@ -136,7 +137,8 @@ namespace OpenViewer
         public bool IsChildAgent = false;
 
         #region Property
-        public string AnimationName { get { return animationName; } }
+        public Animation AnimationCurrent { get { return animationCurrent; } }
+        public Animation AnimationNext { get { return animationNext; } }
         public bool UpdateFullYN { get { return updateFullYN; } set { updateFullYN = value; } }
         public bool IsGhost { get { return isGhost; } set { isGhost = value; } }
         public bool Requesting { get { return requesting; } set { requesting = value; } }
@@ -194,34 +196,35 @@ namespace OpenViewer
 
         public void SetNextAnimation(string _key, bool _loop)
         {
-            nextAnimation = _key;
-            nextAnimationLoop = _loop;
+            animationNext.Key = _key;
+            animationNext.Loop = _loop;
         }
 
         public void AnimationEndHandler(AnimatedMeshSceneNode _node)
         {
             try
             {
-                if (FrameSetList.ContainsKey(nextAnimation))
+                if (FrameSetList.ContainsKey(animationNext.Key))
                 {
-                    int startFrame = FrameSetList[nextAnimation].StartFrame;
-                    int endFrame = FrameSetList[nextAnimation].EndFrame;
-                    int animFramesPerSecond = FrameSetList[nextAnimation].AnimationSpeed;
+                    int startFrame = FrameSetList[animationNext.Key].StartFrame;
+                    int endFrame = FrameSetList[animationNext.Key].EndFrame;
+                    int animFramesPerSecond = FrameSetList[animationNext.Key].AnimationSpeed;
 
                     AnimationSpeed = animFramesPerSecond;
-                    SetAnimation(nextAnimation, startFrame, endFrame, nextAnimationLoop);
+                    SetAnimation(animationNext.Key, startFrame, endFrame, animationNext.Loop);
                     SyncToChilds(_node);
                 }
             }
             finally
             {
-                nextAnimation = string.Empty;
+                animationNext = Animation.Empty;
             }
         }
 
         public void SetAnimation(string _animationName, int _startFrame, int _endFrame, bool _loop)
         {
-            animationName = _animationName;
+            animationCurrent.Key = _animationName;
+            animationCurrent.Loop = _loop;
 
             frameSet.StartFrame = _startFrame;
             frameSet.EndFrame = _endFrame;
@@ -229,6 +232,12 @@ namespace OpenViewer
 
             MeshNode.SetFrameLoop(frameSet.StartFrame, frameSet.EndFrame);
             MeshNode.LoopMode = _loop;
+        }
+
+        public void SetAnimationLoop(bool _loop)
+        {
+            if (MeshNode != null)
+                MeshNode.LoopMode = _loop;
         }
     }
 }

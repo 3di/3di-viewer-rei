@@ -205,7 +205,7 @@ namespace OpenViewer.Managers
                 return;
             }
 
-            Reference.Viewer.GuiManager.DebugAdd(key, "AnimationName:" + Reference.Viewer.AvatarManager.UserObject.AnimationName);
+            Reference.Viewer.GuiManager.DebugAdd(key, "AnimationName:" + Reference.Viewer.AvatarManager.UserObject.AnimationCurrent.Key);
             Reference.Viewer.GuiManager.DebugAdd(key, "SittingOn:" + Reference.Viewer.ProtocolManager.AvatarConnection.SittingOn().ToString());
 
             float[] p = new float[3];

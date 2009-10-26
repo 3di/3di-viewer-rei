@@ -357,6 +357,28 @@ namespace OpenViewer.Managers
             OnRequest -= AvatarPickListener;
         }
 
+        public VObject GetVObjectFromMeshRaw(IntPtr _meshRaw)
+        {
+            VObject vObj = null;
+
+            lock (entities)
+            {
+                foreach (VObject obj in entities.Values)
+                {
+                    if (obj == null)
+                        continue;
+
+                    if (obj.MeshNode.Raw == _meshRaw)
+                    {
+                        vObj = obj;
+                        break;
+                    }
+                }
+            }
+
+            return vObj;
+        }
+
         public bool IsContain(string _uuid)
         {
             bool flag = false;
@@ -657,11 +679,11 @@ namespace OpenViewer.Managers
                 {
                     vobj = entities[vobjkey];
 
-                    string requestAnimationName = string.Empty;
-
                     if (vobj.VoiceLevel > 0 || speaking)
                     {
-                        switch (vobj.AnimationName)
+                        string requestAnimationName = string.Empty;
+
+                        switch (vobj.AnimationCurrent.Key)
                         {
                             case "standing":
                                 requestAnimationName = ANIMATION_NAME_STANDING_SPEAK;
@@ -679,26 +701,16 @@ namespace OpenViewer.Managers
                         }
                         else
                         {
-                            if ((speakingCount++ > SPEAK_WAIT_TIME) || !UtilityAnimation.IsPossibleVoiceAnimation(vobj.AnimationName))
+                            if ((speakingCount++ > SPEAK_WAIT_TIME) || !UtilityAnimation.IsPossibleVoiceAnimation(vobj.AnimationCurrent.Key))
+                            {
+                                vobj.SetAnimationLoop(false);
                                 speaking = false;
+                            }
                         }
-                    }
-                    else
-                    {
-                        switch (vobj.AnimationName)
-                        {
-                            case ANIMATION_NAME_STANDING_SPEAK:
-                                requestAnimationName = "standing";
-                                break;
 
-                            case ANIMATION_NAME_SITTING_SPEAK:
-                                requestAnimationName = "sitting";
-                                break;
-                        }
+                        if (!string.IsNullOrEmpty(requestAnimationName))
+                            SetAnimation(vobj, requestAnimationName);
                     }
-
-                    if (requestAnimationName != string.Empty)
-                        SetAnimation(vobj, requestAnimationName);
                 }
             }
         }
@@ -943,58 +955,57 @@ namespace OpenViewer.Managers
 
         private void animeNode_AnimationEnd(AnimatedMeshSceneNode node)
         {
-            lock (userObject)
-            {
-                if (userObject.Node.Children.Length >= 2)
-                {
-                    bool avatarLoaded = false;
-                    foreach (SceneNode item in userObject.Node.Children)
-                    {
-                        if (item.Raw == node.Raw)
-                        {
-                            avatarLoaded = true;
-                            break;
-                        }
-                    }
+            VObject targetVObj = GetVObjectFromMeshRaw(node.Raw);
 
-                    if (avatarLoaded)
-                    {
-                        if (StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_00) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_01) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_02) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_03) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_04) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_05) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_06) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_07) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_08) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_09) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_10) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_11) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_12) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_13) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_14) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_15) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_16) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_17) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_18) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_19) ||
-                            StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_20)
-                            )
-                        {
-                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStart(Animations.STAND);
-                        }
-                    }
+            if (targetVObj == null)
+                return;
+
+            if (userObject.MeshNode.Raw == targetVObj.MeshNode.Raw)
+            {
+                if (StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_00) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_01) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_02) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_03) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_04) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_05) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_06) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_07) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_08) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_09) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_10) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_11) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_12) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_13) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_14) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_15) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_16) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_17) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_18) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_19) ||
+                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_20)
+                    )
+                {
+                    Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStart(Animations.STAND);
+                    return;
                 }
+            }
+
+            if (!string.IsNullOrEmpty(targetVObj.AnimationNext.Key))
+            {
+                StopAnimationIfIsKeyCurrentAnimation(targetVObj.CurrentAnimationUUID);
+                SetAnimation(targetVObj, targetVObj.AnimationNext.Key);
             }
         }
 
         private bool StopAnimationIfIsKeyCurrentAnimation(UUID _animationUUID)
         {
-            if (userObject.CurrentAnimationUUID == _animationUUID)
+            lock (userObject)
             {
-                Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(_animationUUID);
-                return true;
+                if (userObject.CurrentAnimationUUID == _animationUUID)
+                {
+                    Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(_animationUUID);
+                    return true;
+                }
             }
 
             return false;
@@ -1047,16 +1058,16 @@ namespace OpenViewer.Managers
             {
                 string key = GetAnimationKey(_obj.Prim.ID);
 
-                if (key != string.Empty)
-                {
-                    SetAnimation(_obj, key);
-                }
+               if (!string.IsNullOrEmpty(key))
+                   SetAnimation(_obj, key);
             }
         }
 
         private void SetAnimation(VObject _obj, string _key)
         {
-            if (_obj.FrameSetList.ContainsKey(_key) == false)
+            _obj.SetNextAnimation(string.Empty, true);
+
+            if (!_obj.FrameSetList.ContainsKey(_key))
                 return;
 
             if (_obj.PickNode != null)
@@ -1078,6 +1089,21 @@ namespace OpenViewer.Managers
                     }
                     loopFlag = false;
                     break;
+
+                case UtilityAnimation.ANIMATION_KEY_SPEAK_SITTING:
+                    _obj.SetNextAnimation(UtilityAnimation.ANIMATION_KEY_SPEAK_SITTING_END, false);
+                    break;
+                case UtilityAnimation.ANIMATION_KEY_SPEAK_SITTING_END:
+                    _obj.SetNextAnimation(UtilityAnimation.ANIMATION_KEY_SITTING, true);
+                    loopFlag = false;
+                    break;
+                case UtilityAnimation.ANIMATION_KEY_SPEAK_STANDING:
+                    _obj.SetNextAnimation(UtilityAnimation.ANIMATION_KEY_SPEAK_STANDING_END, false);
+                    break;
+                case UtilityAnimation.ANIMATION_KEY_SPEAK_STANDING_END:
+                    _obj.SetNextAnimation(UtilityAnimation.ANIMATION_KEY_STANDING, true);
+                     loopFlag = false;
+                     break;
                 case "customize00":
                     _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_00;
                     loopFlag = false;
