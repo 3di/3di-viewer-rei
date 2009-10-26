@@ -30,6 +30,18 @@ opvw.API.Common = opvw.API.Common || {
 		9: "ERROR",
 		10: "EXITING"
 	},
+    RequestImage : function(imageUUID, useCache){
+    
+		return opvw.API.plugin.RequestImage(imageUUID, useCache)
+	},
+	/**	
+	 * Set texture
+	 * 
+	 * @debug non supported
+	 */
+    SetTexture : function(objectUUID, materialIndex, filename, requestEnable){
+		return opvw.API.plugin.SetTexture(objectUUID, materialIndex, filename, requestEnable);
+	},
 	/**
 	 * Get plug-in information.
 	 * 
@@ -41,8 +53,9 @@ opvw.API.Common = opvw.API.Common || {
 	}
 	
 };
+opvw.APIWrapper["RequestImage"] = opvw.API.Common.RequestImage;
 opvw.APIWrapper["GetPluginInfo"] = opvw.API.Common.GetPluginInfo;
-
+opvw.APIWrapper["SetTexture"] = opvw.API.Common.SetTexture;
 
 /*
  * EVENT TEMPLATE 
@@ -65,3 +78,4 @@ opvw.APIWrapper["GetPluginInfo"] = opvw.API.Common.GetPluginInfo;
  * 10: EXITING
  */
 //function OnStateChanged( status );
+//function OnAssetLoaded( texturename );

@@ -238,17 +238,14 @@ namespace OpenViewer.Managers
 
         public IrrDatas GetObject(UUID _uuid, bool checkTextures)
         {
+            if (!dataList.ContainsKey(_uuid))
+                return null;
+
             IrrParseLib.IrrDatas _datas;
             lock (dataList)
-            {
-                // If not exist key.
-                if (dataList.ContainsKey(_uuid) == false)
-                    return null;
-
                 _datas = dataList[_uuid];
-            }
-            //Reference.Device.FileSystem.WorkingDirectory = workDirectory;
-            if (IsDownloadAllAsset(_datas, checkTextures) == false)
+
+            if (!CheckAsset(_datas, checkTextures))
                 return null;
 
             return _datas;
@@ -256,107 +253,59 @@ namespace OpenViewer.Managers
 
         public void RequestObject(VObject _obj)
         {
-            Reference.Log.Debug(" Request:" + _obj.RequestIrrfileUUID.ToString());
+            if (requestingList.Contains(_obj.RequestIrrfileUUID))
+                return;
 
-            // Already requesting.
             lock (requestingList)
-            {
-                if (requestingList.Contains(_obj.RequestIrrfileUUID))
-                {
-                    Reference.Log.Debug(" Already Requested:" + _obj.RequestIrrfileUUID.ToString());
-                    return;
-                }
-
                 requestingList.Add(_obj.RequestIrrfileUUID);
-                _obj.Requesting = true;
-            }
+            _obj.Requesting = true;
 
             IrrMeshThread ss = new IrrMeshThread(Reference.Viewer, _obj, workDirectory);
             IrrWorkItem item = new IrrWorkItem("IrrMeshThread.Requesting", new WorkItemCallback(ss.Requesting), null);
             IrrWorkItemQueue(item);
         }
 
-        private bool IsDownloadAllAsset(IrrParseLib.IrrDatas _datas, bool checkTextures)
-        {
-            return CheckAsset(_datas, checkTextures);
-        }
-
         private bool CheckAsset(IrrParseLib.IrrDatas _datas, bool checkTextures)
         {
-            string fileName = string.Empty;
-            bool flag = true;
+            bool flag = CheckAssetFileExsists(_datas.Mesh.Param.Mesh);
 
-            // Check mesh.
-            fileName = _datas.Mesh.Param.Mesh.ToLower();
-            if (!System.IO.File.Exists(workDirectory + @"\" + fileName))
-            {
-                flag = false;
-            }
+            if (!flag)
+                return flag;
 
             if (checkTextures)
             {
-                // Check material.
                 foreach (IrrMaterial material in _datas.Materials)
                 {
-
-                    if (material.Texture1 != string.Empty)
-                    {
-                        fileName = material.Texture1.ToLower();
-                        if (!System.IO.File.Exists(workDirectory + @"\" + fileName))
-                        {
-                            flag = false;
-                            break;
-                        }
-                    }
-
-                    if (material.Texture2 != string.Empty)
-                    {
-                        fileName = material.Texture2.ToLower();
-                        if (!System.IO.File.Exists(workDirectory + @"\" + fileName))
-                        {
-                            flag = false;
-                            break;
-                        }
-                    }
-
-                    if (material.Texture3 != string.Empty)
-                    {
-                        fileName = material.Texture3.ToLower();
-                        if (!System.IO.File.Exists(workDirectory + @"\" + fileName))
-                        {
-                            flag = false;
-                            break;
-                        }
-                    }
-
-                    if (material.Texture4 != string.Empty)
-                    {
-                        fileName = material.Texture4.ToLower();
-                        if (!System.IO.File.Exists(workDirectory + @"\" + fileName))
-                        {
-                            flag = false;
-                            break;
-                        }
-                    }
+                    flag &= CheckAssetFileExsists(material.Texture1);
+                    flag &= CheckAssetFileExsists(material.Texture2);
+                    flag &= CheckAssetFileExsists(material.Texture3);
+                    flag &= CheckAssetFileExsists(material.Texture4);
                 }
             }
 
-            if (flag)
+            if (!flag || _datas.Childs == null)
+                return flag;
+
+            foreach (IrrParseLib.IrrDatas datas in _datas.Childs)
             {
-                if (_datas.Childs != null)
-                {
-                    foreach (IrrParseLib.IrrDatas datas in _datas.Childs)
-                    {
-                        if (!CheckAsset(datas, checkTextures))
-                        {
-                            flag = false;
-                            break;
-                        }
-                    }
-                }
+                if (!CheckAsset(datas, checkTextures))
+                    return false;
             }
 
             return flag;
+        }
+
+        private bool CheckAssetFileExsists(string _filename)
+        {
+            if (string.IsNullOrEmpty(_filename))
+                return true;
+
+            string path = workDirectory + @"\" + _filename.ToLower();
+
+            if (System.IO.File.Exists(path))
+                return true;
+
+            return false;
         }
 
         public bool Contains(UUID _uuid)
@@ -376,11 +325,8 @@ namespace OpenViewer.Managers
         {
             workDirectory = _directory;
 
-            // If asset directory don't exists, create directory.
-            if (System.IO.Directory.Exists(workDirectory) == false)
-            {
-                System.IO.Directory.CreateDirectory(workDirectory);
-            }
+            if (!Directory.Exists(workDirectory))
+                Directory.CreateDirectory(workDirectory);
         }
 
         public string WorkDirectory
@@ -391,7 +337,7 @@ namespace OpenViewer.Managers
 
         public static UUID GetIrrfileUUID(string _uri, UUID _avatarID)
         {
-            if (_uri.StartsWith("http://") == false)
+            if (!_uri.StartsWith("http://"))
                 _uri = "http://" + _uri;
 
             VUtil.LogConsole("OpenViewer.Managers.IrrManager", "GetIrrfileUUID Req:" + _avatarID.ToString() + " Uri:" + _uri);
@@ -444,30 +390,14 @@ namespace OpenViewer.Managers
         /// </summary>
         /// <param name="_datas">IrrDatas</param>
         /// <param name="_slProtocol">SLProtocol</param>
-        public void IrrFileTCPRequestToAssetServer_toplevel(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol, string _directory)
-        {
-            IrrFileTCPRequestToAssetServer_toplevel(_datas, _slProtocol, _directory, true);
-        }
-
         public void IrrFileTCPRequestToAssetServer_toplevel(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol, string _directory, bool fetchTextures)
         {
-            // Request animation file.
-            if (_datas.Mesh.Param.Name != string.Empty)
-            {
-                IrrFileCreateCache(_datas.Mesh.Param.Name + ".xml", _directory);
-            }
-
+            IrrFileCreateCache(_datas.Mesh.Param.Name + ".xml", _directory);
             IrrFileTCPRequestToAssetServer_recursive(_datas, _slProtocol, true, _directory, fetchTextures);
-        }
-
-        private void IrrFileTCPRequestToAssetServer_recursive(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol, bool _root, string _directory)
-        {
-            IrrFileTCPRequestToAssetServer_recursive(_datas, _slProtocol, _root, _directory, true);
         }
 
         private void IrrFileTCPRequestToAssetServer_recursive(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol, bool _root, string _directory, bool fetchTextures)
         {
-            // Request mesh.
             IrrFileCreateCache(_datas.Mesh.Param.Mesh, _directory);
 
             if (fetchTextures)
@@ -475,25 +405,10 @@ namespace OpenViewer.Managers
                 // Request texture - note no JPEG2000 conversion occurs here.
                 foreach (IrrParseLib.IrrMaterial material in _datas.Materials)
                 {
-                    if (material.Texture1 != string.Empty)
-                    {
-                        IrrFileCreateCache(material.Texture1, _directory);
-                    }
-
-                    if (material.Texture2 != string.Empty)
-                    {
-                        IrrFileCreateCache(material.Texture2, _directory);
-                    }
-
-                    if (material.Texture3 != string.Empty)
-                    {
-                        IrrFileCreateCache(material.Texture3, _directory);
-                    }
-
-                    if (material.Texture4 != string.Empty)
-                    {
-                        IrrFileCreateCache(material.Texture4, _directory);
-                    }
+                    IrrFileCreateCache(material.Texture1, _directory);
+                    IrrFileCreateCache(material.Texture2, _directory);
+                    IrrFileCreateCache(material.Texture3, _directory);
+                    IrrFileCreateCache(material.Texture4, _directory);
                 }
             }
 
@@ -506,74 +421,63 @@ namespace OpenViewer.Managers
 
         public string IrrFileCreateCache(string _filename, string _directory)
         {
-            string err = string.Empty;
+            if (string.IsNullOrEmpty(_filename))
+                return "Filename is null or empty.";
+
             if (System.IO.File.Exists(_directory + "/" + _filename))
+                return _filename + " is Already exist";
+
+            string err = string.Empty;
+            string uuid = System.IO.Path.GetFileNameWithoutExtension(_filename);
+            string filenameWithoutPath = System.IO.Path.GetFileName(_filename);
+            int timeout = Reference.Viewer.Config.Source.Configs["Startup"].GetInt("asset_timeout", 60000);
+
+            try
             {
-                VUtil.LogConsole("IrrFileCreateCache", " Already exist:" + _filename);
+                RestClient rest = new RestClient(VUtil.assetServerUri);
+                rest.RequestMethod = "GET";
+                rest.AddResourcePath("assets");
+                rest.AddResourcePath(uuid);
+                rest.AddHeader("Authorization", "OpenGrid " + VUtil.authToken.ToString());
+
+                System.IO.Stream stream = rest.Request(timeout);
+
+                XmlSerializer xs = new XmlSerializer(typeof(AssetBase));
+                AssetBase ab = (AssetBase)xs.Deserialize(stream);
+
+                bool tryToDecompress = true;
+                if (tryToDecompress
+                    && ab.Data.Length >= 2
+                    && ab.Data[0] == 0x1f // gzip header == 0x1f8b
+                    && ab.Data[1] == 0x8b)
+                {
+                    try
+                    {
+                        // try to uncompress
+                        string compressedFilename = _directory + "/" + filenameWithoutPath + ".gz";
+                        System.IO.File.WriteAllBytes(compressedFilename, ab.Data);
+                        string dstFile = _directory + "/" + filenameWithoutPath;
+
+                        Lib3Di.Compress.AddDecompressionRequest(new DecompressionRequest(compressedFilename, dstFile));
+                        Lib3Di.Compress.DecompressWaitingRequests(); // Handle all waiting decompression requests here - one at a time (to prevent file collisions and simultaneous decompression in separate IrrMeshThreads). We could also make a separate thread to handle all decompression requests in sequence, but that thread would need to live forever and would only be active at the start of the program when assets are being downloaded, so it makes more sense to handle decompression requests here (invoked from an IrrMeshThread), where DecompressWaitingRequests() locks the queue and processes everything serially.
+                    }
+                    catch (Exception e)
+                    {
+                        File.WriteAllBytes(_directory + "/" + filenameWithoutPath, ab.Data);
+                    }
+                    finally
+                    {
+                        File.Delete(_directory + "/" + filenameWithoutPath + ".gz");
+                    }
+                }
+                else
+                {
+                    System.IO.File.WriteAllBytes(_directory + "/" + filenameWithoutPath, ab.Data);
+                }
             }
-            else
+            catch (Exception e)
             {
-                string uuid = System.IO.Path.GetFileNameWithoutExtension(_filename);
-                string filenameWithoutPath = System.IO.Path.GetFileName(_filename);
-                int timeout = Reference.Viewer.Config.Source.Configs["Startup"].GetInt("asset_timeout", 60000);
-
-                try
-                {
-                    VUtil.LogConsole("IrrFileCreateCache", " Request:" + filenameWithoutPath);
-
-                    RestClient rest = new RestClient(VUtil.assetServerUri);
-                    rest.RequestMethod = "GET";
-                    rest.AddResourcePath("assets");
-                    rest.AddResourcePath(uuid);
-                    rest.AddHeader("Authorization", "OpenGrid " + VUtil.authToken.ToString());
-
-                    System.IO.Stream stream = rest.Request(timeout);
-
-                    VUtil.LogConsole("IrrFileCreateCache", " Deserialize:" + filenameWithoutPath);
-
-                    XmlSerializer xs = new XmlSerializer(typeof(AssetBase));
-                    AssetBase ab = (AssetBase)xs.Deserialize(stream);
-
-                    bool tryToDecompress = true;
-                    if (tryToDecompress
-                        && ab.Data.Length >= 2
-                        && ab.Data[0] == 0x1f // gzip header == 0x1f8b
-                        && ab.Data[1] == 0x8b)
-                    {
-                        try
-                        {
-                            VUtil.LogConsole("IrrFileCreateCache", " Try Decompress:" + filenameWithoutPath + " Size:" + ab.Data.Length.ToString());
-
-                            // try to uncompress
-                            string compressedFilename = _directory + "/" + filenameWithoutPath + ".gz";
-                            System.IO.File.WriteAllBytes(compressedFilename, ab.Data);
-                            string dstFile = _directory + "/" + filenameWithoutPath;
-
-                            Lib3Di.Compress.AddDecompressionRequest(new DecompressionRequest(compressedFilename, dstFile));
-                            Lib3Di.Compress.DecompressWaitingRequests(); // Handle all waiting decompression requests here - one at a time (to prevent file collisions and simultaneous decompression in separate IrrMeshThreads). We could also make a separate thread to handle all decompression requests in sequence, but that thread would need to live forever and would only be active at the start of the program when assets are being downloaded, so it makes more sense to handle decompression requests here (invoked from an IrrMeshThread), where DecompressWaitingRequests() locks the queue and processes everything serially.
-                        }
-                        catch (Exception e)
-                        {
-                            File.WriteAllBytes(_directory + "/" + filenameWithoutPath, ab.Data);
-                        }
-                        finally
-                        {
-                            File.Delete(_directory + "/" + filenameWithoutPath + ".gz");
-                        }
-                    }
-                    else
-                    {
-                        VUtil.LogConsole("IrrFileCreateCache", " Cached:" + filenameWithoutPath);
-                        System.IO.File.WriteAllBytes(_directory + "/" + filenameWithoutPath, ab.Data);
-                    }
-
-                    VUtil.LogConsole("IrrFileCreateCache", " Complete:" + filenameWithoutPath);
-                }
-                catch (Exception e)
-                {
-                    VUtil.LogConsole("IrrFileCreateCache", " Err:" + _filename + " Message:" + e.Message);
-                    err = e.Message;
-                }
+                err = e.Message;
             }
 
             return err;
@@ -584,56 +488,23 @@ namespace OpenViewer.Managers
         /// </summary>
         /// <param name="_datas">IrrDatas</param>
         /// <param name="_slProtocol">SLProtocol</param>
-        public void IrrFileRequestToAssetServer(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol)
+        private void IrrFileRequestToAssetServer(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol)
         {
-            IrrFileRequestToAssetServer(_datas, _slProtocol, true);
-        }
+            Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(_datas.Mesh.Param.Mesh), true);
 
-        private void IrrFileRequestToAssetServer(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol, bool _root)
-        {
-            string filename = System.IO.Path.GetFileNameWithoutExtension(_datas.Mesh.Param.Mesh);
-            UUID uuid = new UUID(filename);
-
-            // Request mesh.
-            _slProtocol.RequestAsset(uuid, AssetType.Object, true);
-
-            // Request texture.
             foreach (IrrParseLib.IrrMaterial material in _datas.Materials)
             {
-                if (material.Texture1 != string.Empty)
-                {
-                    filename = System.IO.Path.GetFileNameWithoutExtension(material.Texture1);
-                    uuid = new UUID(filename);
-                    _slProtocol.RequestAsset(uuid, AssetType.Texture, true);
-                }
-
-                if (material.Texture2 != string.Empty)
-                {
-                    filename = System.IO.Path.GetFileNameWithoutExtension(material.Texture2);
-                    uuid = new UUID(filename);
-                    _slProtocol.RequestAsset(uuid, AssetType.Texture, true);
-                }
-
-                if (material.Texture3 != string.Empty)
-                {
-                    filename = System.IO.Path.GetFileNameWithoutExtension(material.Texture3);
-                    uuid = new UUID(filename);
-                    _slProtocol.RequestAsset(uuid, AssetType.Texture, true);
-                }
-
-                if (material.Texture4 != string.Empty)
-                {
-                    filename = System.IO.Path.GetFileNameWithoutExtension(material.Texture4);
-                    uuid = new UUID(filename);
-                    _slProtocol.RequestAsset(uuid, AssetType.Texture, true);
-                }
+                Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(material.Texture1), true);
+                Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(material.Texture2), true);
+                Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(material.Texture3), true);
+                Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(material.Texture4), true);
             }
 
-            if (_datas.Childs != null)
-            {
-                foreach (IrrParseLib.IrrDatas datas in _datas.Childs)
-                    IrrFileRequestToAssetServer(datas, _slProtocol, false);
-            }
+            if (_datas.Childs == null)
+                return;
+
+            foreach (IrrParseLib.IrrDatas datas in _datas.Childs)
+                IrrFileRequestToAssetServer(datas, _slProtocol);
         }
 
         /// <summary>
@@ -654,7 +525,7 @@ namespace OpenViewer.Managers
             _datas.CreateAnimationKey(workDirectory);
             foreach (IrrParseLib.KeyframeSet key in _datas.AnimationKey.Keys)
             {
-                if (_obj.FrameSetList.ContainsKey(key.Name) == false)
+                if (!_obj.FrameSetList.ContainsKey(key.Name))
                     _obj.FrameSetList.Add(key.Name, new IrrParseLib.KeyframeSet(key.Name, key.AnimationSpeed, key.StartFrame, key.EndFrame));
             }
 
@@ -669,7 +540,7 @@ namespace OpenViewer.Managers
         {
             string prefix = string.Empty;
 
-            if (string.IsNullOrEmpty(_prefix) == false)
+            if (!string.IsNullOrEmpty(_prefix))
             {
                 prefix = _prefix;
 

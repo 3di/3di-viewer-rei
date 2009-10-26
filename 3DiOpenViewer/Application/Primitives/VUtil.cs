@@ -73,6 +73,12 @@ namespace OpenViewer
 {
     public static class VUtil
     {
+
+        public static string GetEntitiesKeyFromPrim(Primitive _prim)
+        {
+            return _prim.RegionHandle.ToString() + _prim.LocalID.ToString();
+        }
+
         public static VObject NewVObject(Primitive pPrim, VObject pOldObj)
         {   
             VObject returnVObject = null;

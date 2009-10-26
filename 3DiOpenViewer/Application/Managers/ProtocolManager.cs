@@ -37,6 +37,8 @@ using OpenMetaverse;
 
 namespace OpenViewer.Managers
 {
+    public delegate void TextureFromWebCallback(string filenameWithoutExtension);
+
     public class ProtocolManager : BaseComponent
     {
         private const int TELEPORT_MAX_X = 255;
@@ -61,6 +63,7 @@ namespace OpenViewer.Managers
         private int currentParcel = 0;
 
         public event EventHandler OnParcelChanged;
+        public event TextureFromWebCallback OnTextureFromWebLoaded;
 
         public ProtocolManager(Viewer viewer)
             : base(viewer, -1)
@@ -91,7 +94,6 @@ namespace OpenViewer.Managers
             avatarConnection.OnNewPrim += OnNewPrim_warning; // warning: libomv invokes OnNewPrim event both for new prims and updates to prims
             avatarConnection.OnObjectUpdated += OnObjectUpdated;
             avatarConnection.OnObjectDeleted += OnObjectDeleted;
-            avatarConnection.OnAssetReceived += OnAssetReceived;
 
             // - miscellanious
             avatarConnection.OnChat += OnChat;
@@ -326,6 +328,57 @@ namespace OpenViewer.Managers
             }
 
             return simName;
+        }
+
+        /// <summary>
+        /// This function request image to asset server or url.
+        /// </summary>
+        /// <param name="_filename">asset uuid or url</param>
+        /// <param name="_useCache"></param>
+        /// 
+        public void RequestImage(string _filename, bool _useCache)
+        {
+            RequestImage(_filename, _useCache, null);
+        }
+
+        public void RequestImage(string _uuidOrUrl, bool _useCache, VObject _vObject)
+        {
+            if (_useCache)
+            {
+                string path = Util.TextureFolder + _uuidOrUrl;
+                if (System.IO.File.Exists(path))
+                    return;
+            }
+
+            if (_uuidOrUrl.StartsWith("http://") || _uuidOrUrl.StartsWith("https://"))
+                RequestImageToWebServer(_uuidOrUrl);
+            else
+            {
+                string uuid = System.IO.Path.GetFileNameWithoutExtension(_uuidOrUrl);
+                RequestImage(new UUID(uuid), _vObject);
+            }
+        }
+
+        private void RequestImage(UUID _assetUUID, VObject _vObject)
+        {
+            if (_vObject == null)
+                avatarConnection.RequestImage(_assetUUID, AssetType.Object, true);
+            else
+                Reference.Viewer.TextureManager.RequestImage(new UUID(_assetUUID), _vObject);
+        }
+
+        public void RequestImageToWebServer(string _url)
+        {
+            using (System.Net.WebClient wc = new System.Net.WebClient())
+            {
+                string filename = System.IO.Path.GetFileNameWithoutExtension(_url);
+                string extension = System.IO.Path.GetExtension(_url);
+                string path = Util.TextureFolder + filename + extension;
+                wc.DownloadFile(_url, path);
+
+                if (OnTextureFromWebLoaded != null)
+                    OnTextureFromWebLoaded(filename);
+            }
         }
 
         public void RerequestTerrain()
@@ -751,10 +804,6 @@ namespace OpenViewer.Managers
             {
                 Reference.Viewer.EntityManager.DeleteObject(regionHandle, objectID);
             }
-        }
-
-        void OnAssetReceived(OpenMetaverse.AssetDownload transfer, OpenMetaverse.Asset asset)
-        {
         }
 
         #endregion

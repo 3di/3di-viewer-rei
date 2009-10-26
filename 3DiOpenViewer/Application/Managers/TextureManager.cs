@@ -932,63 +932,67 @@ namespace OpenViewer.Managers
             }
             bool result = false;
             bool bNonJp2000 = true;
-            string strExtension = ".tga";
+            string extension = string.Empty;
             try
             {
-                if (asset is AssetTexture)
+                AssetType type = asset.AssetType;
+                if (asset is OpenViewer.Primitives.ExtendedAssetTexture)
                 {
-                    bNonJp2000 = false;
-                    result = asset.Decode();
-                }
-                else
-                {
+                    type = (AssetType)((OpenViewer.Primitives.ExtendedAssetTexture)asset).ExtAssetType;
+
                     //Paupaw:Get the AssetType
-                    switch (((OpenViewer.Primitives.ExtendedAssetTexture)asset).ExtAssetType)
+                    switch (type)
                     {
-                        case (int)AssetType.ImageJPEG:
+                        case AssetType.ImageJPEG:
                             result = true;
-                            strExtension = ".jpg";
+                            extension = ".jpg";
                             break;
-                        case (int)AssetType.ImageTGA:
+                        case AssetType.ImageTGA:
                             result = true;
-                            strExtension = ".tga";
+                            extension = ".tga";
                             break;
-                        case (int)AssetType.Texture: //JP2000
+                        case AssetType.Texture: //JP2000
                             bNonJp2000 = false;
                             result = asset.Decode();
+                            extension = ".tga";
                             break;
                     }
                 }
+                else
+                {
+                    result = true;
+                    extension = ".jpg";
+                }
+
             }
             catch (Exception)
             {
-                m_log.Debug("[TEXTURE]: Failed to decode asset " + asset.AssetID);
+                //m_log.Debug("[TEXTURE]: Failed to decode asset " + asset.AssetID);
+                if (!bNonJp2000)
+                {
+                    bNonJp2000 = true;
+                    result = true;
+                    extension = ".jpg";
+                }
             }
             if (result)
             { 
-                
-                // Write it to disk for picking up later in the pipeline.
-                string texturefolderpath = imagefolder;
-
-                string texturepath = System.IO.Path.Combine(texturefolderpath,asset.AssetID.ToString() + strExtension);
                 byte[] imgdata = null;
                 if (bNonJp2000)
-                {
                     imgdata = asset.AssetData;
-                }
                 else
-                {
                     imgdata = asset.Image.ExportTGA();
-                }
                     
-                FileStream fi = (File.Open(texturepath, FileMode.Create));
-                BinaryWriter bw = new BinaryWriter(fi);
+                string texturefolderpath = imagefolder;
+                string texturepath = System.IO.Path.Combine(texturefolderpath, asset.AssetID.ToString() + extension);
+                FileStream fs = (File.Open(texturepath, FileMode.Create));
+                BinaryWriter bw = new BinaryWriter(fs);
                 bw.Write(imgdata);
                 bw.Flush();
                 bw.Close();
                 
                 // Update nodes that the texture is downloaded.
-                List<VObject> nodesToUpdate = new List<VObject>();
+                List<VObject> nodesToUpdate = null;
                 lock (ouststandingRequests)
                 {
                     if (ouststandingRequests.ContainsKey(asset.AssetID))
@@ -997,21 +1001,21 @@ namespace OpenViewer.Managers
                         ouststandingRequests.Remove(asset.AssetID);
                     }
                 }
+
+                if (nodesToUpdate == null)
+                    return;
+
                 lock (nodesToUpdate)
                 {
                     for (int i = 0; i < nodesToUpdate.Count; i++)
                     {
                         VObject vObj = nodesToUpdate[i];
 
-                        if (vObj != null)
-                        {
-                            if (OnTextureLoaded != null)
-                            {
-                                OnTextureLoaded(asset.AssetID.ToString(), strExtension, vObj, asset.AssetID);
-                            }
-                            
-                        }
-                        
+                        if (vObj == null || OnTextureLoaded == null)
+                            continue;
+
+                        OnTextureLoaded(asset.AssetID.ToString(), extension, vObj, asset.AssetID);
+                        Reference.Viewer.Adapter.CallReceiveImage(asset.AssetID.ToString());
                     }
                 }
             }

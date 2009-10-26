@@ -66,6 +66,7 @@ using System.Collections.Generic;
 using IrrlichtNETCP;
 using OpenMetaverse;
 using IrrParseLib;
+using OpenViewer.Primitives;
 
 namespace OpenViewer.Managers
 {
@@ -122,6 +123,8 @@ namespace OpenViewer.Managers
 
         private Queue<Action<VObject>> pipeline = new Queue<Action<VObject>>();
         private Queue<Action<FoliageObject>> foliageQueue = new Queue<Action<FoliageObject>>();
+        private Queue<EventQueueParam> eventQueue = new Queue<EventQueueParam>();
+
 
 #if DEBUG_QUEUE
         public int ObjectQueueLength { get { return(objectQueue.Count); } }
@@ -139,6 +142,7 @@ namespace OpenViewer.Managers
 
         private MeshFactory meshFactory = null;
         private Dictionary<string, VObject> interpolationTargets = new Dictionary<string, VObject>();
+        private List<SetTextureParam> requestTextureList = new List<SetTextureParam>();
         #endregion
 
 #if LMNT_DEBUG
@@ -174,6 +178,11 @@ namespace OpenViewer.Managers
 
             trianglePickerMapper = new TrianglePickerMapper(Reference.SceneManager.CollisionManager);
             metaTriangleSelector = Reference.SceneManager.CreateMetaTriangleSelector();
+
+            Reference.Viewer.ProtocolManager.OnTextureFromWebLoaded -= ProtocolManager_OnTextureFromWebLoaded;
+            Reference.Viewer.ProtocolManager.OnTextureFromWebLoaded += ProtocolManager_OnTextureFromWebLoaded;
+            Reference.Viewer.TextureManager.OnTextureLoaded -= TextureManager_OnTextureLoaded;
+            Reference.Viewer.TextureManager.OnTextureLoaded += TextureManager_OnTextureLoaded;
         }
 
         public override void Cleanup()
@@ -230,17 +239,14 @@ namespace OpenViewer.Managers
                 if (frame % 10 == 0)
                     DetectObjectUnderMouse();
 
-                // Object updates
-                if (frame % objectUpdateRate == 0)
-                {
-                    ProcessObjectQueue();
-                }
+                if (frame % 10 == 0)
+                    EventControlProcess();
 
-                // Texture updates
+                if (frame % objectUpdateRate == 0)
+                    ProcessObjectQueue();
+
                 if (frame % textureUpdateRate == 0)
-                {
                     ProcessTextureQueue();
-                }
             }
             catch (Exception e)
             {
@@ -659,6 +665,8 @@ namespace OpenViewer.Managers
                     //vObj.Node.AddChild(loadedmeshNode);
                     vObj.Mesh = loadedMesh;
                     vObj.Node = loadedmeshNode;
+                    if (loadedmeshNode.Children.Length > 0)
+                        vObj.NodeStaticMesh = loadedmeshNode.Children[0];
                     node = vObj.Node;
 
                     //vObj.Mesh = null;
@@ -753,6 +761,7 @@ namespace OpenViewer.Managers
                             for (int i = 0; i < vObj.Mesh.MeshBufferCount; i++)
                                 vObj.Mesh.GetMeshBuffer(i).Drop();
                             vObj.Mesh.Drop();
+                            vObj.Mesh = null;
                         }
                         return;
                     }
@@ -1048,6 +1057,142 @@ namespace OpenViewer.Managers
 
         #endregion
 
+        public VObject GetVObjectFromObjectUUID(UUID _primID)
+        {
+            VObject vObj = null;
+
+            lock (entities)
+            {
+                foreach (VObject vo in entities.Values)
+                {
+                    if (vo.Prim == null)
+                        continue;
+
+                    if (vo.Prim.ID == _primID)
+                    {
+                        vObj = vo;
+                        break;
+                    }
+                }
+            }
+
+            return vObj;
+        }
+
+        public string GetEntitiesKeyFromObjectUUID(UUID _primID)
+        {
+            VObject vObj = GetVObjectFromObjectUUID(_primID);
+
+            if (vObj == null || vObj.Prim == null)
+                return string.Empty;
+
+            return VUtil.GetEntitiesKeyFromPrim(vObj.Prim);
+        }
+
+        public bool SetTexture(string _primID, int _materialIndex, string _filename, bool _requestEnable)
+        {
+            VObject vObject;
+
+            string key = GetEntitiesKeyFromObjectUUID(new UUID(_primID));
+
+            if (string.IsNullOrEmpty(key))
+                return false;
+
+            if (!entities.ContainsKey(key))
+                return false;
+
+            lock (entities)
+                vObject = entities[key];
+
+            if (vObject == null)
+                return false;
+
+            if (vObject.NodeStaticMesh == null)
+                return false;
+
+            int count = (int)vObject.NodeStaticMesh.MaterialCount;
+            if (_materialIndex > (count - 1))
+                return false;
+            
+            string path = Util.TextureFolder + _filename;
+            if (!System.IO.File.Exists(path))
+            {
+                if (_requestEnable)
+                {
+                    Reference.Viewer.ProtocolManager.RequestImage(_filename, false, vObject);
+
+                    string filename = System.IO.Path.GetFileNameWithoutExtension(_filename);
+                    string extension = System.IO.Path.GetExtension(_filename);
+                    SetTextureParam param = new SetTextureParam(_primID, _materialIndex, filename, extension);
+                    lock (requestTextureList)
+                        requestTextureList.Add(param);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            Texture tex = Reference.VideoDriver.GetTexture(path);
+            vObject.NodeStaticMesh.GetMaterial(_materialIndex).Texture1 = tex;
+            
+
+            return true;
+        }
+        void TextureManager_OnTextureLoaded(string texname, string extension, VObject node, UUID AssetID)
+        {
+            EventQueueParam param = new EventQueueParam(EventQueueType.TextureDownloaded, AssetID.ToString());
+            lock (eventQueue)
+                eventQueue.Enqueue(param);
+        }
+
+        void ProtocolManager_OnTextureFromWebLoaded(string filenameWithoutExtension)
+        {
+            EventQueueParam param = new EventQueueParam(EventQueueType.TextureDownloaded, filenameWithoutExtension);
+            lock (eventQueue)
+                eventQueue.Enqueue(param);
+        }
+
+        private void EventControlProcess()
+        {
+            if (eventQueue.Count == 0)
+                return;
+
+            EventQueueParam param;
+            lock (eventQueue)
+                param = eventQueue.Dequeue();
+
+            switch (param.Type)
+            {
+                case EventQueueType.TextureDownloaded:
+                    EventControlProcessTextureDownloaded(param.Option);
+                    break;
+            }
+        }
+
+        private void EventControlProcessTextureDownloaded(object _option)
+        {
+            if (!(_option is string))
+                return;
+
+            string textureUUID = _option as string;
+
+            List<SetTextureParam> del = new List<SetTextureParam>();
+            foreach (SetTextureParam param in requestTextureList)
+            {
+                if (param.TextureUUID == textureUUID)
+                {
+                    string path = param.TextureUUID + param.TextureExtension;
+                    SetTexture(param.PrimID, param.MaterialIndex, path, false);
+                    del.Add(param);
+                }
+            }
+
+            foreach (SetTextureParam param in del)
+                lock (requestTextureList)
+                    requestTextureList.Remove(param);
+        }
         #endregion
     }
 }

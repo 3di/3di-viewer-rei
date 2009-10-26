@@ -823,6 +823,7 @@ namespace OpenViewerAX
                     OV.Adapter.OnTeleported += TeleportedEventHandler;
                     OV.Adapter.OnOpenWindow += OpenWindowEventHandler;
                     OV.Adapter.OnAvatarPicked += AvatarPickEventHandler;
+                    OV.Adapter.OnImageLoaded += ImageLoadedEventHandler;
                     OV.Adapter.OnStateChanged += StateChangedEventHandler;
                     OV.Adapter.OnDispatch += DispatchHandler;
                 }
@@ -1304,6 +1305,7 @@ namespace OpenViewerAX
 
         #region 8. Common
         public event OpenViewer.StateChangedListener OnStateChanged;
+        public event OpenViewer.ImageDownloadedListener OnImageLoaded;
 
         // To javascript.
         private void StateChangedEventHandler(int _state)
@@ -1317,6 +1319,17 @@ namespace OpenViewerAX
                 OnStateChanged(_state);
         }
 
+        private void ImageLoadedEventHandler(string _texturename)
+        {
+            if (OV.IsDHTMLRelationEnable == false)
+                return;
+
+            DebugMessageEventHandler("EVE: ImageLoadedEventHandler Request texture : " + _texturename);
+
+            if (OnImageLoaded != null)
+                OnImageLoaded(_texturename);
+        }
+
         public string GetFPS()
         {
             if (OV.IsDHTMLRelationEnable == false)
@@ -1325,6 +1338,16 @@ namespace OpenViewerAX
             DebugMessageEventHandler("OUT: GetFPS");
 
             return OV.Adapter.CallGetFPS().ToString();
+        }
+
+        public void RequestImage(string _assetUUID, string _useChache)
+        {
+            if (OV.IsDHTMLRelationEnable == false)
+                return;
+
+            DebugMessageEventHandler("IN: RequestImage Rquest UUID : " + _assetUUID + " UseChache : " + _useChache);
+
+            OV.Adapter.CallRequestImage(_assetUUID, _useChache);
         }
 
         public string GetPrimitiveCount()
@@ -1345,6 +1368,16 @@ namespace OpenViewerAX
             DebugMessageEventHandler("OUT: GetTextureCount");
 
             return OV.Adapter.CallGetTextureCount().ToString();
+        }
+
+        public string SetTexture(string _objectUUID, int _materialIndex, string _filename, string _requestEnable)
+        {
+            if (OV.IsDHTMLRelationEnable == false)
+                return string.Empty;
+
+            DebugMessageEventHandler("IN: SetTexture + ObjectUUID : " + _objectUUID + " Index : " + _materialIndex + " filename : " + _filename + " Request : " + _requestEnable);
+
+            return OV.Adapter.CallSetTexture(_objectUUID, _materialIndex, _filename, _requestEnable);
         }
         #endregion
 

@@ -89,6 +89,9 @@ namespace OpenViewerAX
         [DispId(80)]
         void OnStateChanged(int _state);
 
+        [DispId(81)]
+        void OnImageLoaded(string _assetUUID);
+
         [DispId(122)]
         void OnDispatch(string _action, string _message);
     }

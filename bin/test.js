@@ -32,6 +32,10 @@ function init(){
 	    var state_message = document.getElementById("state_message");
 	    state_message.value = state + ":" + opvw.API.Common.STATUS[state];
 	  },
+	  OnImageLoaded :  function(texturename) {
+	    var val = document.getElementById("asset_loaded");
+	    val.value = texturename;
+	  },
 	  
 	  // OPVW 1.1 IE
 	  OnAvatarPicked :  function(json) {
@@ -349,6 +353,16 @@ function GetTextureCount()
 	debug_info.value = ctrl.GetTextureCount();
 }
 
+function RequestImage(imageUUID, useCache)
+{
+	ctrl.RequestImage(imageUUID, useCache);
+}
+
+function SetTexture(objectUUID, materialIndex, filename, requestEnable)
+{
+	var debug_info = document.getElementById("js_debug_text_fix");
+	debug_info.value = ctrl.SetTexture(objectUUID, materialIndex, filename, requestEnable);
+}
 //----------------------------------------------------------
 // 9. Camera lookAt
 //----------------------------------------------------------

@@ -390,11 +390,11 @@ namespace OpenViewer
             m_user.Self.VoiceEffect(_volumeLevel);
         }
 
-        public void RequestAsset(UUID uuid, AssetType assetType, bool priority)
+        public void RequestImage(UUID uuid, AssetType assetType, bool priority)
         {
             m_log.Info("[REQ ASSET]: " + " " + uuid.ToString() + " " + assetType.ToString());
 
-            m_user.Assets.RequestAsset(uuid, assetType, priority);
+            m_user.Assets.RequestImage(uuid, ImageType.Normal);
         }
 
         private void gridConnectedCallback(object sender)

@@ -143,13 +143,25 @@ Page Body.
 
 		<div class="type01">
 			<h3>!--8. Common sample.--</h3>
-			State:<br>
-			<input type="text" id="state_message"/>
+			State:<input type="text" id="state_message"/>
+			<br>
+			Request:<input type="text" id="asset_request" value="" style="width:192"/>
+			<input type="text" id="asset_request_cache" value="true" style="width:32"/>
+			<input type="button" value="Request" onclick="RequestImage(asset_request.value, asset_request_cache.value);" />
+			<br>
+			Response:<input type="text" id="asset_loaded" value="" style="width:256"/>
 			<br>
 			<input type="button" value="fps" onclick="GetFPS();" />
 			<input type="button" value="primitive" onclick="GetPrimitiveCount();" />
-
+			<br>
+			ObjectUUID    MaterialIndex    TextureName<br>
 			<input type="button" value="texture" onclick="GetTextureCount();" />
+			<br>
+			<input type="text" id="object_uuid" value=""/>
+			<input type="text" id="materila_index" value="0"/>
+			<input type="text" id="texture_uuid" value=""/>
+			<br>
+			<input type="button" value="setTextre" onclick="SetTexture(object_uuid.value, materila_index.value, texture_uuid.value, 'true');" />
 		</div>
 
 

@@ -120,6 +120,7 @@ namespace OpenViewer
         public SceneNode Node; // Reference to empty scene node
         public SceneNode VoiceNode; // Reference to voice effect node
         public SceneNode PickNode; // Reference to pick object node
+        public SceneNode NodeStaticMesh;
         public AnimatedMeshSceneNode MeshNode; // Reference to graphics node
         public int VoiceLevel = 0;
         public Primitive Prim; // Avatar Extend the primative type

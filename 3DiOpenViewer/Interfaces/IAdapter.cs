@@ -17,7 +17,7 @@ namespace OpenViewer
     public delegate void OpenWindowListener(string _target, string _uri);
     public delegate void AvatarPickListener(string _uuid);
     public delegate void StateChangedListener(int _state);
-
+    public delegate void ImageDownloadedListener(string texname);
 
 
     public interface IAdapter
@@ -36,6 +36,7 @@ namespace OpenViewer
         event TeleportListener OnTeleported;
         event OpenWindowListener OnOpenWindow;
         event AvatarPickListener OnAvatarPicked;
+        event ImageDownloadedListener OnImageLoaded;
         event StateChangedListener OnStateChanged;
         event DispatchListener OnDispatch;
 
@@ -207,6 +208,12 @@ namespace OpenViewer
          void CallUserAvatarLeft();
 
          void CallUserAvatarRight();
+
+         void CallReceiveImage(string texname);
+
+         void CallRequestImage(string _assetUUID, string _useCache);
+
+         string CallSetTexture(string _objectUUID, int _materialIndex, string _filename, string _requestEnable);
         #endregion
 
         #region 8. Common
