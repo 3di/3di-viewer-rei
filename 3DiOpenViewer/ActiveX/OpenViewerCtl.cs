@@ -1199,6 +1199,16 @@ namespace OpenViewerAX
                 OnAvatarPicked(_userInformation);
         }
 
+        public string GetLoggedinAvatarUUIDList()
+        {
+            if (OV.IsDHTMLRelationEnable == false)
+                return string.Empty;
+
+            DebugMessageEventHandler("OUT: GetLoggedInAvatarUUIDList");
+
+            return OV.Adapter.CallGetLoggedinAvatarUUIDList();
+        }
+
         public void StartCustomAnimation(int _index)
         {
             if (OV.IsDHTMLRelationEnable == false)

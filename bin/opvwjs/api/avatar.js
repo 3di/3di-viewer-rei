@@ -16,9 +16,15 @@
  * @class
  */
 opvw.API.Avatar = opvw.API.Avatar || {
-
 	/**
-	 * Get avatar name.
+	 * Get camera Field Of View.
+	 * 
+	 * @return (number) Field Of View.
+	 */
+	GetLoggedinAvatarList : function(){
+		return opvw.API.plugin.GetLoggedinAvatarUUIDList();
+	},
+	/**	 * Get avatar name.
 	 *
 	 * @return (string) Using avatar name.
 	 */
@@ -88,6 +94,7 @@ opvw.API.Avatar = opvw.API.Avatar || {
 		return opvw.API.plugin.StartCustomAnimation(index);
 	}
 };
+opvw.APIWrapper["GetLoggedinAvatarList"] = opvw.API.Avatar.GetLoggedinAvatarList;
 opvw.APIWrapper["GetUserAvatarName"] = opvw.API.Avatar.GetUserAvatarName;
 opvw.APIWrapper["GetUserAvatarPosition"] = opvw.API.Avatar.GetUserAvatarPosition;
 opvw.APIWrapper["GetUserUUID"] = opvw.API.Avatar.GetUserUUID;

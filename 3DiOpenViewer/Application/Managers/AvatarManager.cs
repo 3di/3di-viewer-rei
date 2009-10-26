@@ -595,6 +595,29 @@ namespace OpenViewer.Managers
             }
         }
 
+        public string GetUserUUIDList()
+        {
+            if (entities.Count == 0)
+                return "{}";
+
+            StringBuilder sb = new StringBuilder("{\"id\":[");
+            lock (entities)
+            {
+                foreach (VObject vObject in entities.Values)
+                {
+                    if (vObject == null || vObject.Prim == null)
+                        continue;
+
+                    sb.Append("\"" + vObject.Prim.ID.ToString() + "\",");
+                }
+            }
+
+            sb.Remove(sb.Length - 1, 1);// Remove last ","
+            sb.Append("]}");
+
+            return sb.ToString();
+        }
+
         public void RequestCustomizeAnimation(int _index)
         {
             switch (_index)

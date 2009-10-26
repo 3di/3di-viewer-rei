@@ -186,6 +186,8 @@ namespace OpenViewer
 
         #region 7. User avatar
 
+         string CallGetLoggedinAvatarUUIDList();
+
          void CallAvatarPicked(string _avatarInformation);
 
          void CallAvatarCustomizeAnimation(int _index);

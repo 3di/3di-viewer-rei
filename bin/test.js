@@ -272,6 +272,18 @@ function Teleport()
 //----------------------------------------------------------
 // 7. Useravatar function
 //----------------------------------------------------------
+function GetLoggedinAvatarList()
+{
+	var info = document.getElementById("loggedin_avatar_list");
+	info.value = ctrl.GetLoggedinAvatarList();
+}
+
+function StartCustomAnimation()
+{
+	var avatar_anim_index = document.getElementById("avatar_anim_index");
+	ctrl.StartCustomAnimation(avatar_anim_index.value);
+}
+
 function GetUserAvatarName()
 {
 	var debug_info = document.getElementById("user_avatar_res");
@@ -314,12 +326,6 @@ function UserAvatarRight()
 function UserAvatarDown()
 {
 	ctrl.UserAvatarDown();
-}
-
-function StartCustomAnimation()
-{
-	var avatar_anim_index = document.getElementById("avatar_anim_index");
-	ctrl.StartCustomAnimation(avatar_anim_index.value);
 }
 
 //----------------------------------------------------------
