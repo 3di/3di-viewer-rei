@@ -57,7 +57,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define DebugTexturePipeline
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -321,12 +320,6 @@ namespace OpenViewer.Managers
 
             if (tex != null)
             {
-#if DebugTexturePipeline
-                m_log.Debug("[3Di Mesh]: Already have texture in memory: " + assetID);
-#endif
-#if DebugTexturePipeline
-                m_log.Debug("RequestImage 1 calling applyTexture");
-#endif
                 // We already have the texture, jump to applyTexture
                 applyTexture(tex, requestor, assetID);
 
@@ -357,9 +350,6 @@ namespace OpenViewer.Managers
                     tex = new TextureExtended(texTnorm.Raw, ".tga");
                 if (tex != null)
                 {
-#if DebugTexturePipeline
-                    m_log.Debug("[3Di Mesh]: Already have texture locally on disk: " + assetID);
-#endif
                     lock (memoryTextures)
                     {
                         if (!memoryTextures.ContainsKey(assetID))
@@ -369,9 +359,6 @@ namespace OpenViewer.Managers
                         }
                     }
 
-#if DebugTexturePipeline
-                    m_log.Debug("RequestImage 2 calling applyTexture");
-#endif
                     // apply texture
                     applyTexture(tex, requestor, assetID);
 
@@ -401,10 +388,6 @@ namespace OpenViewer.Managers
                 {
                     // Add it to the objects to be notified when this texture download is complete.
                     ouststandingRequests[assetID].Add(requestor);
-#if YK_ADD_DEFAULT_TEXTURE
-                    applyTexture(null, requestor, assetID);
-#endif
-
                     return;
                 }
                 else 
@@ -416,10 +399,6 @@ namespace OpenViewer.Managers
                     
                 }
             }
-
-#if DebugTexturePipeline
-            m_log.Debug("[3Di Mesh]: Requesting from libomv the following texture: " + assetID);
-#endif
 
             if (string.IsNullOrEmpty(m_user.m_user.Network.AssetServerUri))
             {
@@ -537,11 +516,6 @@ namespace OpenViewer.Managers
                 }
 
                 bool alphaimage = false;
-
-#if YK_ADD_DEFAULT_TEXTURE
-                if (tex == null)
-                    tex = defaultTexture;
-#endif
                 // Check if we've already run this through our image alpha checker
                 if (tex.Userdata == null)
                 {
@@ -586,35 +560,18 @@ namespace OpenViewer.Managers
 //#if NOTYET
                 if (vObj._3DiIrrfileUUID != UUID.Zero && vObj.IrrData != null)
                 {
-#if DebugTexturePipeline
-                    m_log.Debug("[3Di Mesh]: 3Di mesh applyTexture for tex " + AssetID + " for irrfile " + vObj._3DiIrrfileUUID);
-#endif
                     for (int iTex = 0; iTex < vObj.IrrData.Materials.Count; iTex++)
                     {
-#if DebugTexturePipeline
-                        m_log.Debug("[3Di Mesh]: This mesh references a texture num " + iTex + ": " + vObj.IrrData.Materials[iTex].Texture1);
-#endif
                         if (System.IO.Path.GetFileNameWithoutExtension(vObj.IrrData.Materials[iTex].Texture1) == AssetID.ToString())
                         {
-#if DebugTexturePipeline
-                            m_log.Debug("[3Di Mesh]: Found the texture reference inside the mesh; loading texture and re-assigning the reference.");
-#endif
                             Texture loadedTex = device.VideoDriver.GetTexture(AssetID.ToString() + tex.extension);
                             if (vObj.Node.Children.Length > 0)
                             {
                                 vObj.Node.Children[0].GetMaterial(iTex).Texture1 = loadedTex;
                             }
-                            else
-                            {
-#if DebugTexturePipeline
-                                m_log.Debug("[3Di Mesh]: Could not assign texture; mesh child not found");
-#endif
-                            }
                         }
                     }
-#if DebugTexturePipeline
-                    m_log.Debug("[3Di Mesh]: Finished all materials in this mesh.");
-#endif
+
                     if (alphaimage)
                     {
                         vObj.Node.Children[0].SetMaterialType(MaterialType.TransparentAlphaChannel);

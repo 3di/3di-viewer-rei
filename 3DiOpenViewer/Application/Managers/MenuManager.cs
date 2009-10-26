@@ -118,12 +118,8 @@ namespace OpenViewer.Managers
 
         public override void Initialize()
         {
-#if YK_REMOVE_HELP
-            MENU_WIDTH = 256;
-#else
             MENU_R_WIDTH = 208;
             MENU_OFFSET_X = 12;
-#endif
 
             m_menuBackground = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\menu\menu_background_r.tga"), new Position2D(Reference.Viewer.Width - MENU_R_WIDTH - MENU_OFFSET_X, 0), true, Reference.GUIEnvironment.RootElement, (int)GUIElementIDS.MENU_BACKGROUND, "background");
             if (Reference.Viewer.Width > 2*MENU_R_WIDTH+2*MENU_OFFSET_X)

@@ -946,9 +946,6 @@ namespace OpenViewer
             menuManager.Initialize();
             // Add icons
             menuManager.AddIcon(new MenuIcon("menu_logout.png", LogoutRequest));
-#if YK_REMOVE_HELP
-            menuManager.AddIcon(new MenuIcon("menu_help.png", OpenSupportPageRequest));
-#endif
             menuManager.AddIcon(new MenuIcon("menu_settings.png", guiManager.ShowSettingWindow));
             menuManager.AddIcon(new MenuIcon("menu_chat.png", guiManager.ShowChatWindow));
             menuManager.AddIcon(new MenuIcon("menu_teleport.png", guiManager.ShowTeleportWindow));

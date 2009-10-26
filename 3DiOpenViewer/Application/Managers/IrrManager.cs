@@ -140,7 +140,7 @@ namespace OpenViewer.Managers
             }
         }
         
-        public virtual void Initialize()
+        public override void Initialize()
         {
             base.Initialize();
 
@@ -153,7 +153,7 @@ namespace OpenViewer.Managers
             irrWorkItemMaintainerThread.Start();
         }
 
-        public virtual void Cleanup()
+        public override void Cleanup()
         {
             if (irrWorkItemMaintainerThread != null)
             {

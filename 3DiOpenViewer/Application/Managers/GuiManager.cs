@@ -186,13 +186,7 @@ namespace OpenViewer.Managers
             Reference.Viewer.CursolOffset = new Position2D(-1, cursorImageNormal.OriginalSize.Height / 2 + 2);
 
             closeButton = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\window_close.png");
-
-            //chatIconPosition = new Position2D(Reference.Viewer.Width - 48, Reference.Viewer.Height - 48);
-#if YK_REMOVE_HELP
-            chatIconPosition = new Position2D(Reference.Viewer.Width - 40 * 5, 4);
-#else
             chatIconPosition = new Position2D(Reference.Viewer.Width - 40 * 4, 4);
-#endif
             imageChat = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\menu\menu_chat.png"), chatIconPosition, true, parentElement, -1, "");
             imageChat.Visible = false;
 
@@ -903,8 +897,6 @@ namespace OpenViewer.Managers
             t1Rect.Width = 192;
             t1Rect.Height = 16 * 2;
             settingTab1Locale = Reference.GUIEnvironment.AddListBox(t1Rect, t1, -1, false);
-#if YK_LANGUAGE
-#endif
             settingTab1Locale.AddItemW(DialogText.EN);
             if (Reference.Viewer.JapaneseEnabled)
                 settingTab1Locale.AddItemW(DialogText.JP);
@@ -1216,22 +1208,6 @@ namespace OpenViewer.Managers
         public Color GetBackgroundColor(State state)
         {
             return Reference.Viewer.ClearColor;
-
-#if YK_BACKGROUND_COLOR
-            switch (state)
-            {
-                case State.INITIALIZING:
-                case State.INITIALIZED:
-                    return (initWindowBackgroundColor);
-                case State.LOGIN:
-                case State.DOWNLOADING:
-                    return (loginWindowBackgroundColor);
-                case State.TELEPORTING:
-                    return (teleportWindowBackgroundColor);
-                default:
-                    return (Color.TransparentBlue);
-            }
-#endif
         }
         #endregion
 

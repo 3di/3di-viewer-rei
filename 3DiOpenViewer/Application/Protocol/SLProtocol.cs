@@ -212,26 +212,19 @@ namespace OpenViewer
         void Network_OnEventQueueRunning(Simulator simulator)
         {
             if (OnEventQueueRunning != null)
-            {
                 OnEventQueueRunning(simulator);
-            }
         }
 
         void OnLoadURLCallback(string objectName, UUID objectID, UUID ownerID, bool ownerIsGroup, string message, string URL)
         {
             if (OnLoadURL != null)
-            {
                 OnLoadURL(objectName, objectID, ownerID, ownerIsGroup, message, URL);
-            }
         }
 
         void Network_OnCurrentSimChanged(Simulator PreviousSimulator)
         {
-            m_log.Debug("CURRENT SIM CHANGED");
             if (OnCurrentSimChanged != null)
-            {
                 OnCurrentSimChanged(PreviousSimulator);
-            }
         }
 
         void Self_OnTeleport(string message, AgentManager.TeleportStatus status, AgentManager.TeleportFlags flags)
@@ -239,42 +232,32 @@ namespace OpenViewer
             if (status == AgentManager.TeleportStatus.Finished || status == AgentManager.TeleportStatus.Failed)
             {
                 if (OnTeleportFinished != null)
-                {
                     OnTeleportFinished(message, status, flags);
-                }
             }
         }
 
         private void avatarSitResponseCallback(UUID objectID, bool autoPilot, Vector3 cameraAtOffset, Vector3 cameraEyeOffset, bool forceMouselook, Vector3 sitPosition, Quaternion sitRotation)
         {
             if (OnAvatarSitResponse != null)
-            {
                 OnAvatarSitResponse(objectID,autoPilot,cameraAtOffset,cameraEyeOffset,forceMouselook,sitPosition,sitRotation);
-            }
         }
 
         private void Friends_OnFriendOffline(FriendInfo friend)
         {
             if( OnFriendsListChanged != null )
-            {
                 OnFriendsListChanged();
-            }
         }
 
         private void Friends_OnFriendOnline(FriendInfo friend)
         {
             if (OnFriendsListChanged != null)
-            {
                 OnFriendsListChanged();
-            }
         }
 
         private void Friends_OnFriendNamesReceived(Dictionary<UUID, string> names)
         {
             if (OnFriendsListChanged != null)
-            {
                 OnFriendsListChanged();
-            }
         }
 
         public Dictionary<UUID, FriendInfo> Friends
@@ -311,13 +294,9 @@ namespace OpenViewer
             lock (AvatarAnimations)
             {
                 if (AvatarAnimations.ContainsKey(avatarID))
-                {
                     AvatarAnimations[avatarID] = currentAnims;
-                }
                 else
-                {
                     AvatarAnimations.Add(avatarID, currentAnims);
-                }
             }
 
             if (OnAnimationUpdate != null)
@@ -335,24 +314,19 @@ namespace OpenViewer
         private void assetReceivedCallback(AssetDownload transfer, Asset asset)
         {
             if (OnAssetReceived != null)
-            {
                 OnAssetReceived(transfer, asset);
-            }
         }
 
         private void imageReceivedCallback(ImageDownload image, AssetTexture asset)
         {
             if (OnImageReceived != null)
-            {
                 OnImageReceived(asset);
-            }
         }
+
         private void objectDeletedCallback(Simulator simulator, uint objectID)
         {
             if (OnObjectDeleted != null)
-            {
                 OnObjectDeleted(simulator, objectID);
-            }
         }
 
         public void BeginLogin(string loginURI, string username, string password, string startlocation)
@@ -392,8 +366,6 @@ namespace OpenViewer
 
         public void RequestImage(UUID uuid, AssetType assetType, bool priority)
         {
-            m_log.Info("[REQ ASSET]: " + " " + uuid.ToString() + " " + assetType.ToString());
-
             m_user.Assets.RequestImage(uuid, ImageType.Normal);
         }
 
@@ -405,10 +377,9 @@ namespace OpenViewer
 
 
             if (OnGridConnected != null)
-            {
                 OnGridConnected();
-            }
         }
+
         private void simConnectedCallback(Simulator sender)
         {
             m_user.Throttle.Total = 600000;
@@ -422,10 +393,9 @@ namespace OpenViewer
             m_user.Self.Movement.Camera.Far = 64f;
             m_user.Self.Movement.Camera.Position = m_user.Self.RelativePosition;
             SetHeightWidth(768, 1024);
+
             if (OnSimConnected != null)
-            {
                 OnSimConnected(sender);
-            }
         }
         private void loginCallback(LoginStatus status, string message)
         {
@@ -433,22 +403,20 @@ namespace OpenViewer
             VUtil.authToken = this.m_user.Network.SecureSessionID;
                  
             if (OnLogin != null)
-            {
                 OnLogin((LoginStatus)status, message);
-            }
         }
+
         public void Logout()
         {
             m_user.Network.Logout();
         }
+
         public void disconnectedCallback(NetworkManager.DisconnectType reason, string message)
         {
-            m_log.WarnFormat("[CONNECTION]: Disconnected{0}: Message:{1}",reason.ToString(), message);
             if (OnSimDisconnected != null)
-            {
                 OnSimDisconnected(reason, message);
-            }
         }
+
         public bool Connected
         {
             get { return m_user.Network.Connected; }
@@ -542,25 +510,17 @@ namespace OpenViewer
             // So we explicitly check for those cases here.
             if ((int)type < 4 && id != m_user.Self.AgentID)
             {
-                m_log.Debug("Chat: " + fromName + ": " + message);
                 if (OnChat != null)
-                {
-                    OnChat(message, audible, type, sourcetype,
-                                      fromName, id, ownerid, position);
-                }
+                    OnChat(message, audible, type, sourcetype, fromName, id, ownerid, position);
             }
         }
-        
-        
 
-        private void newPrim(Simulator simulator, Primitive prim, ulong regionHandle,
-                             ushort timeDilation)
+
+
+        private void newPrim(Simulator simulator, Primitive prim, ulong regionHandle, ushort timeDilation)
         {
-            
             if (OnNewPrim != null)
-            {
-                OnNewPrim(simulator,prim, regionHandle,timeDilation);
-            }
+                OnNewPrim(simulator, prim, regionHandle, timeDilation);
         }
 
         
