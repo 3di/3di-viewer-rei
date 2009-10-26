@@ -202,6 +202,11 @@ namespace OpenViewer
             animationNext.Loop = _loop;
         }
 
+        public void SetAnimationMode(JointUpdateOnRenderMode _mode)
+        {
+            MeshNode.JointMode = _mode;
+        }
+
         public void AnimationEndHandler(AnimatedMeshSceneNode _node)
         {
             try

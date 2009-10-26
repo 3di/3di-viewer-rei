@@ -1165,6 +1165,7 @@ namespace OpenViewer.Managers
 
             bool isVoiceAnimation = (_obj.VoiceLevel > 1) ? true : false;
             bool loopFlag = true;
+            JointUpdateOnRenderMode jointMode = JointUpdateOnRenderMode.Control;
             switch (_key)
             {
                 case "sitstart":
@@ -1175,6 +1176,7 @@ namespace OpenViewer.Managers
                         _obj.PickNode.Scale = new Vector3D(1, 0.75f, 1);
                     }
                     loopFlag = false;
+                    jointMode = JointUpdateOnRenderMode.None;
                     break;
 
                 case UtilityAnimation.ANIMATION_KEY_SPEAK_SITTING:
@@ -1287,6 +1289,7 @@ namespace OpenViewer.Managers
 
             _obj.AnimationCurrentName = _key;
             _obj.AnimationSpeed = animFramesPerSecond;
+            _obj.SetAnimationMode(jointMode);
             _obj.SetAnimation(_key, startFrame, endFrame, loopFlag);
         }
 

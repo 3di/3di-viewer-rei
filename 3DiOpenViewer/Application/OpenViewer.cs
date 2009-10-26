@@ -1584,10 +1584,8 @@ namespace OpenViewer
                         break;
 #endif
                     case KeyCode.F1:
-                        adapter.CallAvatarCustomizeAnimation(0);
                         break;
                     case KeyCode.F2:
-                        adapter.CallAvatarCustomizeAnimation(1);
                         break;
 #if DEBUG
                     case KeyCode.F3:
