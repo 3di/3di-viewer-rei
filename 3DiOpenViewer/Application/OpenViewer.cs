@@ -71,25 +71,6 @@ using OpenMetaverse;
 
 namespace OpenViewer
 {
-    public class RenderForm : System.Windows.Forms.Form
-    {
-        private Viewer viewer = null;
-
-        public RenderForm(Viewer viewer)
-        {
-            this.viewer = viewer;
-            this.Cursor = null;
-        }
-
-        protected override bool CanEnableIme
-        {
-            get
-            {
-                return (true);
-            }
-        }
-    }
-
     public class Viewer
     {
         private const float DEFAULT_FIRST_DISTANCE = 5f;
