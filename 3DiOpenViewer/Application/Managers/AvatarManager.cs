@@ -944,7 +944,7 @@ namespace OpenViewer.Managers
                                     //animeNode.SetTransitionTime(0.1f); // <<--------------- I'll implement to IrrlichtNET.dll
 
                                     _obj.Mesh = animeNode.AnimatedMesh.GetMesh(0);
-                                    SetAnimation(_obj, "standing");
+                                    SetAnimation(_obj, _obj.Prim.ParentID != 0 ? "sitstart" : "standing");
                                 }
                             }
                         }
@@ -954,7 +954,7 @@ namespace OpenViewer.Managers
                 }
             }
 
-            AnimationFrame(_obj);
+            AnimationFrame(_obj, _obj.Prim.ParentID != 0);
 
             _obj.TargetPosition = new Vector3D(_obj.Prim.Position.X, _obj.Prim.Position.Z - 0.83f, _obj.Prim.Position.Y);
             _obj.Velocity = new Vector3D(_obj.Prim.Velocity.X, _obj.Prim.Velocity.Z, _obj.Prim.Velocity.Y);
@@ -1128,14 +1128,24 @@ namespace OpenViewer.Managers
         /// with an avatar. They are removed from that dictionary here and applied to the proper avatars
         /// in the scene.
         /// </summary>
-        private void AnimationFrame(VObject _obj)
+        private void AnimationFrame(VObject _obj, bool sitting)
         {
             if (_obj.MeshNode is AnimatedMeshSceneNode)
             {
                 string key = GetAnimationKey(_obj.Prim.ID);
 
-               if (!string.IsNullOrEmpty(key))
-                   SetAnimation(_obj, key);
+                if (sitting && (key != null && key == UtilityAnimation.ANIMATION_KEY_STANDING))
+                {
+                    SetAnimation(_obj, "sitstart");
+                }
+                else if ((!sitting) && (key != null && key == UtilityAnimation.ANIMATION_KEY_SITTING))
+                {
+                    SetAnimation(_obj, "standing");
+                }
+                else if (!string.IsNullOrEmpty(key))
+                {
+                    SetAnimation(_obj, key);
+                }
             }
         }
 
