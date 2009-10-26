@@ -1035,7 +1035,7 @@ namespace OpenViewer.Managers
             if (targetVObj == null)
                 return;
 
-            if (userObject.MeshNode.Raw == targetVObj.MeshNode.Raw)
+            if (userObject != null && userObject.MeshNode.Raw == targetVObj.MeshNode.Raw)
             {
                 if (StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_00) ||
                     StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_01) ||
