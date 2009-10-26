@@ -67,7 +67,7 @@ using OpenViewer.Primitives;
 
 namespace OpenViewer
 {
-    public class VObject
+    public class VObject : IDisposable
     {
         // Customize animation key
         public static readonly UUID CUSTOMIZE_ANIM_00 = new UUID("{C5829C0B-B82C-4f3d-9475-0826D48E5DB8}");
@@ -239,6 +239,14 @@ namespace OpenViewer
         {
             if (MeshNode != null)
                 MeshNode.LoopMode = _loop;
+        }
+
+        public void Dispose()
+        {
+            if (MeshNode != null)
+            {
+                MeshNode.Dispose();
+            }
         }
     }
 }

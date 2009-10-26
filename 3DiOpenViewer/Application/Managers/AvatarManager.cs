@@ -1032,7 +1032,7 @@ namespace OpenViewer.Managers
         {
             VObject targetVObj = GetVObjectFromMeshRaw(node.Raw);
 
-            if (targetVObj == null)
+            if (targetVObj == null || targetVObj.MeshNode == null)
                 return;
 
             if (userObject != null && userObject.MeshNode.Raw == targetVObj.MeshNode.Raw)
@@ -1107,6 +1107,7 @@ namespace OpenViewer.Managers
                 lock (NativeElement.Elements) { if (NativeElement.Elements.ContainsKey(_obj.PickNode.TriangleSelector.Raw)) { NativeElement.Elements.Remove(_obj.PickNode.TriangleSelector.Raw); } }
             }
 
+            _obj.Dispose();
             _obj.VoiceNode = null;
             _obj.MeshNode = null;
             _obj.PickNode = null;
