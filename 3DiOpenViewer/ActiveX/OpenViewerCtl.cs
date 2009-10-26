@@ -1278,6 +1278,16 @@ namespace OpenViewerAX
             return OV.Adapter.CallGetUserAvatarName();
         }
 
+        public string GetUserAvatarAnimationName()
+        {
+            if (OV.IsDHTMLRelationEnable == false)
+                return string.Empty;
+
+            DebugMessageEventHandler("OUT: GetUserAvatarAnimationName");
+
+            return OV.Adapter.CallGetUserAvatarAnimationName();
+        }
+
         public void UserAvatarUp()
         {
             if (OV.IsDHTMLRelationEnable == false)

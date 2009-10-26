@@ -128,6 +128,7 @@ namespace OpenViewer
         public bool NeedToReload3DiMesh = false;
         public bool SmoothingReset = false;
         public UUID CurrentAnimationUUID;
+        public string AnimationCurrentName;
         public UUID _3DiIrrfileUUID;
         public IrrDatas IrrData; // reference to parsed .irr data. We need this when we receive a textureComplete callback, in order to figure out which texture slot references the just-arrived texture.
         public bool requestTexturesDirectlyFromAssetServerWithoutJ2KConversion;

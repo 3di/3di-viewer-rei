@@ -45,6 +45,14 @@ opvw.API.Avatar = opvw.API.Avatar || {
 		position["z"] = Number(posions[2]);
 		return position;
 	},
+	/**	
+	 * Get user avatar animation name.
+	 * 
+	 * @return (string) animation name
+	 */
+	GetUserAvatarAnimationName : function() {
+		return opvw.API.plugin.GetUserAvatarAnimationName();
+	},
 	/**
 	 * Get user acount UUID.
 	 * 
@@ -99,6 +107,7 @@ opvw.APIWrapper["GetUserAvatarName"] = opvw.API.Avatar.GetUserAvatarName;
 opvw.APIWrapper["GetUserAvatarPosition"] = opvw.API.Avatar.GetUserAvatarPosition;
 opvw.APIWrapper["GetUserUUID"] = opvw.API.Avatar.GetUserUUID;
 opvw.APIWrapper["GetUserAvatarUUID"] = opvw.API.Avatar.GetUserAvatarUUID;
+opvw.APIWrapper["GetUserAvatarAnimationName"] = opvw.API.Avatar.GetUserAvatarAnimationName;
 opvw.APIWrapper["UserAvatarUp"] = opvw.API.Avatar.UserAvatarUp;
 opvw.APIWrapper["UserAvatarLeft"] = opvw.API.Avatar.UserAvatarLeft;
 opvw.APIWrapper["UserAvatarRight"] = opvw.API.Avatar.UserAvatarRight;

@@ -312,6 +312,12 @@ function GetUserAvatarPosition()
 	debug_info.value = "X:" + position.x + " Y:" + position.y + " Z:" + position.z;
 }
 
+function GetUserAvatarAnimation()
+{
+	var val = ctrl.GetUserAvatarAnimationName();
+	debug_info.value = val;
+}
+
 function GetUserUUID()
 {
 	var debug_info = document.getElementById("user_avatar_res");

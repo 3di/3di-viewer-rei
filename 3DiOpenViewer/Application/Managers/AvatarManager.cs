@@ -1284,6 +1284,7 @@ namespace OpenViewer.Managers
             int endFrame = _obj.FrameSetList[_key].EndFrame;
             int animFramesPerSecond = _obj.FrameSetList[_key].AnimationSpeed;
 
+            _obj.AnimationCurrentName = _key;
             _obj.AnimationSpeed = animFramesPerSecond;
             _obj.SetAnimation(_key, startFrame, endFrame, loopFlag);
         }
@@ -1350,6 +1351,15 @@ namespace OpenViewer.Managers
                 position = userObject.Prim.Position + userObject.ParentPosition;
             }
             return position;
+        }
+
+        public string GetAvatarCurrentAnimation()
+        {
+            string animation = string.Empty;
+            lock (userObject)
+                animation = userObject.AnimationCurrentName;
+
+            return animation;
         }
 
         public void UserUpdateMousePosition(Position2D _position)

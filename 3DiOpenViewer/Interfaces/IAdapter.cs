@@ -196,6 +196,8 @@ namespace OpenViewer
 
          void CallAvatarCustomizeAnimation(int _index);
 
+         string CallGetUserAvatarAnimationName();
+
          string CallGetUserUUID();
 
          string CallGetUserAvatarPosition();
