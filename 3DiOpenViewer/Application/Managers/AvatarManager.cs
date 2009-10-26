@@ -203,7 +203,7 @@ namespace OpenViewer.Managers
                 if (frame % 10 == 0)
                     EventControlProcess();
 
-                if (frame % updateRate == 0 && userObject != null)
+                if (frame % updateRate == 0 && userObject != null && userObject.Node != null)
                 {
                     lock (userObject)
                     {
@@ -381,7 +381,7 @@ namespace OpenViewer.Managers
             {
                 foreach (VObject obj in entities.Values)
                 {
-                    if (obj == null)
+                    if (obj == null || obj.MeshNode == null)
                         continue;
 
                     if (obj.MeshNode.Raw == _meshRaw)
