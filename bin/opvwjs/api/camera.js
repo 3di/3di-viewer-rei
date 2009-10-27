@@ -39,10 +39,10 @@ opvw.API.Camera = opvw.API.Camera || {
 	 */
 	GetCameraPosition : function(){
 		//x, y, z float positions with comma delimiter: 123.456, 123.456, 123.456
-		var posions = opvw.API.plugin.GetCameraPosition().split(",");
-		position["x"] = Number(posions[0]);
-		position["y"] = Number(posions[1]);
-		position["z"] = Number(posions[2]);
+		var position = opvw.API.plugin.GetCameraPosition().split(",");
+		position["x"] = Number(position[0]);
+		position["y"] = Number(position[1]);
+		position["z"] = Number(position[2]);
 		return position;
 	},
 	/**
@@ -52,10 +52,10 @@ opvw.API.Camera = opvw.API.Camera || {
 	 */
 	GetCameraTarget : function(){
 		//x, y, z float positions with comma delimiter: 123.456, 123.456, 123.456
-		var posions = opvw.API.plugin.GetCameraTarget().split(",");
-		position["x"] = Number(posions[0]);
-		position["y"] = Number(posions[1]);
-		position["z"] = Number(posions[2]);
+		var position = opvw.API.plugin.GetCameraTarget().split(",");
+		position["x"] = Number(position[0]);
+		position["y"] = Number(position[1]);
+		position["z"] = Number(position[2]);
 		return position;
 	},
 	GetCameraDistance : function(){
