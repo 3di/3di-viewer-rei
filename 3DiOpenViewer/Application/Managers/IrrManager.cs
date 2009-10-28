@@ -47,7 +47,7 @@ namespace OpenViewer.Managers
     public class IrrManager : BaseComponent
     {
         private Dictionary<UUID, IrrDatas> dataList = new Dictionary<UUID, IrrDatas>();
-        private List<UUID> requestingList = new List<UUID>();
+        private Dictionary<UUID, List<VObject>> requestingList = new Dictionary<UUID,List<VObject>>();
         private UUID lastUUID = new UUID();
         private string workDirectory = string.Empty;
         public SmartThreadPool requestingThreadPool;
@@ -93,6 +93,11 @@ namespace OpenViewer.Managers
 
         private void PostIrrWorkItemHandler(IWorkItemResult wir)
         {
+            if (wir.IsCanceled)
+            {
+                return;
+            }
+
             object result = wir.GetResult();
 
             if (result != null)
@@ -253,12 +258,25 @@ namespace OpenViewer.Managers
 
         public void RequestObject(VObject _obj)
         {
-            if (requestingList.Contains(_obj.RequestIrrfileUUID))
-                return;
+            Reference.Log.Debug(" Request:" + _obj.RequestIrrfileUUID.ToString());
+            _obj.Requesting = true;
 
             lock (requestingList)
-                requestingList.Add(_obj.RequestIrrfileUUID);
-            _obj.Requesting = true;
+            {
+                if (requestingList.ContainsKey(_obj.RequestIrrfileUUID))
+                {
+                    Reference.Log.Debug(" Already Requested:" + _obj.RequestIrrfileUUID.ToString());
+
+                    requestingList[_obj.RequestIrrfileUUID].Add(_obj);
+                    return;
+                }
+                else
+                {
+                    List<VObject> requestors = new List<VObject>();
+                    requestors.Add(_obj);
+                    requestingList.Add(_obj.RequestIrrfileUUID, requestors);
+                }
+            }
 
             IrrMeshThread ss = new IrrMeshThread(Reference.Viewer, _obj, workDirectory);
             IrrWorkItem item = new IrrWorkItem("IrrMeshThread.Requesting", new WorkItemCallback(ss.Requesting), null);
@@ -375,13 +393,19 @@ namespace OpenViewer.Managers
             }
         }
 
-        public void CloseRequest(UUID _uuid)
+        public List<VObject> CloseRequest(UUID _uuid)
         {
+            List<VObject> requestors = null;
+
             lock (requestingList)
             {
-                if (requestingList.Contains(_uuid))
+                if (requestingList.ContainsKey(_uuid))
+                {
+                    requestors = requestingList[_uuid];
                     requestingList.Remove(_uuid);
+                }
             }
+            return requestors;
         }
 
 

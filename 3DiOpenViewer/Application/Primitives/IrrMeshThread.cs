@@ -82,17 +82,41 @@ namespace OpenViewer
 
             }
 
-            Reference.Viewer.IrrManager.CloseRequest(obj.RequestIrrfileUUID);
+            List<VObject> requestors = Reference.Viewer.IrrManager.CloseRequest(obj.RequestIrrfileUUID);
+
             if (!(obj.Prim is Avatar))
             {
                 // mesh prim
-                obj._3DiIrrfileUUID = obj.RequestIrrfileUUID; // ensure the mesh loading code in EntityManager has the mesh UUID
-                obj.NeedToReload3DiMesh = true;
-                obj.UpdateFullYN = true;
-                Reference.Viewer.EntityManager.AddObject(obj);
+                if (requestors != null)
+                {
+                    foreach (VObject v in requestors)
+                    {
+                        if (v == null)
+                        {
+                            continue;
+                        }
+
+                        v._3DiIrrfileUUID = obj.RequestIrrfileUUID; // ensure the mesh loading code in EntityManager has the mesh UUID
+                        v.NeedToReload3DiMesh = true;
+                        v.UpdateFullYN = true;
+
+                        Reference.Viewer.EntityManager.AddObject(v);
+                    }
+                }
             }
-            obj.Requesting = false;
-            Reference.Viewer.AvatarManager.UpdateObject(obj.Prim.ID);
+            if (requestors != null)
+            {
+                foreach (VObject v in requestors)
+                {
+                    if (v == null)
+                    {
+                        continue;
+                    }
+
+                    v.Requesting = false;
+                    Reference.Viewer.AvatarManager.UpdateObject(v.Prim.ID);
+                }
+            }
             return null; // OK
         }
     }
