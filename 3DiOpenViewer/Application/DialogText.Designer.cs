@@ -248,6 +248,18 @@ using System;
         }
 
         /// <summary>
+        ///   A fatal error has occured
+        ///Restart the viewer? に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ErrorFinalMessageme01
+        {
+            get
+            {
+                return ResourceManager.GetString("ErrorFinalMessageme01", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Creating graphics device failed. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ErrorGraphicDriverCaption

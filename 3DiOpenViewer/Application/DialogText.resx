@@ -157,8 +157,10 @@ You have been disconnected from the server.
 Please log out.</value>
   </data>
   <data name="ErrorFinalMessageme00" xml:space="preserve">
-    <value>A fatal error has occured
-Restart the viewer?</value>
+    <value>Restart the viewer?</value>
+  </data>
+  <data name="ErrorFinalMessageme01" xml:space="preserve">
+    <value>The viewer is restarted.</value>
   </data>
   <data name="ErrorGraphicDriverCaption" xml:space="preserve">
     <value>Creating graphics device failed.</value>

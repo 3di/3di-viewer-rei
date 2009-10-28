@@ -715,9 +715,10 @@ namespace OpenViewer
 #endif
 
             System.Windows.Forms.DialogResult dialogRes = System.Windows.Forms.DialogResult.Retry;
+            int restarted = 0;
             while (dialogRes == System.Windows.Forms.DialogResult.Retry)
             {
-                dialogRes = RenderLoop();
+                dialogRes = RenderLoop(restarted++);
             }
 
 #if MANAGED_D3D
@@ -970,7 +971,7 @@ namespace OpenViewer
             }
         }
 
-        private System.Windows.Forms.DialogResult RenderLoop()
+        private System.Windows.Forms.DialogResult RenderLoop(int restarted)
         {
             uint frames = 1;
             long teleportTimeout = 0;
@@ -1096,9 +1097,19 @@ namespace OpenViewer
                 {
                     m_log.Fatal("RenderLoop", e);
 
-                    ShowCursor(true);
-                    dialogRes = System.Windows.Forms.MessageBox.Show(DialogText.ErrorFinalMessageme00, "Error", System.Windows.Forms.MessageBoxButtons.RetryCancel, System.Windows.Forms.MessageBoxIcon.Stop);
-                    ShowCursor(false);
+                    if (restarted == 0)
+                    {
+                        ShowCursor(true);
+                        System.Windows.Forms.MessageBox.Show(DialogText.ErrorFinalMessageme01, "Restart Plug-in", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                        ShowCursor(false);
+                        dialogRes = System.Windows.Forms.DialogResult.Retry;
+                    }
+                    else
+                    {
+                        ShowCursor(true);
+                        dialogRes = System.Windows.Forms.MessageBox.Show(DialogText.ErrorFinalMessageme00, "Restart plug-in", System.Windows.Forms.MessageBoxButtons.RetryCancel, System.Windows.Forms.MessageBoxIcon.Information);
+                        ShowCursor(false);
+                    }
                 }
             }
             finally

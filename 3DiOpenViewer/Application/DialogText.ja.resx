@@ -156,8 +156,10 @@
 ログアウトしてください。</value>
   </data>
   <data name="ErrorFinalMessageme00" xml:space="preserve">
-    <value>致命的なエラーが発生しました。
-プラグインを再起動しますか？</value>
+    <value>プラグインを再起動しますか？</value>
+  </data>
+  <data name="ErrorFinalMessageme01" xml:space="preserve">
+    <value>プラグインを再起動します。</value>
   </data>
   <data name="ErrorGraphicDriverCaption" xml:space="preserve">
     <value>Deviceの生成に失敗しました。</value>
