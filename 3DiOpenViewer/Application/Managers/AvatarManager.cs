@@ -941,7 +941,7 @@ namespace OpenViewer.Managers
                                 if (animeNode != null)
                                 {
                                     animeNode.AnimationEnd += animeNode_AnimationEnd;
-                                    //animeNode.SetTransitionTime(0.1f); // <<--------------- I'll implement to IrrlichtNET.dll
+                                    animeNode.SetTransitionTime(0.1f);
 
                                     _obj.Mesh = animeNode.AnimatedMesh.GetMesh(0);
                                     SetAnimation(_obj, _obj.Prim.ParentID != 0 ? "sitstart" : "standing");
