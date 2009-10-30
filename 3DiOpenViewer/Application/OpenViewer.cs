@@ -1734,11 +1734,15 @@ namespace OpenViewer
             if (p_event.MouseInputEvent == MouseInputEvent.MouseMoved)
             {
                 Cursors currentCursor = guiManager.GetCursor();
-                if (LMheld)
+
+                if (stateManager.State == State.CONNECTED)
                 {
-                    if (currentCursor == Cursors.NORMAL)
+                    if (LMheld)
                     {
-                        avatarManager.UserUpdateMousePosition(p_event.MousePosition);
+                        if (currentCursor == Cursors.NORMAL)
+                        {
+                            avatarManager.UserUpdateMousePosition(p_event.MousePosition);
+                        }
                     }
                 }
 
