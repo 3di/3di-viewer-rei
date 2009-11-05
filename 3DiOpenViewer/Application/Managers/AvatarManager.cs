@@ -143,28 +143,8 @@ namespace OpenViewer.Managers
                 avatarNameVisible = Reference.Viewer.Config.Source.Configs["Startup"].GetBoolean("visibleAvatarName");
             }
 
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_00, "customize00");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_01, "customize01");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_02, "customize02");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_03, "customize03");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_04, "customize04");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_05, "customize05");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_06, "customize06");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_07, "customize07");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_08, "customize08");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_09, "customize09");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_10, "customize10");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_11, "customize11");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_12, "customize12");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_13, "customize13");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_14, "customize14");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_15, "customize15");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_16, "customize16");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_17, "customize17");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_18, "customize18");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_19, "customize19");
-            customizeAnimationKey.Add(VObject.CUSTOMIZE_ANIM_20, "customize20");
-
+            for(int i = 0; i < VObject.CUSTOM_ANIMATIONS.Count; i++)
+                customizeAnimationKey.Add(VObject.CUSTOM_ANIMATIONS[i], string.Format("customize{0:00}", i));
         }
 
         public override void Initialize()
@@ -670,30 +650,7 @@ namespace OpenViewer.Managers
 
         public void RequestCustomizeAnimation(int _index)
         {
-            switch (_index)
-            {
-                case 0: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_00); break;
-                case 1: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_01); break;
-                case 2: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_02); break;
-                case 3: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_03); break;
-                case 4: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_04); break;
-                case 5: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_05); break;
-                case 6: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_06); break;
-                case 7: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_07); break;
-                case 8: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_08); break;
-                case 9: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_09); break;
-                case 10: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_10); break;
-                case 11: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_11); break;
-                case 12: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_12); break;
-                case 13: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_13); break;
-                case 14: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_14); break;
-                case 15: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_15); break;
-                case 16: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_16); break;
-                case 17: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_17); break;
-                case 18: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_18); break;
-                case 19: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_19); break;
-                case 20: RequestCustomizeAnimation(VObject.CUSTOMIZE_ANIM_20); break;
-            }
+            RequestCustomizeAnimation(VObject.CUSTOM_ANIMATIONS[_index]);
         }
 
         public void RequestCustomizeAnimation(UUID _animationUUID)
@@ -711,28 +668,10 @@ namespace OpenViewer.Managers
                 return;
 
             // If playing animation is customize animation, stop current animation.
-            if (userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_00
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_01
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_02
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_03
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_04
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_05
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_06
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_07
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_08
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_09
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_10
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_11
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_12
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_13
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_14
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_15
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_16
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_17
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_18
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_19
-                || userObject.CurrentAnimationUUID == VObject.CUSTOMIZE_ANIM_20
-                )
+            bool customAnim = false;
+            foreach (UUID uuid in VObject.CUSTOM_ANIMATIONS)
+                if (userObject.CurrentAnimationUUID == uuid) customAnim = true;
+            if (customAnim)
             {
                 Reference.Viewer.ProtocolManager.AvatarConnection.RequestAnimationStop(userObject.CurrentAnimationUUID);
             }
@@ -1039,28 +978,10 @@ namespace OpenViewer.Managers
 
             if (userObject != null && userObject.MeshNode.Raw == targetVObj.MeshNode.Raw)
             {
-                if (StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_00) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_01) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_02) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_03) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_04) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_05) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_06) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_07) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_08) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_09) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_10) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_11) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_12) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_13) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_14) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_15) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_16) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_17) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_18) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_19) ||
-                    StopAnimationIfIsKeyCurrentAnimation(UtilityAnimation.CUSTOMIZE_ANIM_20)
-                    )
+                bool custAnim = false;
+                foreach (UUID uuid in VObject.CUSTOM_ANIMATIONS)
+                    custAnim = custAnim || StopAnimationIfIsKeyCurrentAnimation(uuid);
+                if (custAnim)
                 {
                 }
             }
@@ -1193,94 +1114,17 @@ namespace OpenViewer.Managers
                     _obj.SetNextAnimation(UtilityAnimation.ANIMATION_KEY_STANDING, true);
                      loopFlag = false;
                      break;
-                case "customize00":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_00;
-                    loopFlag = false;
-                    break;
-                case "customize01":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_01;
-                    loopFlag = false;
-                    break;
-                case "customize02":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_02;
-                    loopFlag = false;
-                    break;
-                case "customize03":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_03;
-                    loopFlag = false;
-                    break;
-                case "customize04":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_04;
-                    loopFlag = false;
-                    break;
-                case "customize05":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_05;
-                    loopFlag = false;
-                    break;
-                case "customize06":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_06;
-                    loopFlag = false;
-                    break;
-                case "customize07":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_07;
-                    loopFlag = false;
-                    break;
-                case "customize08":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_08;
-                    loopFlag = false;
-                    break;
-                case "customize09":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_09;
-                    loopFlag = false;
-                    break;
-                case "customize10":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_10;
-                    loopFlag = false;
-                    break;
-                case "customize11":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_11;
-                    loopFlag = false;
-                    break;
-                case "customize12":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_12;
-                    loopFlag = false;
-                    break;
-                case "customize13":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_13;
-                    loopFlag = false;
-                    break;
-                case "customize14":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_14;
-                    loopFlag = false;
-                    break;
-                case "customize15":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_15;
-                    loopFlag = false;
-                    break;
-                case "customize16":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_16;
-                    loopFlag = false;
-                    break;
-                case "customize17":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_17;
-                    loopFlag = false;
-                    break;
-                case "customize18":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_18;
-                    loopFlag = false;
-                    break;
-                case "customize19":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_19;
-                    loopFlag = false;
-                    break;
-                case "customize20":
-                    _obj.CurrentAnimationUUID = VObject.CUSTOMIZE_ANIM_20;
-                    loopFlag = false;
-                    break;
 
                 default:
                     _obj.CurrentAnimationUUID = new UUID();
                     break;
+            }
+
+            if (_key.StartsWith("customize"))
+            {
+                int animNo = int.Parse(_key.Substring(9));
+                _obj.CurrentAnimationUUID = VObject.CUSTOM_ANIMATIONS[animNo];
+                loopFlag = false;
             }
 
             int startFrame = _obj.FrameSetList[_key].StartFrame;
