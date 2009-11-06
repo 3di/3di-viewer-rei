@@ -138,7 +138,7 @@ namespace OpenViewer.Managers
             Reference.Viewer.GuiManager.DebugAdd(key, "Application");
             Reference.Viewer.GuiManager.DebugAdd(key, " - Mem(byte):" + memkb.ToString("###,###,###"));
 #else
-            long memkb = System.Diagnostics.Process.GetCurrentProcess().WorkingSet / 1024;
+            long memkb = System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / 1024;
             string processName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
 
             Reference.Viewer.GuiManager.DebugAdd(key, "Application");

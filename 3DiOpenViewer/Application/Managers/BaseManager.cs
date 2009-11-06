@@ -56,7 +56,7 @@ namespace OpenViewer.Managers
         }
 
         // Run when the scene is closing
-        public virtual void Cleanup()
+        public override void Cleanup()
         {
             if (parentNode != null)
             {

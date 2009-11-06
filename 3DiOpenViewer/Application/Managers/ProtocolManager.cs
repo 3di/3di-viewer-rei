@@ -60,7 +60,6 @@ namespace OpenViewer.Managers
         // Usui - detached sims: "a detached simulator" is a simulator you have visited before 
         //   and the connection to it is disconnected now
         private Dictionary<ulong, Simulator> DetachedSims = new Dictionary<ulong, Simulator>();
-        private int currentParcel = 0;
 
         public event EventHandler OnParcelChanged;
         public event TextureFromWebCallback OnTextureFromWebLoaded;

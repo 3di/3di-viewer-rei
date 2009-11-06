@@ -43,9 +43,9 @@ namespace OpenViewer.Shaders
             parentNode = _parentNode;
         }
 
-        public virtual void Initialize() { }
+        public override void Initialize() { }
 
-        public virtual void Cleanup()
+        public override void Cleanup()
         {
             //parentNode = null;
         }

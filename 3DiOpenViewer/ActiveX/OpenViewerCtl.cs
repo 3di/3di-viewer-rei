@@ -47,7 +47,7 @@ using OpenViewer.bootstrap;
 using System.Threading;
 using System.Security.Permissions;
 
-[assembly: CLSCompliant(true)]
+//[assembly: CLSCompliant(true)]
 namespace OpenViewerAX
 {
     [ComImport]

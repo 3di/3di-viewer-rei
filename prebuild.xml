@@ -104,7 +104,7 @@
       <Reference name="Mono.Addins.dll" />
       <Reference name="IrrParseLib" />
       <Reference name="OpenViewer.bootstrap" /> 
-      <Reference name="OpenViewerVoice" />
+<!--  <Reference name="OpenViewerVoice" /> -->
       <Reference name="OpenMetaverse.dll" />
       <Reference name="OpenMetaverseTypes.dll" />
       <Reference name="OpenMetaverse.Utilities.dll" />
@@ -149,7 +149,7 @@
       <Reference name="Mono.Addins.dll" />
       <Reference name="IrrParseLib" />
       <Reference name="OpenViewer.bootstrap" /> 
-      <Reference name="OpenViewerVoice" />
+<!--  <Reference name="OpenViewerVoice" /> -->
       <Reference name="OpenMetaverse.dll" />
       <Reference name="OpenMetaverseTypes.dll" />
       <Reference name="OpenMetaverse.Utilities.dll" />
@@ -200,6 +200,7 @@
       </Files>
     </Project>
 
+<!--
     <Project name="VoicePlugin" path="3DiOpenViewer/Plugins/VoicePlugin" type="Library">
       <Configuration name="Debug">
         <Options>
@@ -232,6 +233,7 @@
          <Match path="Resources" pattern="*.xml" buildAction="EmbeddedResource"/>
       </Files>
     </Project>
+-->
 
     <Project name="OpenViewerAX" path="3DiOpenViewer/ActiveX" type="Library">
       <Configuration name="Debug">

@@ -1504,7 +1504,6 @@ namespace OpenViewer
             entityManager.AddTexture(tx);
         }
 
-        bool isOpen = false;
         public bool KeyInputEventProcessor(Event p_event)
         {
             if (guiManager.Focused)
@@ -1608,7 +1607,7 @@ namespace OpenViewer
                     case KeyCode.F6:
                         break;
                     case KeyCode.F7:
-                        throw new Exception("Dead!!");
+                        //throw new Exception("Dead!!");
                         break;
                     case KeyCode.F10:
                         Shaders.AdvancedSea sea = (Shaders.AdvancedSea)shaderManager.GetShaderObject(ShaderManager.ShaderType.AdvancedSea);

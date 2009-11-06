@@ -68,7 +68,6 @@ namespace OpenViewer
     
     class SculptMeshLOD : IDisposable
     {
-        Image idata = null;
         Bitmap bLOD = null;
         Bitmap bBitmap = null;
         private int lod = 32;

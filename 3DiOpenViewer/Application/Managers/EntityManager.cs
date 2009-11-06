@@ -482,6 +482,8 @@ namespace OpenViewer.Managers
             catch (AccessViolationException e)
             {
                 // TrianglePicker was release before
+                Reference.Log.Warn("[ENTITY MANAGER]: " + e.Message);
+                Reference.Log.Debug("[ENTITY MANAGER]: " + e.StackTrace);
             }
             if (node == null)
                 return;

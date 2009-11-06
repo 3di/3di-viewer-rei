@@ -45,7 +45,6 @@ namespace OpenViewer.Shaders
         private SceneNode moonNode;
         private SceneNode skyNode;
         private Color lastAtomColor = new Color(255, 187, 121, 8);
-        private float colorRate = 0;
 
         private DateTime worldTime = new DateTime(2009, 2, 27, 15, 0, 0);
         private DirectionalLight sunLight;             // Directional lights wrapper for the sun

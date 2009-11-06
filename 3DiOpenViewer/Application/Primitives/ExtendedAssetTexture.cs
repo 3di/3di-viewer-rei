@@ -37,7 +37,6 @@ namespace OpenViewer.Primitives
     [Serializable]
     class ExtendedAssetTexture:OpenMetaverse.AssetTexture
     {
-        private int fAssetType;
         public int ExtAssetType { get; set; }
         public ExtendedAssetTexture(OpenMetaverse.UUID assetID, byte[] assetData, int assetTypeIn):base(assetID,assetData)
         {

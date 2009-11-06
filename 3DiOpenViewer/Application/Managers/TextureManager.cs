@@ -126,7 +126,7 @@ namespace OpenViewer.Managers
         private TextureExtended defaultTexture;
         private int timeout;
 
-        public virtual void Initialize()
+        public override void Initialize()
         {
             base.Initialize();
             downloadTextureQueue = new BlockingQueue<TextureDownloadRequest>();
@@ -137,7 +137,7 @@ namespace OpenViewer.Managers
             defaultTexture = new TextureExtended(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\dummy_white.tga").Raw, ".tga");
         }
 
-        public virtual void Cleanup()
+        public override void Cleanup()
         {
             if (defaultTexture != null)
             {

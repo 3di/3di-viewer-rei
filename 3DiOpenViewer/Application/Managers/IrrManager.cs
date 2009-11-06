@@ -487,6 +487,8 @@ namespace OpenViewer.Managers
                     }
                     catch (Exception e)
                     {
+                        Reference.Log.Warn("[IRR MANAGER]: " + e.Message);
+                        Reference.Log.Debug("[IRR MANAGER]: " + e.StackTrace);
                         File.WriteAllBytes(_directory + "/" + filenameWithoutPath, ab.Data);
                     }
                     finally
