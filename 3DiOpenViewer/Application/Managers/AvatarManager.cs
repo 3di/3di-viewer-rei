@@ -143,8 +143,8 @@ namespace OpenViewer.Managers
                 avatarNameVisible = Reference.Viewer.Config.Source.Configs["Startup"].GetBoolean("visibleAvatarName");
             }
 
-            for(int i = 0; i < VObject.CUSTOM_ANIMATIONS.Count; i++)
-                customizeAnimationKey.Add(VObject.CUSTOM_ANIMATIONS[i], string.Format("customize{0:00}", i));
+            for(int i = 0; i < UtilityAnimation.CUSTOM_ANIMATIONS.Count; i++)
+                customizeAnimationKey.Add(UtilityAnimation.CUSTOM_ANIMATIONS[i], string.Format("customize{0:00}", i));
         }
 
         public override void Initialize()
@@ -650,7 +650,7 @@ namespace OpenViewer.Managers
 
         public void RequestCustomizeAnimation(int _index)
         {
-            RequestCustomizeAnimation(VObject.CUSTOM_ANIMATIONS[_index]);
+            RequestCustomizeAnimation(UtilityAnimation.CUSTOM_ANIMATIONS[_index]);
         }
 
         public void RequestCustomizeAnimation(UUID _animationUUID)
@@ -669,7 +669,7 @@ namespace OpenViewer.Managers
 
             // If playing animation is customize animation, stop current animation.
             bool customAnim = false;
-            foreach (UUID uuid in VObject.CUSTOM_ANIMATIONS)
+            foreach (UUID uuid in UtilityAnimation.CUSTOM_ANIMATIONS)
                 if (userObject.CurrentAnimationUUID == uuid) customAnim = true;
             if (customAnim)
             {
@@ -979,7 +979,7 @@ namespace OpenViewer.Managers
             if (userObject != null && userObject.MeshNode.Raw == targetVObj.MeshNode.Raw)
             {
                 bool custAnim = false;
-                foreach (UUID uuid in VObject.CUSTOM_ANIMATIONS)
+                foreach (UUID uuid in UtilityAnimation.CUSTOM_ANIMATIONS)
                     custAnim = custAnim || StopAnimationIfIsKeyCurrentAnimation(uuid);
                 if (custAnim)
                 {
@@ -1123,7 +1123,7 @@ namespace OpenViewer.Managers
             if (_key.StartsWith("customize"))
             {
                 int animNo = int.Parse(_key.Substring(9));
-                _obj.CurrentAnimationUUID = VObject.CUSTOM_ANIMATIONS[animNo];
+                _obj.CurrentAnimationUUID = UtilityAnimation.CUSTOM_ANIMATIONS[animNo];
                 loopFlag = false;
             }
 
