@@ -50,7 +50,7 @@ namespace OpenViewer.Managers
         // Run when the scene is (re)initializing
         public override void Initialize()
         {
-            base.Initialize();
+            //base.Initialize();
 
             parentNode = Reference.SceneManager.AddEmptySceneNode(Reference.SceneManager.RootSceneNode, -1);
         }
@@ -64,7 +64,7 @@ namespace OpenViewer.Managers
                 parentNode = null;
             }
 
-            base.Initialize();
+            //base.Initialize();
         }
     }
 }
