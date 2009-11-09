@@ -316,9 +316,14 @@ namespace OpenViewer
         [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
         private static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
+#if !LINUX
         [DllImport("user32.dll")]
         public static extern int ShowCursor(bool bShow);
 
+#else
+        public static int ShowCursor(bool bShow) {return(0);}
+#endif
+		
         public Viewer()
         {
             // Check and create folders if needed at the user's location.
@@ -474,7 +479,11 @@ namespace OpenViewer
 
             try
             {
+#if !LINUX
                 device = new IrrlichtDevice(DriverType.Direct3D9, new Dimension2D(width, height), 32, false, true, false, false, renderTarget);
+#else
+                device = new IrrlichtDevice(DriverType.OpenGL, new Dimension2D(width, height), 24, false, true, false, false);
+#endif
                 if (device == null)
                 {
                     m_log.Error("can't create irrlicht device.");
@@ -499,6 +508,7 @@ namespace OpenViewer
             }
             else
             {
+#if !LINUX
                 m_log.InfoFormat("AdapterVendorID: 0x{0:x8}", device.VideoDriver.AdapterVendorId);
                 m_log.InfoFormat("AdapterDeviceId: 0x{0:x8}", device.VideoDriver.AdapterDeviceId);
                 m_log.InfoFormat("AdapterSubSysId: 0x{0:x8}", device.VideoDriver.AdapterSubSysId);
@@ -530,6 +540,7 @@ namespace OpenViewer
                     }
                     */
                 }
+#endif
             }
 
             reference = new RefController(this);
@@ -543,7 +554,7 @@ namespace OpenViewer
             device.Logger.LogLevel = LogLevel.Information;
 #endif
             // Create video Textrue
-            videoTexture = device.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\videoTexture.tga");
+            videoTexture = device.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/videoTexture.tga");
 
             IrrlichtNETCP.Extensions.TTFont font = new TTFont(Device.VideoDriver);
             IrrlichtNETCP.Extensions.TTFace face = new TTFace();
@@ -555,12 +566,12 @@ namespace OpenViewer
             {
                 fontsize = (uint)Config.Source.Configs["Startup"].GetInt("guifont_size");
             }
-
+#if !LINUX
             if (!string.IsNullOrEmpty(fontface))
             {
-                if (System.IO.File.Exists(System.Environment.SystemDirectory + @"\..\Fonts\" + fontface))
+                if (System.IO.File.Exists(System.Environment.SystemDirectory + @"/../Fonts/" + fontface))
                 {
-                    face.Load(System.Environment.SystemDirectory + @"\..\Fonts\" + fontface);
+                    face.Load(System.Environment.SystemDirectory + @"/../Fonts/" + fontface);
                     font.Attach(face, fontsize);
                     font.Antialias = true;
                     Reference.GUIEnvironment.Skin.Font = font;
@@ -571,6 +582,7 @@ namespace OpenViewer
                     m_log.Warn("[FONT]: The specified font (" + fontface + ") was not available on this system. Reverting to default.");
                 }
             }
+
             if (!font_loaded)
             {
                 if (System.IO.File.Exists(System.Environment.SystemDirectory + @"\..\Fonts\msgothic.ttc"))
@@ -599,6 +611,55 @@ namespace OpenViewer
                     }
                 }
             }
+#else
+            if (!string.IsNullOrEmpty(fontface))
+            {
+                if (System.IO.File.Exists("/usr/share/fonts/" + fontface))
+                {
+                    face.Load("/usr/share/fonts/" + fontface);
+                    font.Attach(face, fontsize);
+                    font.Antialias = true;
+                    Reference.GUIEnvironment.Skin.Font = font;
+                    font_loaded = true;
+                }
+                else
+                {
+                    m_log.Warn("[FONT]: The specified font (" + fontface + ") was not available on this system. Reverting to default.");
+                }
+            }
+
+            if (!font_loaded)
+            {
+                if (System.IO.File.Exists("/usr/share/fonts/truetype/kochi/kochi-gothic.ttf"))
+                {
+                    face.Load("/usr/share/fonts/truetype/kochi/kochi-gothic.ttf");
+					m_log.Info("[FONT]: Loading font: /usr/share/fonts/truetype/kochi/kochi-gothic.ttf");
+                    font.Attach(face, fontsize);
+                    font.Antialias = true;
+                    Reference.GUIEnvironment.Skin.Font = font;
+                }
+                else
+                {
+                    JapaneseEnabled = false;
+                    Locale = "en";
+                    System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
+                    if (System.IO.File.Exists("/usr/share/fonts/truetype/ttf-bitstream-vera/Vera.ttf"))
+                    {
+                        face.Load("/usr/share/fonts/truetype/ttf-bitstream-vera/Vera.ttf");
+						m_log.Info("[FONT]: Loading font: /usr/share/fonts/truetype/ttf-bitstream-vera");
+                        font.Attach(face, fontsize);
+                        font.Antialias = true;
+                        Reference.GUIEnvironment.Skin.Font = font;
+                    }
+                    else
+                    {
+                        // Use built in font--- this looks horrible and should be avoided if possible
+                        Reference.GUIEnvironment.Skin.Font = Reference.GUIEnvironment.BuiltInFont;
+						m_log.Info("[FONT]: Using built-in font.");
+                    }
+                }
+            }
+#endif
             font.Drop();
             face.Drop();
             // if font and face are being used, at this point face and font should both have reference counts of 1.
@@ -879,7 +940,7 @@ namespace OpenViewer
                 config.InnerXml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"
                                 + "<log4net>"
                                 + "    <appender name=\"FileAppender\" type=\"log4net.Appender.RollingFileAppender\" >"
-                                + "         <file value=\"" + Util.LogFolder + "\\openviewer.log\" />"
+                                + "         <file value=\"" + Util.LogFolder + "openviewer.log\" />"
                                 + "         <maxSizeRollBackups value=\"10\" />"
                                 + "         <rollingStyle value=\"Size\" />"
                                 + "         <maximumFileSize value=\"1MB\" />"
@@ -924,7 +985,7 @@ namespace OpenViewer
 
         private void SetupAddins()
         {
-            string path = Util.UserCacheDirectory + @"\plugins\viewer.addins";
+            string path = Util.UserCacheDirectory + @"/plugins/viewer.addins";
 
             System.Xml.XmlDocument config = new System.Xml.XmlDocument();
 
@@ -1610,8 +1671,8 @@ namespace OpenViewer
                         //throw new Exception("Dead!!");
                         break;
                     case KeyCode.F10:
-                        Shaders.AdvancedSea sea = (Shaders.AdvancedSea)shaderManager.GetShaderObject(ShaderManager.ShaderType.AdvancedSea);
-                        sea.SaveMaps();
+                        //Shaders.AdvancedSea sea = (Shaders.AdvancedSea)shaderManager.GetShaderObject(ShaderManager.ShaderType.AdvancedSea);
+                        //sea.SaveMaps();
                         break;
                     case KeyCode.F12:
                         SetWorldTime("2009-02-20 10:00:00");
@@ -2023,6 +2084,7 @@ namespace OpenViewer
 
             switch (_type)
             {
+#if !LINUX
                 case ShaderManager.ShaderType.Sea:
                     SeaQuality = type;
                     break;
@@ -2033,6 +2095,7 @@ namespace OpenViewer
 
                 case ShaderManager.ShaderType.Shadow:
                     break;
+#endif
 
                 case ShaderManager.ShaderType.Sky:
                     SkyQuality = type;

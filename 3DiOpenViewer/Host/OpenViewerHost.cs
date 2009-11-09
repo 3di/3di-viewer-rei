@@ -91,8 +91,10 @@ namespace OpenViewerHost
             viewer.Locale = locale;
             viewer.IsVisibleDebutTab = (debugTab == "true" ? true : false);
             viewer.IsCameraPitchReverse = (cameraReverse == "true" ? true : false);
+#if !LINUX			
             viewer.SetShaderQuality(OpenViewer.Managers.ShaderManager.ShaderType.Sea, seaQuality);
             viewer.SetShaderQuality(OpenViewer.Managers.ShaderManager.ShaderType.AdvancedSea, seaQuality);
+#endif
             viewer.SetShaderQuality(OpenViewer.Managers.ShaderManager.ShaderType.Sky, skyQuality);
             viewer.TeleportTimeout = teleportTimeout * 10000000;
 

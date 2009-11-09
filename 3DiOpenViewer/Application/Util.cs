@@ -102,7 +102,7 @@ namespace OpenViewer
         {
             get
             {
-                string UserCacheLocation = @"\3Di\OpenViewer";
+                string UserCacheLocation = @"/3Di/OpenViewer";
 
                 OperatingSystem osInfo = Environment.OSVersion;
 
@@ -119,14 +119,14 @@ namespace OpenViewer
             }
         }
 
-        public static string ConfigFolder = Path.Combine(Util.UserCacheDirectory, @"configs\");
-        public static string LogFolder = Path.Combine(Util.UserCacheDirectory, @"logs\");
-        public static string GuiFolder = Path.Combine(Util.UserCacheDirectory, @"gui\");
-        public static string AssetFolder = Path.Combine(Util.UserCacheDirectory, @"assets\");
-        public static string TextureFolder = Path.Combine(Util.UserCacheDirectory, @"assets\textures\");
-        public static string TerrainFolder = Path.Combine(Util.UserCacheDirectory, @"assets\terrains\");
-        public static string ModelFolder = Path.Combine(Util.UserCacheDirectory, @"assets\models\");
-        public static string SoundFolder = Path.Combine(Util.UserCacheDirectory, @"assets\sounds\");
+        public static string ConfigFolder = Path.Combine(Util.UserCacheDirectory, @"configs/");
+        public static string LogFolder = Path.Combine(Util.UserCacheDirectory, @"logs/");
+        public static string GuiFolder = Path.Combine(Util.UserCacheDirectory, @"gui/");
+        public static string AssetFolder = Path.Combine(Util.UserCacheDirectory, @"assets/");
+        public static string TextureFolder = Path.Combine(Util.UserCacheDirectory, @"assets/textures/");
+        public static string TerrainFolder = Path.Combine(Util.UserCacheDirectory, @"assets/terrains/");
+        public static string ModelFolder = Path.Combine(Util.UserCacheDirectory, @"assets/models/");
+        public static string SoundFolder = Path.Combine(Util.UserCacheDirectory, @"assets/sounds/");
 
         public static void InitializeFolderHierarchy()
         {
@@ -142,15 +142,15 @@ namespace OpenViewer
             
             string folderBase = Util.UserCacheDirectory;
             string[] folders = {
-                                   Path.Combine(folderBase, @"configs\"),
-                                   Path.Combine(folderBase, @"logs\"),
-                                   Path.Combine(folderBase, @"gui\"), 
-                                   Path.Combine(folderBase, @"assets\"), 
-                                   Path.Combine(folderBase, @"assets\terrains\"),
-                                   Path.Combine(folderBase, @"assets\textures\"),
-                                   Path.Combine(folderBase, @"assets\models\"),
-                                   Path.Combine(folderBase, @"assets\sounds\"),
-                                   Path.Combine(folderBase, @"plugins\"),
+                                   Path.Combine(folderBase, @"configs/"),
+                                   Path.Combine(folderBase, @"logs/"),
+                                   Path.Combine(folderBase, @"gui/"), 
+                                   Path.Combine(folderBase, @"assets/"), 
+                                   Path.Combine(folderBase, @"assets/terrains/"),
+                                   Path.Combine(folderBase, @"assets/textures/"),
+                                   Path.Combine(folderBase, @"assets/models/"),
+                                   Path.Combine(folderBase, @"assets/sounds/"),
+                                   Path.Combine(folderBase, @"plugins/"),
                                };
 
             foreach (string s in folders)
@@ -159,11 +159,11 @@ namespace OpenViewer
                     Directory.CreateDirectory(s);
             }
 
-            foreach (string file in Directory.GetFiles(Path.Combine(Util.ApplicationDataDirectory, @"media\avatar\")))
+            foreach (string file in Directory.GetFiles(Path.Combine(Util.ApplicationDataDirectory, @"media/avatar/")))
             {
-                if (!File.Exists(Path.Combine(Util.UserCacheDirectory, @"assets\models\" + Path.GetFileName(file))))
-                    File.Copy(Path.Combine(Util.ApplicationDataDirectory, @"media\avatar\" + Path.GetFileName(file)), 
-                              Path.Combine(Util.UserCacheDirectory, @"assets\models\" + Path.GetFileName(file)), 
+                if (!File.Exists(Path.Combine(Util.UserCacheDirectory, @"assets/models/" + Path.GetFileName(file))))
+                    File.Copy(Path.Combine(Util.ApplicationDataDirectory, @"media/avatar/" + Path.GetFileName(file)), 
+                              Path.Combine(Util.UserCacheDirectory, @"assets/models/" + Path.GetFileName(file)), 
                               true);
             }
         }
@@ -180,10 +180,10 @@ namespace OpenViewer
         {
             const string keepaliveFile = "keepalive";
             bool isSafe = false;
-            if (File.Exists(Util.UserCacheDirectory + @"\" + keepaliveFile))
+            if (File.Exists(Util.UserCacheDirectory + @"/" + keepaliveFile))
             {
                 // Check for expiry
-                StreamReader sr = new StreamReader(Util.UserCacheDirectory + @"\" + keepaliveFile);
+                StreamReader sr = new StreamReader(Util.UserCacheDirectory + @"/" + keepaliveFile);
                 string status = sr.ReadToEnd();
                 sr.Close();
 
@@ -238,7 +238,7 @@ namespace OpenViewer
 
             // Format: PID:ticks
             const string keepaliveFile = "keepalive";
-            System.IO.StreamWriter sw = new StreamWriter(Util.UserCacheDirectory + @"\" + keepaliveFile, false);
+            System.IO.StreamWriter sw = new StreamWriter(Util.UserCacheDirectory + @"/" + keepaliveFile, false);
             sw.WriteLine(keepaliveUUID.ToString() + ":" + ticks.ToString());
             sw.Close();
         }
@@ -249,9 +249,9 @@ namespace OpenViewer
         public static void CloseKeepAlive()
         {
             const string keepaliveFile = "keepalive";
-            if (File.Exists(Util.UserCacheDirectory + @"\" + keepaliveFile))
+            if (File.Exists(Util.UserCacheDirectory + @"/" + keepaliveFile))
             {
-                File.Delete(Util.UserCacheDirectory + @"\" + keepaliveFile);
+                File.Delete(Util.UserCacheDirectory + @"/" + keepaliveFile);
             }
         }
 

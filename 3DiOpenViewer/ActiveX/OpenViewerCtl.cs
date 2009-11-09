@@ -47,7 +47,11 @@ using OpenViewer.bootstrap;
 using System.Threading;
 using System.Security.Permissions;
 
+#if !LINUX
 //[assembly: CLSCompliant(true)]
+#else
+[assembly: CLSCompliant(false)]
+#endif
 namespace OpenViewerAX
 {
     [ComImport]
@@ -788,7 +792,7 @@ namespace OpenViewerAX
                     link.Click += new EventHandler(link_Click);
                     this.Controls.Add(link);
                     PictureBox bg = new PictureBox();
-                    Bitmap bitmap = new Bitmap(Util.ApplicationDataDirectory + @"\media\gui\background\login_background.png");
+                    Bitmap bitmap = new Bitmap(Util.ApplicationDataDirectory + @"/media/gui/background/login_background.png");
                     bg.ClientSize = new Size(bitmap.Width, bitmap.Height);
                     bg.Location = new Point((Width - bitmap.Width) / 2,(Height - bitmap.Height) / 2);
                     bg.Image = bitmap; 
@@ -839,9 +843,11 @@ namespace OpenViewerAX
                 OV.Locale = locale;
                 OV.IsVisibleDebutTab = (debugTab == "true" ? true : false);
                 OV.IsCameraPitchReverse = (cameraReverse == "true" ? true : false);
+#if !LINUX
                 OV.SetShaderQuality(OpenViewer.Managers.ShaderManager.ShaderType.Sea, seaQuality);
                 OV.SetShaderQuality(OpenViewer.Managers.ShaderManager.ShaderType.AdvancedSea, seaQuality);
                 OV.SetShaderQuality(OpenViewer.Managers.ShaderManager.ShaderType.Sky, skyQuality);
+#endif
 
                 OV.TeleportTimeout = teleportTimeout * 10000000;
 
@@ -858,7 +864,7 @@ namespace OpenViewerAX
                 warning.TextAlign = ContentAlignment.MiddleCenter;
                 this.Controls.Add(warning);
                 PictureBox bg = new PictureBox();
-                Bitmap bitmap = new Bitmap(Util.ApplicationDataDirectory + @"\media\gui\background\login_background.png");
+                Bitmap bitmap = new Bitmap(Util.ApplicationDataDirectory + @"/media/gui/background/login_background.png");
                 bg.ClientSize = new Size(bitmap.Width, bitmap.Height);
                 bg.Location = new Point((Width - bitmap.Width) / 2, (Height - bitmap.Height) / 2);
                 bg.Image = bitmap;

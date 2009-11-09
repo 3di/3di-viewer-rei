@@ -138,7 +138,7 @@ namespace OpenViewer.Managers
 
                         if (tsn != null)
                         {
-                            Texture tx = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\sand01.jpg");
+                            Texture tx = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/sand01.jpg");
                             if (tx != null)
                                 tsn.SetMaterialTexture(0, tx);
                             tsn.SetMaterialType(MaterialType.DetailMap);

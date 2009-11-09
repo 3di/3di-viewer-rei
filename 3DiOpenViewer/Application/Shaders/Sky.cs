@@ -136,9 +136,9 @@ namespace OpenViewer.Shaders
         {
             julianDay = getJulianDay();
 
-            shaderDirectory = Util.ApplicationDataDirectory + @"\media\shaders\";
-            modelDirectory = Util.ApplicationDataDirectory + @"\media\models\";
-            textureDirectory = Util.ApplicationDataDirectory + @"\media\textures\";
+            shaderDirectory = Util.ApplicationDataDirectory + @"/media/shaders/";
+            modelDirectory = Util.ApplicationDataDirectory + @"/media/models/";
+            textureDirectory = Util.ApplicationDataDirectory + @"/media/textures/";
         }
 
         public override void Update(uint frame)
@@ -203,7 +203,11 @@ namespace OpenViewer.Shaders
 
             if (Reference.Viewer.SkyQuality == Viewer.ShaderLevelType.Low)
             {
+#if !LINUX
                 filename = "sky_shader_low.fx";
+#else
+                filename = "sky_shader_low___.fx";  // Will not be found, so revert back to texture only
+#endif
             }
 
             int res = -1;
@@ -239,7 +243,8 @@ namespace OpenViewer.Shaders
                 Reference.Log.Warn("Load: File not exsit:" + path);
             }
 
-            if (res > 0)
+            // Fall through for texture only sky on linux
+            if (res > 0 || Reference.Viewer.SkyQuality == Viewer.ShaderLevelType.Low)
             {
                 // Create sun.
                 sunNode = Reference.SceneManager.AddBillboardSceneNode(parentNode, new Dimension2Df(256, 256), -1);

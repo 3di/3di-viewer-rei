@@ -121,10 +121,10 @@ namespace OpenViewer.Managers
             MENU_R_WIDTH = 208;
             MENU_OFFSET_X = 12;
 
-            m_menuBackground = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\menu\menu_background_r.tga"), new Position2D(Reference.Viewer.Width - MENU_R_WIDTH - MENU_OFFSET_X, 0), true, Reference.GUIEnvironment.RootElement, (int)GUIElementIDS.MENU_BACKGROUND, "background");
+            m_menuBackground = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/menu/menu_background_r.tga"), new Position2D(Reference.Viewer.Width - MENU_R_WIDTH - MENU_OFFSET_X, 0), true, Reference.GUIEnvironment.RootElement, (int)GUIElementIDS.MENU_BACKGROUND, "background");
             if (Reference.Viewer.Width > 2*MENU_R_WIDTH+2*MENU_OFFSET_X)
             {
-                m_textBackground = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\menu\menu_background_l.tga"), new Position2D(0, 0), true, Reference.GUIEnvironment.RootElement, (int)GUIElementIDS.MENU_BACKGROUND, "background");
+                m_textBackground = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/menu/menu_background_l.tga"), new Position2D(0, 0), true, Reference.GUIEnvironment.RootElement, (int)GUIElementIDS.MENU_BACKGROUND, "background");
                 m_menuSIMName = Reference.GUIEnvironment.AddStaticTextW("", new Rect(5, 5, 295, 23), false, false, m_textBackground, (int)GUIElementIDS.MENU_SIMNAME, false);
                 m_menuLocation = Reference.GUIEnvironment.AddStaticTextW("", new Rect(5, 25, 295, 43), false, false, m_textBackground, (int)GUIElementIDS.MENU_LOCATIONTEXT, false);
                 m_textBackground.Visible = false;
@@ -158,10 +158,10 @@ namespace OpenViewer.Managers
         {
             if (icon.Image != string.Empty)
             {
-                icon.inactiveTexture = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\menu\" + icon.Image);
+                icon.inactiveTexture = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/menu/" + icon.Image);
                 if(icon.ImageActive != string.Empty)
                 {
-                    icon.activeTexture = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\menu\" + icon.ImageActive);
+                    icon.activeTexture = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/menu/" + icon.ImageActive);
                 }
                 icon.guiImage = Reference.GUIEnvironment.AddImage(icon.inactiveTexture, new Position2D(MENU_R_WIDTH - (m_menuIcons.Count + 1) * (MENU_ICONWIDTH + MENU_SPACING) - 5, MENU_ICONOFFSET_Y), true, m_menuBackground, (int)GUIElementIDS.MENU_ITEMBASE + m_menuIcons.Count, "background");
                 this.m_menuIcons.Add(icon);

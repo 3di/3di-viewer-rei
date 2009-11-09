@@ -134,7 +134,7 @@ namespace OpenViewer.Managers
             textureFetchThread = new Thread(new ThreadStart(TextureFetchHandler));
             textureFetchThread.Start();
 
-            defaultTexture = new TextureExtended(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\dummy_white.tga").Raw, ".tga");
+            defaultTexture = new TextureExtended(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/dummy_white.tga").Raw, ".tga");
         }
 
         public override void Cleanup()
@@ -922,7 +922,7 @@ namespace OpenViewer.Managers
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 //m_log.Debug("[TEXTURE]: Failed to decode asset " + asset.AssetID);
                 if (!bNonJp2000)

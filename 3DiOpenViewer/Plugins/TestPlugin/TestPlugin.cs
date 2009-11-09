@@ -61,8 +61,8 @@ namespace OpenViewer.Plugins
             Reference.Viewer.Adapter.RegisterCallback("heal", new Callback(on_heal));
 
             // Initializing persistent resources. These will not be dropped on Cleanup()
-            healthBarG = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\healthbar_g.png");
-            healthBarR = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\healthbar_r.png");
+            healthBarG = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/healthbar_g.png");
+            healthBarR = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/healthbar_r.png");
         }
 
         /// <summary>

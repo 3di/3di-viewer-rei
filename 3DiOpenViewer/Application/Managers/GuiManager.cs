@@ -179,18 +179,18 @@ namespace OpenViewer.Managers
             : base(viewer, -1)
         {
             // Cursors stay during the whole lifecycle of this manager
-            cursorImageNormal = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\cursor-arrow.png");
-            cursorImageHand = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\cursor-hand.png");
-            cursorImageChair = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\cursor-chair.png");
+            cursorImageNormal = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/cursor-arrow.png");
+            cursorImageHand = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/cursor-hand.png");
+            cursorImageChair = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/cursor-chair.png");
             currentCursorImage = cursorImageNormal;
             Reference.Viewer.CursolOffset = new Position2D(-1, cursorImageNormal.OriginalSize.Height / 2 + 2);
 
-            closeButton = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\window_close.png");
+            closeButton = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/window_close.png");
             chatIconPosition = new Position2D(Reference.Viewer.Width - 40 * 4, 4);
-            imageChat = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\menu\menu_chat.png"), chatIconPosition, true, parentElement, -1, "");
+            imageChat = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/menu/menu_chat.png"), chatIconPosition, true, parentElement, -1, "");
             imageChat.Visible = false;
 
-            Texture chairTexture = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\stand_icon_master.png");
+            Texture chairTexture = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/stand_icon_master.png");
             imageChair = Reference.GUIEnvironment.AddButton(
                 new Rect(new Position2D(32, Reference.Viewer.Height - chairTexture.OriginalSize.Height - 32), new Dimension2D(chairTexture.OriginalSize.Width, chairTexture.OriginalSize.Height)),
                 parentElement,
@@ -292,7 +292,7 @@ namespace OpenViewer.Managers
             }
             if (loginFailed)
             {
-                Texture img = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\background\error_background.png");
+                Texture img = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/background/error_background.png");
                 Dimension2D imageSize = img.OriginalSize;
 
                 // Show error dialog.
@@ -477,7 +477,7 @@ namespace OpenViewer.Managers
             }
 
             if (isLoad == false)
-                loginWindowBackground = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\background\login_background.png");
+                loginWindowBackground = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/background/login_background.png");
 
             isLoad = true;
             if (!string.IsNullOrEmpty(Reference.Viewer.InitBackgroundURL))
@@ -503,7 +503,7 @@ namespace OpenViewer.Managers
             }
 
             if (isLoad == false)
-                initWindowBackground = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\background\init_background.png");
+                initWindowBackground = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/background/init_background.png");
 
             isLoad = true;
             if (!string.IsNullOrEmpty(Reference.Viewer.LoginBackgroundURL))
@@ -529,7 +529,7 @@ namespace OpenViewer.Managers
             }
 
             if (isLoad == false)
-                teleportWindowBackground = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\background\login_background.png");
+                teleportWindowBackground = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/background/login_background.png");
 
         }
         #endregion
@@ -636,7 +636,7 @@ namespace OpenViewer.Managers
 
             Reference.GUIEnvironment.AddButtonW(new Rect(new Position2D(50, y * 4 + oy), new Dimension2D(200, h)), wnd, (int)GUIElementIDS.LOGIN_LOGINBUTTON, DialogText.Login);
 
-            Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\window_login.png"), new Position2D(5, 2), true, wnd, -1, "");
+            Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/window_login.png"), new Position2D(5, 2), true, wnd, -1, "");
 
             /* Initialize parameters */
             loginServerURI.Text = loginInfo.URI;
@@ -666,13 +666,13 @@ namespace OpenViewer.Managers
 
             GUIListBox chatBoxMessageList_private = Reference.GUIEnvironment.AddListBox(new Rect(new Position2D(4, 24), new Dimension2D(290, 140)), wnd, (int)GUIElementIDS.CHAT_MSGLIST, true);
 
-            Texture buttonTex = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\button_chatenter.png");
+            Texture buttonTex = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/button_chatenter.png");
             chatBoxInput = Reference.GUIEnvironment.AddEditBoxW("", new Rect(new Position2D(4, 172), new Dimension2D(276, 44)), true, wnd, (int)GUIElementIDS.CHAT_ENTERMSG);
             GUIButton btn = Reference.GUIEnvironment.AddButtonW(new Rect(new Position2D(284, 172), new Dimension2D(buttonTex.OriginalSize.Width, buttonTex.OriginalSize.Height)), wnd, (int)GUIElementIDS.CHAT_SENDBUTTON, "");
             btn.SetImage(buttonTex);
-            //Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\button_chatenter.png"), new Position2D(0, 0), true, btn, -1, "");
+            //Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/button_chatenter.png"), new Position2D(0, 0), true, btn, -1, "");
 
-            Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\window_chat.png"), new Position2D(5, 2), true, wnd, -1, "");
+            Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/window_chat.png"), new Position2D(5, 2), true, wnd, -1, "");
 
             // Get all chat history.
             for (int i = 0; i < Reference.Viewer.ChatManager.Messages.Length; i++)
@@ -720,7 +720,7 @@ namespace OpenViewer.Managers
             // teleport button
             Reference.GUIEnvironment.AddButtonW(new Rect(new Position2D(4, 96), new Dimension2D(300 - 8, BUTTON_DEFULT_HEIGHT)), wnd, (int)GUIElementIDS.TELEPORT_TELEPORTBUTTON, DialogText.Teleport);
 
-            Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\window_teleport.png"), new Position2D(5, 2), true, wnd, -1, "");
+            Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/window_teleport.png"), new Position2D(5, 2), true, wnd, -1, "");
 
             // Set focus.
             Reference.GUIEnvironment.SetFocus(teleportRegionName);
@@ -737,7 +737,7 @@ namespace OpenViewer.Managers
                 new Rect(new Position2D(Reference.Viewer.Width / 2 - 150, Reference.Viewer.Height / 2 - 64), new Dimension2D(300, 128)),
                 false, "   " + DialogText.Teleport, parentElement, (int)GUIElementIDS.TELEPORT_FAILED_WINDOW);
 
-            GUIImage img = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\window_teleport.png"), new Position2D(5, 2), true, wnd, -1, "");
+            GUIImage img = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/window_teleport.png"), new Position2D(5, 2), true, wnd, -1, "");
 
             wnd.CloseButton.Visible = false;
 
@@ -839,7 +839,7 @@ namespace OpenViewer.Managers
             Rect rect = new Rect(new Position2D(Reference.Viewer.Width / 2 - 150, Reference.Viewer.Height / 2 - 110), new Dimension2D(300, 220));
             GUIWindow wnd = Reference.GUIEnvironment.AddWindowW(rect, false, "   " + DialogText.Settings, parentElement, (int)GUIElementIDS.SETTING_WINDOW);
 
-            Texture tex = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\window_settings.png");
+            Texture tex = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/window_settings.png");
             if (tex != null)
                 Reference.GUIEnvironment.AddImage(tex, new Position2D(5, 2), true, wnd, -1, "");
 
@@ -931,7 +931,7 @@ namespace OpenViewer.Managers
             // Information tab
             //----------------------------------------------------------------------
             GUITab t3 = tab.AddTabW(DialogText.Information, -1);
-            Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\logo.tga"), new Position2D(22, 24), false, t3, -1, string.Empty);
+            Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/logo.tga"), new Position2D(22, 24), false, t3, -1, string.Empty);
             Reference.GUIEnvironment.AddStaticTextW(DialogText.Version + ": " + Reference.Viewer.Version.ToString(), new Rect(new Position2D(22, 100), new Dimension2D(Reference.Viewer.Width - 8, 24)), false, true, t3, -1, false);
             Reference.GUIEnvironment.AddStaticTextW("Copyright (C) 2009 3Di, Inc.", new Rect(new Position2D(22, 120), new Dimension2D(Reference.Viewer.Width - 8, 24)), false, true, t3, -1, false);
         }
@@ -966,7 +966,7 @@ namespace OpenViewer.Managers
                 rect,
                 false, "   " + DialogText.Settings, parentElement, (int)GUIElementIDS.DEBUG_WINDOW);
 
-            Texture tex = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\gui\windows\window_settings.png");
+            Texture tex = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/window_settings.png");
             if (tex != null)
                 Reference.GUIEnvironment.AddImage(tex, new Position2D(5, 2), true, wnd, -1, "");
 

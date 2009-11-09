@@ -817,7 +817,7 @@ namespace OpenViewer.Managers
                 _obj.VoiceNode = Reference.Viewer.EffectManager.AddVoiceEffectSceneNode(_obj.Node);
             }
 
-            AnimatedMesh animMesh = Reference.SceneManager.GetMesh(Util.ApplicationDataDirectory + @"\media\models\avatar_pick_object.x");
+            AnimatedMesh animMesh = Reference.SceneManager.GetMesh(Util.ApplicationDataDirectory + @"/media/models/avatar_pick_object.x");
             _obj.PickNode = Reference.SceneManager.AddMeshSceneNode(animMesh.GetMesh(0), _obj.Node, _obj.Node.ID);
             _obj.PickNode.SetMaterialFlag(MaterialFlag.Lighting, false);
             _obj.PickNode.SetMaterialType(MaterialType.TransparentAlphaChannel);
@@ -1478,7 +1478,7 @@ namespace OpenViewer.Managers
 
         private void GeneratePickTile()
         {
-            AnimatedMesh animMesh = Reference.SceneManager.GetMesh(Util.ApplicationDataDirectory + @"\media\models\tile.x");
+            AnimatedMesh animMesh = Reference.SceneManager.GetMesh(Util.ApplicationDataDirectory + @"/media/models/tile.x");
             if (animMesh != null)
             {
                 Mesh mesh = animMesh.GetMesh(0);

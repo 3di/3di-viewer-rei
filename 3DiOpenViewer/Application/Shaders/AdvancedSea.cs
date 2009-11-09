@@ -168,16 +168,16 @@ namespace OpenViewer.Shaders
                 AnimatedMesh mesh = Reference.SceneManager.AddHillPlaneMesh("terrain", new Dimension2Df(512, 512), new Dimension2D(256, 256), 0.0f, new Dimension2Df(0, 0), new Dimension2Df(1024, 1024));
                 SceneNode amsn = Reference.SceneManager.AddOctTreeSceneNode(mesh, parentNode, -1, 128);
                 amsn.Position = new Vector3D(128, 0, 128);
-                amsn.SetMaterialTexture(0, Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\sand01.jpg"));
+                amsn.SetMaterialTexture(0, Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/sand01.jpg"));
 
                 AnimatedMesh watermesh = Reference.SceneManager.AddHillPlaneMesh("realisticwater", Size, new Dimension2D(1, 1), 0f, new Dimension2Df(0, 0), new Dimension2Df(1, 1));
                 WaterSceneNode = Reference.SceneManager.AddOctTreeSceneNode(watermesh, parentNode, -1, 128);
 
-                Texture bumpTexture = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\waterbump.jpg");
+                Texture bumpTexture = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/waterbump.jpg");
 
                 GPUProgrammingServices gpuProgrammingServices = Reference.VideoDriver.GPUProgrammingServices;
 
-                string path = Util.ApplicationDataDirectory + @"\media\shaders\" + filename;
+                string path = Util.ApplicationDataDirectory + @"/media/shaders/" + filename;
                 if (System.IO.File.Exists(path))
                 {
                     try
@@ -200,7 +200,7 @@ namespace OpenViewer.Shaders
                 }
                 else
                 {
-                    Viewer.Log.Warn("[SHADER] [SEA] Shader file was not found: " + Util.ApplicationDataDirectory + @"\media\shaders\" + filename);
+                    Viewer.Log.Warn("[SHADER] [SEA] Shader file was not found: " + Util.ApplicationDataDirectory + @"/media/shaders/" + filename);
                 }
                 float waterheight = 0;
                 if (Reference.Viewer.ProtocolManager.AvatarConnection.m_user.Network.CurrentSim != null)
@@ -222,8 +222,8 @@ namespace OpenViewer.Shaders
 
         public void SaveMaps()
         {
-            ReflectionMap.Save(Util.LogFolder + @"\advanced_sea_reflection.bmp");
-            RefractionMap.Save(Util.LogFolder + @"\advanced_sea_refraction.bmp");
+            ReflectionMap.Save(Util.LogFolder + @"/advanced_sea_reflection.bmp");
+            RefractionMap.Save(Util.LogFolder + @"/advanced_sea_refraction.bmp");
         }
 
         public override void ShaderEvent(MaterialRendererServices services, int userData)

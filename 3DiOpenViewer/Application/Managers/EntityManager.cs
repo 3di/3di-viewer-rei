@@ -159,7 +159,7 @@ namespace OpenViewer.Managers
             meshFactory = new MeshFactory(Reference.SceneManager.MeshManipulator, Reference.Device);
 
 #if MANAGED_D3D
-            AnimatedMesh mesh = Reference.SceneManager.GetMesh(Util.ApplicationDataDirectory + @"\media\models\tv.x");
+            AnimatedMesh mesh = Reference.SceneManager.GetMesh(Util.ApplicationDataDirectory + @"/media/models/tv.x");
             if (mesh != null)
             {
                 MeshSceneNode node = Reference.SceneManager.AddMeshSceneNode(mesh.GetMesh(0), Reference.SceneManager.RootSceneNode, -1);

@@ -58,7 +58,7 @@ namespace OpenViewer.Managers
             fadeAlpha.OnEnd += AlphaEventHandler;
 
             for (int i = 0; i < voiceEffectTexture.Length; i++)
-                voiceEffectTexture[i] = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\voice_level_" + i.ToString() + ".png");
+                voiceEffectTexture[i] = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/voice_level_" + i.ToString() + ".png");
         }
 
         public void FadeIn(EventHandler _eventHandler)
@@ -209,7 +209,7 @@ namespace OpenViewer.Managers
             node.SetMaterialFlag(MaterialFlag.Lighting, false);
             node.SetMaterialType(MaterialType.TransparentVertexAlpha);
 
-            Texture tex = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"\media\textures\ghost.bmp");
+            Texture tex = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/ghost.bmp");
             if (tex != null)
                 node.SetMaterialTexture(0, tex);
 

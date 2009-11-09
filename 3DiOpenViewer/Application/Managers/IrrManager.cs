@@ -582,8 +582,9 @@ namespace OpenViewer.Managers
                 }
             }
 
-            AnimatedMesh mesh = _smgr.GetMesh(prefix + _datas.Mesh.Param.Mesh);
+            AnimatedMesh mesh = _smgr.GetMesh(workDirectory + prefix + _datas.Mesh.Param.Mesh);
             AnimatedMeshSceneNode node = _smgr.AddAnimatedMeshSceneNode(mesh);
+            Reference.Log.Info("[LOADING MESH]: " + workDirectory + prefix + _datas.Mesh.Param.Mesh);
 
             // Set material.
             for (int i = 0; i < node.MaterialCount; i++)
