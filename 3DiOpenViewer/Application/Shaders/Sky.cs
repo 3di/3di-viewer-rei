@@ -303,14 +303,6 @@ namespace OpenViewer.Shaders
                         -1
                         );
 
-                    for (int i = 0; i < node.MaterialCount; i++)
-                    {
-#if YK_VIDEO_WIREFRAME
-                        node.GetMaterial(i).Wireframe = true;
-#endif
-                    }
-                    
-
                     // Unuse gold sun and silver moon.
                     sunNode.Visible = false;
                     moonNode.Visible = false;

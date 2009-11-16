@@ -600,17 +600,7 @@ namespace OpenViewer.Managers
                     node.GetMaterial(i).Shininess = _datas.Materials[i].Shininess;
                     node.GetMaterial(i).ZBuffer = (uint)_datas.Materials[i].ZBuffer;
                     node.GetMaterial(i).ZWriteEnable = _datas.Materials[i].ZWriteEnable;
-#if YK_VIDEO_WIREFRAME
-                    node.GetMaterial(i).Wireframe = true;
-#else
                     node.GetMaterial(i).Wireframe = _datas.Materials[i].Wireframe;
-#endif
-
-                    // [YK:NEXT]
-                    //node.GetMaterial(i).AmbientColor = _datas.Materials[i].Ambient;
-                    //node.GetMaterial(i).DiffuseColor = _datas.Materials[i].Diffuse;
-                    //node.GetMaterial(i).SpecularColor = _datas.Materials[i].Specular;
-                    //node.GetMaterial(i).EmissiveColor = _datas.Materials[i].Emissive;
                 }
             }
 

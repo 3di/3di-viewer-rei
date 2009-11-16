@@ -155,7 +155,6 @@ namespace OpenViewer
                     mesh.AddMeshBuffer(mb[i]);
                 }
 
-#if RECALC_BOUNDINGBOX
                 Box3D box = new Box3D(0, 0, 0, 0, 0, 0);
                 for (int i = 0; i < mesh.MeshBufferCount; i++)
                 {
@@ -163,7 +162,6 @@ namespace OpenViewer
                     box.AddInternalBox(mesh.GetMeshBuffer(i).BoundingBox);
                 }
                 mesh.BoundingBox = box;
-#endif
                 // don't dispose here
                 //mb.Dispose();
             }

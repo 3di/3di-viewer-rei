@@ -154,9 +154,6 @@ namespace OpenViewer.Managers
                                 tsn.GetMaterial(i).SpecularColor = IrrlichtNETCP.Color.Black;
                                 tsn.GetMaterial(i).EmissiveColor = IrrlichtNETCP.Color.Black;
                                 tsn.GetMaterial(i).Shininess = 0;
-#if YK_VIDEO_WIREFRAME
-                                tsn.GetMaterial(i).Wireframe = true;
-#endif
                             }
 
 #if PREVENT_CAMERA_GOING_THROUGH_TERRAIN

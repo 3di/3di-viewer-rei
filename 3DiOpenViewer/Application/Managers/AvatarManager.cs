@@ -294,24 +294,6 @@ namespace OpenViewer.Managers
 
         public override void Draw()
         {
-#if YK_DEBUG
-            Vector3D vec = new Vector3D(0, 0, 1);
-            Vector3D start = new Vector3D();
-            Vector3D end = new Vector3D();
-
-            if (projectedray.Vector.LengthSQ > 0)
-                vec = projectedray.Vector.Normalize();
-
-            if (Reference.Viewer.Camera.SNCamera != null)
-                start = Reference.Viewer.Camera.SNCamera.Position + vec * 1;
-
-            if (Reference.Viewer.Camera.SNCamera != null)
-                end = start + vec * 2;
-
-            Reference.VideoDriver.Draw3DLine(new Vector3D(128, 22, 128), new Vector3D(130, 25, 130), Color.Green);
-            Reference.VideoDriver.Draw3DTriangle(new Triangle3D(new Vector3D(124, 25, 128), new Vector3D(128, 25, 124), new Vector3D(128, 25, 128)), Color.Red);
-#endif
-
             base.Draw();
         }
 

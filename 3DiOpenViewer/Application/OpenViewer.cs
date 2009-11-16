@@ -113,10 +113,6 @@ namespace OpenViewer
 
         private List<IManagerPlugin> m_managers = new List<IManagerPlugin>();
 
-#if MANAGED_D3D
-        private Microsoft.DirectX.AudioVideoPlayback.Video video;
-        private Microsoft.DirectX.Direct3D.Device d3ddevice;
-#endif
         #endregion
 
         #region Properties
@@ -414,41 +410,6 @@ namespace OpenViewer
             try
             {
                 SetParent(f.Handle, (IntPtr)target);
-
-#if MANAGED_D3D
-                Microsoft.DirectX.Direct3D.PresentParameters pp = new Microsoft.DirectX.Direct3D.PresentParameters();
-                pp.Windowed = true;
-                pp.SwapEffect = Microsoft.DirectX.Direct3D.SwapEffect.Discard;
-
-                try
-                {
-                    d3ddevice = new Microsoft.DirectX.Direct3D.Device(
-                        0,
-                        Microsoft.DirectX.Direct3D.DeviceType.Hardware,
-                        f,
-                        Microsoft.DirectX.Direct3D.CreateFlags.SoftwareVertexProcessing,
-                        pp
-                        );
-                }
-                catch
-                {
-                    try
-                    {
-                        d3ddevice = new Microsoft.DirectX.Direct3D.Device(
-                            0,
-                            Microsoft.DirectX.Direct3D.DeviceType.Reference,
-                            f,
-                            Microsoft.DirectX.Direct3D.CreateFlags.SoftwareVertexProcessing,
-                            pp
-                            );
-                    }
-                    catch
-                    {
-                    }
-                }
-
-                CreateVideoObject();
-#endif
             }
             catch (System.Exception)
             {
@@ -792,104 +753,12 @@ namespace OpenViewer
                 dialogRes = RenderLoop(restarted++);
             }
 
-#if MANAGED_D3D
-            try
-            {
-                if (video != null)
-                {
-                    lock (video)
-                    {
-                        video.Stop();
-                        video.Dispose();
-                    }
-                }
-
-                if (d3ddevice != null)
-                {
-                    lock (d3ddevice)
-                    {
-                        d3ddevice.Dispose();
-                        d3ddevice = null;
-                    }
-                }
-            }
-            catch
-            {
-            }
-#endif
-
-
             if (device != null)
             {
                 device.Dispose();
                 device = null;
             }
         }
-
-#if MANAGED_D3D
-        void CreateVideoObject()
-        {
-            if (video != null)
-            {
-                video.TextureReadyToRender -= new Microsoft.DirectX.AudioVideoPlayback.TextureRenderEventHandler(video_TextureReadyToRender);
-                video.Ending -= new EventHandler(video_Ending);
-                video.Dispose();
-                video = null;
-            }
-
-            video = new Microsoft.DirectX.AudioVideoPlayback.Video("mms://stream1.halsc.com/mitomitomi/test.wmv", true);
-            //video = new Microsoft.DirectX.AudioVideoPlayback.Video("mms://10.0.1.173:8070", true);
-            video.TextureReadyToRender += new Microsoft.DirectX.AudioVideoPlayback.TextureRenderEventHandler(video_TextureReadyToRender);
-            video.Ending += new EventHandler(video_Ending);
-            video.RenderToTexture(d3ddevice);
-        }
-
-        void video_Ending(object sender, EventArgs e)
-        {
-            video.Stop();
-            video.Play();
-        }
-
-        void video_TextureReadyToRender(object sender, Microsoft.DirectX.AudioVideoPlayback.TextureRenderEventArgs e)
-        {
-            if (stateManager.State != State.CONNECTED)
-                return;
-
-            if (e.Texture == null)
-                return;
-
-            Microsoft.DirectX.Direct3D.Texture tex = e.Texture;
-
-            try
-            {
-                using (Microsoft.DirectX.GraphicsStream stream = Microsoft.DirectX.Direct3D.TextureLoader.SaveToStream(Microsoft.DirectX.Direct3D.ImageFileFormat.Bmp, tex))
-                {
-                    using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(stream))
-                    {
-                        videoTexture.Lock();
-                        for (int i = 0; i < videoTexture.OriginalSize.Width; i++)
-                        {
-                            for (int j = 0; j < videoTexture.OriginalSize.Height; j++)
-                            {
-                                if (i >= bmp.Width || j >= bmp.Height)
-                                    continue;
-
-                                videoTexture.SetPixel(i, j, IrrlichtNETCP.Color.FromBCL(bmp.GetPixel(i, j)));
-                            }
-                        }
-                        videoTexture.Unlock();
-                    }
-
-                    stream.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Fatal("VIDEO Error ", ex);
-                CreateVideoObject();
-            }
-        }
-#endif
 
         private void LoadPlugins()
         {
@@ -1393,11 +1262,6 @@ namespace OpenViewer
 
             guiManager.DrawCursor();
 
-#if LMNT_DEBUG
-            Reference.Device.VideoDriver.Draw3DLine(entityManager.projLine, IrrlichtNETCP.Color.Red);
-            Reference.Device.VideoDriver.Draw3DTriangle(entityManager.collTri, IrrlichtNETCP.Color.Green);
-#endif
-
             // Check menu window
             if (menuManager != null)
             {
@@ -1662,11 +1526,6 @@ namespace OpenViewer
                         guiManager.ShowDebugWindow();
                         break;
 #if DEBUG
-#if ENABLE_ELEMENT_DUMPING
-                    case KeyCode.F9:
-                        NativeElement.DumpElements(@"c:\memlog_snapshot.txt");
-                        break;
-#endif
                     case KeyCode.F1:
                         break;
                     case KeyCode.F2:

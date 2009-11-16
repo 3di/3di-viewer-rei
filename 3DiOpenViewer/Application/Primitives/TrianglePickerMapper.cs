@@ -92,25 +92,6 @@ namespace OpenViewer
             }
         }
 
-#if DEBUG_PICKING
-        public bool nlinTestSel(Line3D line, SceneManager smgr, ref Triangle3D tri)
-        {
-            lock (trilist)
-            {
-                foreach (TriangleSelector selector in trilist)
-                {
-                    Vector3D intersection;
-                    if (smgr.CollisionManager.GetCollisionPoint(
-                        line, selector, out intersection, out tri))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-#endif
-
         public SceneNode GetSceneNodeFromRay(Line3D ray, int bitMask, bool noDebug, Vector3D campos)
         {
             SceneNode returnobj = null;

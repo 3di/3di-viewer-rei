@@ -145,29 +145,12 @@ namespace OpenViewer.Managers
         private List<SetTextureParam> requestTextureList = new List<SetTextureParam>();
         #endregion
 
-#if LMNT_DEBUG
-        public SceneNode lastNode = null;
-        public Line3D projLine = new Line3D(0, 0, 0, 0, 0, 0);
-        public Triangle3D collTri = new Triangle3D(0, 0, 0, 0, 0, 0, 0, 0, 0);
-#endif
-
         public EntityManager(Viewer viewer)
             : base(viewer, -1)
         {
             // MeshFactory needs to stay and not be cleaned up between sessions to speed up construction
             // of meshes (needs to be properly released at the end of its lifecycle though)
             meshFactory = new MeshFactory(Reference.SceneManager.MeshManipulator, Reference.Device);
-
-#if MANAGED_D3D
-            AnimatedMesh mesh = Reference.SceneManager.GetMesh(Util.ApplicationDataDirectory + @"/media/models/tv.x");
-            if (mesh != null)
-            {
-                MeshSceneNode node = Reference.SceneManager.AddMeshSceneNode(mesh.GetMesh(0), Reference.SceneManager.RootSceneNode, -1);
-                node.Position = new Vector3D(128, 21, 128);
-                node.Scale = new Vector3D(0.5f, 0.5f, 0.5f);
-                node.GetMaterial(0).Texture1 = Reference.Viewer.VideoTexture;
-            }
-#endif
         }
 
         #region Public Interface
@@ -271,9 +254,6 @@ namespace OpenViewer.Managers
             {
                 for (int b = 0; b < numOpaqueBlocks; b++)
                 {
-#if DebugObjectPipeline
-                    Reference.Log.DebugFormat("[3Di Mesh]: For new prim {0}, processing opaque block {1} of {2}", vObj.Prim.ID, b, numOpaqueBlocks);
-#endif
                     byte[] opaqueData = vObj.Prim.OpaqueExtraData[b];
                     string constructedString = Encoding.ASCII.GetString(vObj.Prim.OpaqueExtraData[b]);
                     int blockID = opaqueData[0] + 256 * opaqueData[1];
@@ -289,18 +269,12 @@ namespace OpenViewer.Managers
 
                         if (Reference.Viewer.IrrManager.Contains(irrFileUUID) == false)
                         {
-#if DebugObjectPipeline
-                            Reference.Log.DebugFormat("[3Di Mesh]: Request3DiAssets, prim {0}, requesting async have .irr file {1}", vObj.Prim.ID, irrFileUUID);
-#endif
                             vObj.RequestIrrfileUUID = irrFileUUID;
                             vObj.requestTexturesDirectlyFromAssetServerWithoutJ2KConversion = false;
                             Reference.Viewer.IrrManager.RequestObject(vObj); // will enqueue vObj when all data is downloaded
                         }
                         else
                         {
-#if DebugObjectPipeline
-                            Reference.Log.DebugFormat("[3Di Mesh]: Request3DiAssets, prim {0}, already have .irr file {1}", vObj.Prim.ID, irrFileUUID);
-#endif
                             vObj.NeedToReload3DiMesh = true;
                             vObj.UpdateFullYN = false;
                         }
@@ -380,9 +354,6 @@ namespace OpenViewer.Managers
                         // defined in the textureentry
                     }
 
-#if DebugTexturePipeline
-                    Reference.Log.Debug("EntityManager ProcessTextureQueue calling applyTexture");
-#endif
                     Reference.Viewer.TextureManager.applyTexture(tex, tx.vObj, tx.textureID);
                 }
             }
@@ -689,9 +660,6 @@ namespace OpenViewer.Managers
 
                         if (Reference.Viewer.IrrManager.Contains(vObj._3DiIrrfileUUID))
                         {
-#if DebugTexturePipeline
-                            Reference.Log.Debug("[3Di Mesh]: We want to fetch the following textures for the mesh asset " + vObj._3DiIrrfileUUID);
-#endif
                             IrrDatas irrData = Reference.Viewer.IrrManager.GetObject(vObj._3DiIrrfileUUID, false);
                             vObj.IrrData = irrData;
                             if (irrData != null)
@@ -700,14 +668,8 @@ namespace OpenViewer.Managers
                                 {
                                     if (irrmat.Texture1.Trim().Length > 0)
                                     {
-#if DebugTexturePipeline
-                                        Reference.Log.Debug("[3Di Mesh]: Mesh contains a reference to texture " + irrmat.Texture1);
-#endif
                                         string reqUUIDstring = System.IO.Path.GetFileNameWithoutExtension(irrmat.Texture1.Trim());
                                         UUID reqUUID = new UUID(reqUUIDstring);
-#if DebugTexturePipeline
-                                        Reference.Log.Debug("[3Di Mesh]: Therefore we are requesting asset UUID " + reqUUID);
-#endif
                                         Reference.Viewer.TextureManager.RequestImage(reqUUID, vObj);
                                     }
                                 }
@@ -942,9 +904,6 @@ namespace OpenViewer.Managers
                          Reference.Viewer.Camera.SNCamera);
                     irrNodeUnderMouse =
                         trianglePickerMapper.GetSceneNodeFromRay(projectedray, 0x0128, true, Reference.Viewer.Camera.SNCamera.Position); //smgr.CollisionManager.GetSceneNodeFromScreenCoordinates(new Position2D(p_event.MousePosition.X, p_event.MousePosition.Y), 0, false);
-#if LMNT_DEBUG
-                    projLine = projectedray;
-#endif
                     bool foundRegionPrimCorrespondingToIrrNodeId = false;
                     VObject vobj = null;
                     if (irrNodeUnderMouse != null
@@ -964,17 +923,6 @@ namespace OpenViewer.Managers
                                     && vobj.Node.ID == irrNodeUnderMouse.ID)
                                 {
                                     primitiveUnderMouse = vobj.Prim; // NOTE: no lock here. Lock needed if multithreaded access to this variable.
-
-#if LMNT_DEBUG
-                                    if (lastNode != null)
-                                    {
-                                        lastNode.DebugDataVisible = DebugSceneType.Off;
-                                    }
-                                    lastNode = vobj.Node;
-                                    lastNode.DebugDataVisible = DebugSceneType.MeshWireOverlay;
-                                    Vector3D collP;
-                                    Reference.SceneManager.CollisionManager.GetCollisionPoint(projectedray, lastNode.TriangleSelector, out collP, out collTri);
-#endif
 
                                     foundRegionPrimCorrespondingToIrrNodeId = true;
                                     break;

@@ -199,10 +199,6 @@ namespace OpenViewer.Managers
             imageChair.UseAlphaChannel = true;
             imageChair.Visible = false;
 
-#if MANAGED_D3D
-            //GUIImage image = Reference.GUIEnvironment.AddImage(Reference.Viewer.VideoTexture, new Position2D(), true, parentElement, -1, "");
-#endif
-
             // timer.
             timer.Elapsed += FocuseLostTimer;
             timer.Enabled = false;
@@ -1005,8 +1001,8 @@ namespace OpenViewer.Managers
                 debugListBoxList.Add(6, Reference.GUIEnvironment.AddListBox(new Rect(new Position2D(0, 0), new Dimension2D(Reference.Viewer.Width / 2, Reference.Viewer.Height - 64)), dt6, -1, false));
                 debugListBoxList.Add(7, Reference.GUIEnvironment.AddListBox(new Rect(new Position2D(0, 0), new Dimension2D(Reference.Viewer.Width / 2, Reference.Viewer.Height - 64)), dt7, -1, false));
 #if DEBUG_QUEUE
-                GUITab dt7 = debugTab.AddTab("QUEUE", -1);
-                debugListBoxList.Add(7, Reference.GUIEnvironment.AddListBox(new Rect(new Position2D(0, 0), new Dimension2D(Reference.Viewer.Width / 2, Reference.Viewer.Height - 64)), dt7, -1, false));
+                GUITab dt8 = debugTab.AddTab("QUEUE", -1);
+                debugListBoxList.Add(8, Reference.GUIEnvironment.AddListBox(new Rect(new Position2D(0, 0), new Dimension2D(Reference.Viewer.Width / 2, Reference.Viewer.Height - 64)), dt8, -1, false));
 #endif
             
             }

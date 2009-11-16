@@ -113,7 +113,7 @@ namespace OpenViewer.Managers
                     Action = ElementsInformation;
                     break;
 #if DEBUG_QUEUE
-                case 7:
+                case 8:
                     Action = QueueInformation;
                     break;
 #endif
@@ -129,15 +129,6 @@ namespace OpenViewer.Managers
         {
             int key = 0;
 
-            //long memkb = System.GC.GetTotalMemory(true) / 1000;
-#if LMNT_DEBUG
-            // Display the working set in bytes for a finer grained debugging
-            // (looking for smaller memory leaks)
-            long memkb = System.Diagnostics.Process.GetCurrentProcess().WorkingSet64;
-
-            Reference.Viewer.GuiManager.DebugAdd(key, "Application");
-            Reference.Viewer.GuiManager.DebugAdd(key, " - Mem(byte):" + memkb.ToString("###,###,###"));
-#else
             long memkb = System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / 1024;
             string processName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
 
@@ -145,7 +136,7 @@ namespace OpenViewer.Managers
             Reference.Viewer.GuiManager.DebugAdd(key, " - ProcessName:" + processName);
             Reference.Viewer.GuiManager.DebugAdd(key, " - Version:" + Reference.Viewer.Version.ToString());
             Reference.Viewer.GuiManager.DebugAdd(key, " - Mem(KB):" + memkb.ToString("#,###"));
-#endif
+
             for (int i = 0; i < System.GC.MaxGeneration; i++)
             {
                 Reference.Viewer.GuiManager.DebugAdd(key, " - GC:" + i.ToString() + System.GC.GetGeneration(i).ToString());
@@ -496,7 +487,7 @@ namespace OpenViewer.Managers
         private void QueueInformation(object sender, EventArgs e)
         {
 #if DEBUG_QUEUE
-            int key = 7;
+            int key = 8;
 
             Reference.Viewer.GuiManager.DebugAdd(key, "EntityManager: objectQueue " + Reference.Viewer.EntityManager.ObjectQueueLength);
             Reference.Viewer.GuiManager.DebugAdd(key, "EntityManager: readyQueue " + Reference.Viewer.EntityManager.ReadyQueueLength);

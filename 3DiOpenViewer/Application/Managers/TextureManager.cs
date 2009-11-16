@@ -556,8 +556,6 @@ namespace OpenViewer.Managers
                     alphaimage = (bool)tex.Userdata;
                 }
 
-
-//#if NOTYET
                 if (vObj._3DiIrrfileUUID != UUID.Zero && vObj.IrrData != null)
                 {
                     for (int iTex = 0; iTex < vObj.IrrData.Materials.Count; iTex++)
@@ -580,8 +578,6 @@ namespace OpenViewer.Managers
 
                 }
                 else 
-//#endif
-
 
                 // Apply the Texture based on the TextureEntry
                 if(vObj.Prim.Textures != null)
@@ -718,13 +714,7 @@ namespace OpenViewer.Managers
                                 // Set material color.
                                 for (int i = 0; i < msn.MaterialCount; i++)
                                 {
-#if MATERIAL_DEBUG
-                                    lock(NativeElement.Elements) {System.Diagnostics.Debug.WriteLine("Element count before get:" + NativeElement.Elements.Count);}
-#endif
                                     msn.GetMaterial(i).AmbientColor = objColor;
-#if MATERIAL_DEBUG
-                                    lock (NativeElement.Elements) { System.Diagnostics.Debug.WriteLine("Element count after get:" + NativeElement.Elements.Count); }
-#endif
                                     msn.GetMaterial(i).DiffuseColor = objColor;
                                     msn.GetMaterial(i).SpecularColor = Color.Black;
                                     msn.GetMaterial(i).EmissiveColor = Color.Black;
@@ -733,7 +723,6 @@ namespace OpenViewer.Managers
                             }
                         }
 
-#if RECALC_BOUNDINGBOX
                         Box3D box = new Box3D(0, 0, 0, 0, 0, 0);
                         for (int i = 0; i < msn.GetMesh().MeshBufferCount; i++)
                         {
@@ -741,7 +730,6 @@ namespace OpenViewer.Managers
                             box.AddInternalBox(msn.GetMesh().GetMeshBuffer(i).BoundingBox);
                         }
                         msn.GetMesh().BoundingBox = box;
-#endif
                     }
                     else
                     {

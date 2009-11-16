@@ -28,10 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define NEW_IRRLICHT_DLLS
-// Please note that the Advanced sea shader takes advantage of HW accelerated User Clip Planes
-// that are only enabled in the latest Irrlicht dlls. Currently this shader is disabled
-#if NEW_IRRLICHT_DLLS
 using System;
 using IrrlichtNETCP;
 
@@ -266,4 +262,3 @@ namespace OpenViewer.Shaders
         }
     }
 }
-#endif
