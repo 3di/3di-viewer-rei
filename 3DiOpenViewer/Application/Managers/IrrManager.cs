@@ -100,7 +100,7 @@ namespace OpenViewer.Managers
 
             object result = wir.GetResult();
 
-            if (result != null)
+            if (result != null && irrWorkItems != null)
             {
                 IrrWorkItem item = (IrrWorkItem)result;
                 lock (irrWorkItems)
