@@ -881,7 +881,13 @@ namespace OpenViewer.Managers
             try
             {
                 AssetType type = asset.AssetType;
-                if (asset is OpenViewer.Primitives.ExtendedAssetTexture)
+                if (asset is AssetTexture)
+                {
+                    bNonJp2000 = false;
+                    result = asset.Decode();
+                    extension = ".tga";
+                }
+                else if (asset is OpenViewer.Primitives.ExtendedAssetTexture)
                 {
                     type = (AssetType)((OpenViewer.Primitives.ExtendedAssetTexture)asset).ExtAssetType;
 
