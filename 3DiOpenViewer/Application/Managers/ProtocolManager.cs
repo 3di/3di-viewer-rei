@@ -883,7 +883,7 @@ namespace OpenViewer.Managers
         void OnAttachSound(UUID soundID, UUID ownerID, UUID objectID, float gain, byte flags)
         {
             // If sound uuid exist.
-            if (soundID != UUID.Zero)
+            if (soundID != UUID.Zero && Reference.Viewer.SoundManager != null)
             {
                 Reference.Viewer.SoundManager.PlaySE(soundID);
             }

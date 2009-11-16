@@ -725,7 +725,15 @@ namespace OpenViewer
             avatarManager = new Managers.AvatarManager(this);
             effectManager = new Managers.EffectManager(this);
             chatManager = new Managers.ChatManager(this);
-            soundManager = new Managers.SoundManager(this);
+            try
+            {
+                soundManager = new Managers.SoundManager(this);
+            }
+            catch (BadImageFormatException e)
+            {
+                // Trying to load 32-bit assembly on 64-bit architecture
+                m_log.Warn("[MANAGERS]: SoundManager is not available due to incompatible assembly.");
+            }
             debugManager = new DebugManager(this, -1);
 
             // Experimental manager plugin loader
@@ -743,9 +751,11 @@ namespace OpenViewer
 
             guiManager.LoadBackgrounds();
 
-            soundManager.InitWindowBackgroundMusicURL = InitBackgroundMusicURL;
-            soundManager.LoadBackgroundMusic();
-
+            if (soundManager != null)
+            {
+                soundManager.InitWindowBackgroundMusicURL = InitBackgroundMusicURL;
+                soundManager.LoadBackgroundMusic();
+            }
             // After all managers all initialized
             stateManager.State = State.INITIALIZED;
 
@@ -919,7 +929,8 @@ namespace OpenViewer
 #if DEBUG
             VUtil.LogFilterList.Add("IrrFileCreateCache");
             VUtil.LogFilterList.Add(avatarManager.ToString());
-            VUtil.LogFilterList.Add(soundManager.ToString());
+            if (soundManager != null)
+                VUtil.LogFilterList.Add(soundManager.ToString());
             VUtil.LogFilterList.Add(irrManager.ToString());
             VUtil.LogFilterList.Add(protocolManager.AvatarConnection.ToString());
 #endif
@@ -1023,7 +1034,8 @@ namespace OpenViewer
             avatarManager.Initialize();
             effectManager.Initialize();
             chatManager.Initialize();
-            soundManager.Initialize();
+            if (soundManager != null)
+                soundManager.Initialize();
             debugManager.Initialize();
 
             foreach (IManagerPlugin plugin in m_managers)
@@ -1513,7 +1525,8 @@ namespace OpenViewer
             avatarManager.Cleanup();
             effectManager.Cleanup();
             chatManager.Cleanup();
-            soundManager.Cleanup();
+            if (soundManager != null)
+                soundManager.Cleanup();
             cacheManager.Cleanup();
             debugManager.Cleanup();
         }
@@ -1839,7 +1852,8 @@ namespace OpenViewer
 
             if (_state == State.CONNECTED)
             {
-                soundManager.Stop();
+                if (soundManager != null)
+                    soundManager.Stop();
 
                 Reference.Viewer.Adapter.SendMessage("simconnected", true);
 
