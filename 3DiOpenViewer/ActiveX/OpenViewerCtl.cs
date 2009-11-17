@@ -48,7 +48,7 @@ using System.Threading;
 using System.Security.Permissions;
 
 #if !LINUX
-//[assembly: CLSCompliant(true)]
+[assembly: CLSCompliant(true)]
 #else
 [assembly: CLSCompliant(false)]
 #endif
