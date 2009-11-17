@@ -851,9 +851,11 @@ namespace OpenViewer.Managers
 
                 if (shinyval > 0)
                 {
-                    
-                    mb.Material.MaterialType = (MaterialType)newMaterialType1;
-                    mb.Material.Lighting = false;
+                    if (newMaterialType1 != -1)
+                    {
+                        mb.Material.MaterialType = (MaterialType)newMaterialType1;
+                        mb.Material.Lighting = false;
+                    }
                 }
             }
         }
