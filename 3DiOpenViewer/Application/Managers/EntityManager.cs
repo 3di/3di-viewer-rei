@@ -118,7 +118,6 @@ namespace OpenViewer.Managers
 
         #region Queues
         private Queue<VObject> objectQueue = new Queue<VObject>();
-        private Queue<VObject> readyQueue = new Queue<VObject>();
         private Queue<TextureCompleteNotification> textureQueue = new Queue<TextureCompleteNotification>();
 
         private Queue<Action<VObject>> pipeline = new Queue<Action<VObject>>();
@@ -128,7 +127,6 @@ namespace OpenViewer.Managers
 
 #if DEBUG_QUEUE
         public int ObjectQueueLength { get { return(objectQueue.Count); } }
-        public int ReadyQueueLength { get { return (readyQueue.Count); } }
         public int TextureQueueLength { get { return (textureQueue.Count); } }
         public int PipelineQueueLength { get { return (pipeline.Count); } }
 #endif
@@ -173,10 +171,6 @@ namespace OpenViewer.Managers
             lock (objectQueue)
             {
                 objectQueue.Clear();
-            }
-            lock (readyQueue)
-            {
-                readyQueue.Clear();
             }
             lock (textureQueue)
             {
