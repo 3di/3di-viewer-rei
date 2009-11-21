@@ -31,7 +31,6 @@
 using System;
 using System.Collections.Generic;
 using IrrlichtNETCP;
-using IrrlichtNETCP.Extensions;
 
 namespace OpenViewer.Managers
 {
@@ -74,11 +73,6 @@ namespace OpenViewer.Managers
             {
                 shaderIndex.Clear();
             }
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
         }
 
         public override void Cleanup()

@@ -58,7 +58,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -275,19 +274,6 @@ namespace OpenViewer
                 }
             }
             return null;
-        }
-
-        /// <summary>
-        /// Saves bmp for the terrain
-        /// </summary>
-        /// <param name="bitmap"></param>
-        /// <param name="filename"></param>
-        public static void SaveBitmapToFile(Bitmap bitmap, string filename)
-        {
-            ImageCodecInfo bmpEncoder = GetImageEncoder("BMP");
-
-            Bitmap resize = new Bitmap(bitmap);
-            resize.Save( filename, System.Drawing.Imaging.ImageFormat.Bmp);
         }
 
         /// <summary>

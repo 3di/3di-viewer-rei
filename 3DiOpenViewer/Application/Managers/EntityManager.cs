@@ -60,8 +60,6 @@
 #define DebugTexturePipeline
 #define DebugObjectPipeline
 using System;
-using System.Text;
-using System.Drawing;
 using System.Collections.Generic;
 using IrrlichtNETCP;
 using OpenMetaverse;
@@ -121,7 +119,6 @@ namespace OpenViewer.Managers
         private Queue<TextureCompleteNotification> textureQueue = new Queue<TextureCompleteNotification>();
 
         private Queue<Action<VObject>> pipeline = new Queue<Action<VObject>>();
-        private Queue<Action<FoliageObject>> foliageQueue = new Queue<Action<FoliageObject>>();
         private Queue<EventQueueParam> eventQueue = new Queue<EventQueueParam>();
 
 
@@ -238,8 +235,7 @@ namespace OpenViewer.Managers
         public void HandleNewPrimEvent_warning(OpenMetaverse.Primitive prim, ulong regionHandle, ushort timeDilation) 
         // warning: libomv invokes OnNewPrim event both for new prims and updates to prims
         {
-            VObject vObj;
-            vObj = new VObject();
+            VObject vObj = new VObject();
             vObj.Prim = prim;
 
 
@@ -249,16 +245,14 @@ namespace OpenViewer.Managers
                 for (int b = 0; b < numOpaqueBlocks; b++)
                 {
                     byte[] opaqueData = vObj.Prim.OpaqueExtraData[b];
-                    string constructedString = Encoding.ASCII.GetString(vObj.Prim.OpaqueExtraData[b]);
                     int blockID = opaqueData[0] + 256 * opaqueData[1];
-                    int blockLen = (((opaqueData[5]) * 256 + opaqueData[4]) * 256 + opaqueData[3]) * 256 + opaqueData[2];
                     if (blockID == 0x200) // 3Di data
                     {
                         int iByte = 4 + 2; // skip type and length
                         UUID irrFileUUID = new UUID(opaqueData, iByte);
                         iByte += 16;
+                        // FIXME: colMeshUUID is unused
                         UUID colMeshUUID = new UUID(opaqueData, iByte);
-                        iByte += 16;
                         vObj._3DiIrrfileUUID = irrFileUUID;
 
                         if (Reference.Viewer.IrrManager.Contains(irrFileUUID) == false)
@@ -450,8 +444,6 @@ namespace OpenViewer.Managers
                 Reference.Log.Warn("[ENTITY MANAGER]: " + e.Message);
                 Reference.Log.Debug("[ENTITY MANAGER]: " + e.StackTrace);
             }
-            if (node == null)
-                return;
             try
             {
                 if (node.MaterialCount > 0)

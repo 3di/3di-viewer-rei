@@ -57,17 +57,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
 using OpenMetaverse;
 using IrrlichtNETCP;
-using OpenSim.Framework;
-using Lib3Di;
 
 namespace OpenViewer
 {

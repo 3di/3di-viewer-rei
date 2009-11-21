@@ -59,15 +59,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Text;
 using System.Threading;
-using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 using OpenMetaverse;
 using OpenSim.Framework;
-//using OpenMetaverse.Rendering;
 using IrrlichtNETCP;
 using Amib.Threading;
 

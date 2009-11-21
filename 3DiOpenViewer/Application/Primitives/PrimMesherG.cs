@@ -60,14 +60,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using OpenMetaverse;
 using PrimMesher;
 using IrrlichtNETCP;
 using log4net;
-using log4net.Appender;
-using log4net.Core;
-using log4net.Repository;
 
 namespace OpenViewer
 {

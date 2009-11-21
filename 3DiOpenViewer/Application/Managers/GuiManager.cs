@@ -32,7 +32,6 @@ using System;
 using System.Collections.Generic;
 using IrrlichtNETCP;
 using OpenMetaverse;
-using System.Runtime.InteropServices;
 
 namespace OpenViewer.Managers
 {
@@ -292,10 +291,10 @@ namespace OpenViewer.Managers
                 Dimension2D imageSize = img.OriginalSize;
 
                 // Show error dialog.
-                GUIImage menu = Reference.GUIEnvironment.AddImage(img,
-                                                                        new Position2D(Reference.Viewer.Width / 2 - imageSize.Width / 2,
-                                                                                       Reference.Viewer.Height / 2 - imageSize.Height / 2),
-                                                                        true, parentElement, (int)GUIElementIDS.ERROR_DIALOG_WINDOW, "");
+                Reference.GUIEnvironment.AddImage(img,
+                                                  new Position2D(Reference.Viewer.Width / 2 - imageSize.Width / 2,
+                                                  Reference.Viewer.Height / 2 - imageSize.Height / 2),
+                                                  true, parentElement, (int)GUIElementIDS.ERROR_DIALOG_WINDOW, "");
 
                 ShowMessageWindow(loginMessage);
 
@@ -417,10 +416,10 @@ namespace OpenViewer.Managers
             if (loginWindowBackground != null)
             {
                 Dimension2D imageSize = loginWindowBackground.OriginalSize;
-                GUIImage background = Reference.GUIEnvironment.AddImage(loginWindowBackground,
-                                                                        new Position2D(Reference.Viewer.Width / 2 - imageSize.Width / 2,
-                                                                                       Reference.Viewer.Height / 2 - imageSize.Height / 2),
-                                                                        true, parentElement, (int)GUIElementIDS.LOGIN_BACKGROUND, "");
+                Reference.GUIEnvironment.AddImage(loginWindowBackground,
+                                                  new Position2D(Reference.Viewer.Width / 2 - imageSize.Width / 2,
+                                                  Reference.Viewer.Height / 2 - imageSize.Height / 2),
+                                                  true, parentElement, (int)GUIElementIDS.LOGIN_BACKGROUND, "");
                 removeGUI.Add((int)GUIElementIDS.LOGIN_BACKGROUND);
             }
 
@@ -538,10 +537,10 @@ namespace OpenViewer.Managers
             if (initWindowBackground != null)
             {
                 Dimension2D imageSize = initWindowBackground.OriginalSize;
-                GUIImage background = Reference.GUIEnvironment.AddImage(initWindowBackground,
-                                                                        new Position2D(Reference.Viewer.Width / 2 - imageSize.Width / 2,
-                                                                                       Reference.Viewer.Height / 2 - imageSize.Height / 2),
-                                                                        true, parentElement, (int)GUIElementIDS.INIT_BACKGROUND, "");
+                Reference.GUIEnvironment.AddImage(initWindowBackground,
+                                                  new Position2D(Reference.Viewer.Width / 2 - imageSize.Width / 2,
+                                                  Reference.Viewer.Height / 2 - imageSize.Height / 2),
+                                                  true, parentElement, (int)GUIElementIDS.INIT_BACKGROUND, "");
             }
         }
         #endregion
@@ -733,7 +732,7 @@ namespace OpenViewer.Managers
                 new Rect(new Position2D(Reference.Viewer.Width / 2 - 150, Reference.Viewer.Height / 2 - 64), new Dimension2D(300, 128)),
                 false, "   " + DialogText.Teleport, parentElement, (int)GUIElementIDS.TELEPORT_FAILED_WINDOW);
 
-            GUIImage img = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/window_teleport.png"), new Position2D(5, 2), true, wnd, -1, "");
+            Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/windows/window_teleport.png"), new Position2D(5, 2), true, wnd, -1, "");
 
             wnd.CloseButton.Visible = false;
 
@@ -909,8 +908,7 @@ namespace OpenViewer.Managers
             //----------------------------------------------------------------------
             GUITab t2 = tab.AddTabW(DialogText.Cache, -1);
 
-            Rect t2Rect;
-            t2Rect = new Rect(new Position2D(8, 24), new Dimension2D(278, 64));
+            Rect t2Rect = new Rect(new Position2D(8, 24), new Dimension2D(278, 64));
             Reference.GUIEnvironment.AddStaticTextW(DialogText.CacheInformationMessage, t2Rect, false, true, t2, -1, false);
 
             t2Rect = new Rect(new Position2D(112, 88), new Dimension2D(278, 32));

@@ -48,7 +48,6 @@ namespace OpenViewer.Managers
     {
         private Dictionary<UUID, IrrDatas> dataList = new Dictionary<UUID, IrrDatas>();
         private Dictionary<UUID, List<VObject>> requestingList = new Dictionary<UUID,List<VObject>>();
-        private UUID lastUUID = new UUID();
         private string workDirectory = string.Empty;
         public SmartThreadPool requestingThreadPool;
         private int asset_max_threads;
@@ -114,9 +113,7 @@ namespace OpenViewer.Managers
         {
             while (true)
             {
-                List<IrrWorkItem> items;
-
-                items = null;
+                List<IrrWorkItem> items = null;
                 lock (irrWorkItems)
                 {
                     if (irrWorkItems.Count > 0)
@@ -180,7 +177,6 @@ namespace OpenViewer.Managers
             lock (dataList)
             {
                 dataList.Clear();
-                lastUUID = new UUID();
             }
             lock (requestingList)
             {
@@ -236,8 +232,6 @@ namespace OpenViewer.Managers
                 {
                     dataList.Add(_uuid, _data);
                 }
-
-                lastUUID = _uuid;
             }
         }
 
@@ -507,30 +501,6 @@ namespace OpenViewer.Managers
             }
 
             return err;
-        }
-
-        /// <summary>
-        /// Request asset from IrrDatas.
-        /// </summary>
-        /// <param name="_datas">IrrDatas</param>
-        /// <param name="_slProtocol">SLProtocol</param>
-        private void IrrFileRequestToAssetServer(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol)
-        {
-            Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(_datas.Mesh.Param.Mesh), true);
-
-            foreach (IrrParseLib.IrrMaterial material in _datas.Materials)
-            {
-                Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(material.Texture1), true);
-                Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(material.Texture2), true);
-                Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(material.Texture3), true);
-                Reference.Viewer.ProtocolManager.RequestImage(Path.GetFileNameWithoutExtension(material.Texture4), true);
-            }
-
-            if (_datas.Childs == null)
-                return;
-
-            foreach (IrrParseLib.IrrDatas datas in _datas.Childs)
-                IrrFileRequestToAssetServer(datas, _slProtocol);
         }
 
         /// <summary>

@@ -59,7 +59,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml;
@@ -782,12 +781,6 @@ namespace OpenViewer
             {
                 m_log.Error("CleanChache", e);
             }
-        }
-
-
-        void f_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
-        {
-            Shutdown();
         }
 
         /// <summary>
@@ -1573,10 +1566,11 @@ namespace OpenViewer
             if (p_event.MouseInputEvent == MouseInputEvent.LMouseLeftUp)
             {
                 LMheld = false;
-                if (menuManager == null && menuManager.Click(Device.CursorControl.Position))
-                {
-                    return (false);
-                }
+                // FIXME: Remove this code
+                //if (menuManager == null && menuManager.Click(Device.CursorControl.Position))
+                //{
+                //    return (false);
+                //}
                 if (stateManager.State == State.INITIALIZED)
                 {
                     if (LoginMode == "click")
@@ -1747,7 +1741,7 @@ namespace OpenViewer
                 return;
 
             string location = "last";
-            if (LoginLocation != null && LoginLocation != string.Empty)
+            if (!string.IsNullOrEmpty(LoginLocation))
                 location = LoginLocation;
 
             lock (stateManager.SyncStat)

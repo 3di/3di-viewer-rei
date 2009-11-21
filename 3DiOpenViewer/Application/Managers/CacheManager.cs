@@ -28,10 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace OpenViewer.Managers
 {
@@ -40,8 +38,8 @@ namespace OpenViewer.Managers
         public const long CACHE_MAX_MAX = 999 * 1000 * 1000; // 999GB
         public const long CACHE_MAX_MIN = 1 * 1000 * 1000;   // 001MB
 
-        private int DEFAULT_CACHE_SIZE = 300; // MB
-        private bool DEFAULT_CACHE_ALL_DELETE = false;
+        private const int DEFAULT_CACHE_SIZE = 300; // MB
+        private const bool DEFAULT_CACHE_ALL_DELETE = false;
 
         public long CacheSize { get { return dc.TotalSize; } }
         public long CacheMaxSize { get; set; }

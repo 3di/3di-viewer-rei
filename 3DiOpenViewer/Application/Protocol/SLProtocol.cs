@@ -60,11 +60,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using OpenMetaverse;
-using OpenMetaverse.Rendering;
 using OpenMetaverse.Packets;
-using OpenMetaverse.Utilities;
 using log4net;
 
 

@@ -48,11 +48,6 @@ namespace OpenViewer.Managers
             ChangeMode(0);
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
         public override void Cleanup()
         {
         }

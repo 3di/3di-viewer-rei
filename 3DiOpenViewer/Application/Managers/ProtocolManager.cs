@@ -29,7 +29,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using IrrlichtNETCP;
@@ -690,7 +689,7 @@ namespace OpenViewer.Managers
         }
          void OnAvatarSitResponse(OpenMetaverse.UUID objectID, bool autoPilot, OpenMetaverse.Vector3 cameraAtOffset, OpenMetaverse.Vector3 cameraEyeOffset, bool forceMouselook, OpenMetaverse.Vector3 sitPosition, OpenMetaverse.Quaternion sitRotation)
         {
-            if (autoPilot == true)
+            if (autoPilot)
             {
                 // Client-side autopilot is requested from the server when the avatar tries
                 // to sit on a prim that is (a) occupied and (b) far away from the avatar.
@@ -699,8 +698,7 @@ namespace OpenViewer.Managers
                 // Here, we have no autopilot implemented, so we simply do nothing, effectively
                 // ignoring the sit request for a far-away prim that is occupied.
 
-                bool clientSideAutoPilotSucceeded;
-                clientSideAutoPilotSucceeded = false;
+                bool clientSideAutoPilotSucceeded = false;
 
                 // TODO: later, we should implement autopilot code and check if the client-side autopilot
                 // succeeded.

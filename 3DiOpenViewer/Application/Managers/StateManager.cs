@@ -29,9 +29,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using IrrlichtNETCP;
-using OpenMetaverse;
 
 namespace OpenViewer.Managers
 {

@@ -80,7 +80,6 @@ namespace OpenViewer.Managers
         private const float CUSTOMIZE_ANIMATION_WAIT_SECOND = 0.5f;
         private const float CAMERA_RESET_LENGTH = 5.0f;
         private const float ROTATION_SPEED = 0.075f;
-        private const float moveSpeed = 4.0f;
         private const float div2pi = (float)Math.PI / 2;
         private const float pi = (float)Math.PI;
         private const float pi2 = (float)Math.PI * 2;
@@ -1066,7 +1065,6 @@ namespace OpenViewer.Managers
                 _obj.PickNode.Scale = new Vector3D(1, 1, 1);
             }
 
-            bool isVoiceAnimation = (_obj.VoiceLevel > 1) ? true : false;
             bool loopFlag = true;
             JointUpdateOnRenderMode jointMode = JointUpdateOnRenderMode.Control;
             switch (_key)
@@ -1345,22 +1343,6 @@ namespace OpenViewer.Managers
             _triangle = triangle;
 
             return find;
-        }
-
-        private bool IsInSim(Vector3D _position)
-        {
-            const float simMin = 0;
-            const float simMax = 255;
-
-            bool flag = false;
-
-            if (simMin < _position.X && _position.X < simMax
-                && simMin < _position.Z && _position.Z < simMax)
-            {
-                flag = true;
-            }
-
-            return flag;
         }
 
         public float RadHeading

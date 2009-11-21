@@ -30,9 +30,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using IrrlichtNETCP;
-using Nini.Ini;
 
 namespace OpenViewer.Managers
 {
@@ -85,15 +83,15 @@ namespace OpenViewer.Managers
 
     public class MenuManager : BaseComponent
     {
-        private static int MENU_R_WIDTH = 256;
-        private static int MENU_L_WIDTH = 224;
-        private static int MENU_HEIGHT = 32;
-        private static int MENU_OFFSET_X = 4;
-        private static int MENU_OFFSET_Y = 4;
-        private static int MENU_ICONWIDTH = 32;
-        private static int MENU_ICONOFFSET_X = 16;
-        private static int MENU_ICONOFFSET_Y = 4;
-        private static int MENU_SPACING = 16;
+        private const int MENU_R_WIDTH = 208;
+        private const int MENU_L_WIDTH = 224;
+        private const int MENU_HEIGHT = 32;
+        private const int MENU_OFFSET_X = 12;
+        private const int MENU_OFFSET_Y = 4;
+        private const int MENU_ICONWIDTH = 32;
+        private const int MENU_ICONOFFSET_X = 16;
+        private const int MENU_ICONOFFSET_Y = 4;
+        private const int MENU_SPACING = 16;
 
         private GUIImage m_menuBackground = null;
         private GUIImage m_textBackground = null;
@@ -118,9 +116,6 @@ namespace OpenViewer.Managers
 
         public override void Initialize()
         {
-            MENU_R_WIDTH = 208;
-            MENU_OFFSET_X = 12;
-
             m_menuBackground = Reference.GUIEnvironment.AddImage(Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/gui/menu/menu_background_r.tga"), new Position2D(Reference.Viewer.Width - MENU_R_WIDTH - MENU_OFFSET_X, 0), true, Reference.GUIEnvironment.RootElement, (int)GUIElementIDS.MENU_BACKGROUND, "background");
             if (Reference.Viewer.Width > 2*MENU_R_WIDTH+2*MENU_OFFSET_X)
             {

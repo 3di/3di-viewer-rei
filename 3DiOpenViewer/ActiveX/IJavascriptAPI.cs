@@ -28,19 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using Microsoft.Win32;
-using System.Reflection;
-
-using OpenViewer;
-using System.Threading;
 
 namespace OpenViewerAX
 {

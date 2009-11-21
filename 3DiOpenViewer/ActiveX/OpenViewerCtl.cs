@@ -29,10 +29,7 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Text;
 using System.Xml;
 using System.IO;
@@ -43,7 +40,6 @@ using Microsoft.Win32;
 using System.Reflection;
 
 using OpenViewer;
-using OpenViewer.bootstrap;
 using System.Threading;
 using System.Security.Permissions;
 
@@ -77,10 +73,6 @@ namespace OpenViewerAX
 
         [DllImport("user32.dll")]
         private static extern bool InvalidateRect(IntPtr hwnd, IntPtr lpRect, bool bErase);
-
-        [DllImport("user32.dll")]
-        private static extern bool SendMessage(IntPtr hwnd, Int32 Msg, IntPtr wParam, IntPtr lParam);
-
 
         // Constants for implementation of the IObjectSafety interface.
         private const int INTERFACESAFE_FOR_UNTRUSTED_CALLER = 0x00000001;
@@ -1739,7 +1731,6 @@ namespace OpenViewerAX
             
             if (m.Msg == WM_PAINT)
             {
-                Keys keyCode = (Keys)m.WParam & Keys.KeyCode;
                 IntPtr p = GetAncestor(Handle, 1);
                 InvalidateRect(p, IntPtr.Zero, true);
             }

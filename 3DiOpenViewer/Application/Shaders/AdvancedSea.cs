@@ -36,7 +36,6 @@ namespace OpenViewer.Shaders
     public class AdvancedSea : BaseShader
     {
         SceneNode WaterSceneNode;
-        IrrlichtNETCP.Timer Timer;
         Dimension2Df Size;
         int ShaderMaterial;
 
@@ -45,23 +44,18 @@ namespace OpenViewer.Shaders
         Texture RefractionMap = null;
         Texture ReflectionMap = null;
 
-        float WindForce = 5.0f;
+        const float WindForce = 5.0f;
         Vector3D WindDirection = new Vector3D(0.0f, 1.0f, 0.0f);
-        float WaveHeight = 0.1f;    // 0.3
+        const float WaveHeight = 0.1f;    // 0.3
         Colorf WaterColor = new Colorf(0.2f, 0.4f, 0.9f, 0.85f);
         Colorf SpecularColor = new Colorf(1.0f, 0.7f, 1.0f, 0.9f);
-        float Specular = 96;
-        float ColorBlendFactor = 0.2f;  // 0.2
+        const float Specular = 96;
+        const float ColorBlendFactor = 0.2f;  // 0.2
         Dimension2D renderTargetSize = new Dimension2D(512, 512);
 
         public AdvancedSea(Viewer viewer, SceneNode _parentNode)
             : base(viewer, -1, _parentNode)
         {
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
         }
 
         public override void Update(uint frame)
@@ -145,7 +139,6 @@ namespace OpenViewer.Shaders
             {
                 const string filename = "advanced_sea_shader.fx";
 
-                Timer = Reference.Device.Timer;
                 Size = new Dimension2Df(256, 256);
 
                 if (Reference.SceneManager.ActiveCamera != null)
@@ -170,8 +163,6 @@ namespace OpenViewer.Shaders
                 WaterSceneNode = Reference.SceneManager.AddOctTreeSceneNode(watermesh, parentNode, -1, 128);
 
                 Texture bumpTexture = Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory + @"/media/textures/waterbump.jpg");
-
-                GPUProgrammingServices gpuProgrammingServices = Reference.VideoDriver.GPUProgrammingServices;
 
                 string path = Util.ApplicationDataDirectory + @"/media/shaders/" + filename;
                 if (System.IO.File.Exists(path))

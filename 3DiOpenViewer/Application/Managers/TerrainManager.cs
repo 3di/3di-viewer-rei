@@ -28,9 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using IrrlichtNETCP;
 using System.Drawing;
 
@@ -46,11 +44,6 @@ namespace OpenViewer.Managers
         public TerrainManager(Viewer viewer)
             : base(viewer, -1)
         {
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
         }
 
         public override void Cleanup()
@@ -237,22 +230,6 @@ namespace OpenViewer.Managers
         public Dictionary<ulong, TerrainSceneNode> Terrains
         {
             get { return terrains; }
-        }
-
-        private void setPixcel(Bitmap bitmap, int x, int y, float value)
-        {
-            byte[] bytes = BitConverter.GetBytes(value);
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(bytes);
-            }
-            System.Drawing.Color c = System.Drawing.Color.FromArgb(bytes[0], bytes[1], bytes[2], bytes[3]);
-            bitmap.SetPixel((bitmap.Width - 1) - x, y, c);
-        }
-
-        private static int Clip(int x, int min, int max)
-        {
-            return Math.Min(Math.Max(x, min), max);
         }
 
         private const uint m_regionWidth = 256;

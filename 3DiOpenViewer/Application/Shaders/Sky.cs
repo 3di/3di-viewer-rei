@@ -44,7 +44,6 @@ namespace OpenViewer.Shaders
         private SceneNode sunNode;
         private SceneNode moonNode;
         private SceneNode skyNode;
-        private Color lastAtomColor = new Color(255, 187, 121, 8);
 
         private DateTime worldTime = new DateTime(2009, 2, 27, 15, 0, 0);
         private DirectionalLight sunLight;             // Directional lights wrapper for the sun
@@ -329,11 +328,6 @@ namespace OpenViewer.Shaders
             }
 
             return res;
-        }
-
-        public override void Cleanup()
-        {
-            base.Cleanup();
         }
 
         public override void ShaderEvent(IrrlichtNETCP.MaterialRendererServices services, int userData)

@@ -58,8 +58,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using OpenMetaverse;
 using IrrlichtNETCP;
 
@@ -69,10 +67,10 @@ namespace OpenViewer
     {
         public CameraSceneNode SNCamera;
         public VObject VOtarget;
-        private float CAMERASPEED = 0.0175f;
-        private float CAMERAZOOMSPEED = 5f;
-        private float CAMERAWHEELSPEED = 1.0f;
-        private float TWOPI = (float)(Math.PI * 2);
+        private const float CAMERASPEED = 0.0175f;
+        private const float CAMERAZOOMSPEED = 5f;
+        private const float CAMERAWHEELSPEED = 1.0f;
+        private const float TWOPI = (float)(Math.PI * 2);
         public float loMouseOffsetPHI = 0;
         public float loMouseOffsetTHETA = 0;
         public Vector3D FollowCamTargetOffset = new Vector3D(0, 1f, 0);
@@ -81,7 +79,6 @@ namespace OpenViewer
         public bool SmoothingReset = false;
 
 
-        private static Vector3 m_lastTargetPos = Vector3.Zero;
         private Vector3[] LookAtCam = new Vector3[3];
         private float nowDistance;
         private Vector3D targetPosition;
@@ -120,13 +117,12 @@ namespace OpenViewer
         }
 
 
-        public IrrlichtNETCP.Vector3D CalculateSphericalCameraCoordinates(IrrlichtNETCP.Vector3D camPos, 
-            IrrlichtNETCP.Vector3D targetPos)
+        public Vector3D CalculateSphericalCameraCoordinates(Vector3D camPos, Vector3D targetPos)
         {
             float xCamRotationAnglePHI, xCamRotationAngleTHETA;
-            IrrlichtNETCP.Vector3D result = new IrrlichtNETCP.Vector3D(); // result is spherical coordinates as a 3D vector in (radius, theta, phi) order
+            Vector3D result = new Vector3D(); // result is spherical coordinates as a 3D vector in (radius, theta, phi) order
 
-            IrrlichtNETCP.Vector3D relCamPos = camPos - targetPos;
+            Vector3D relCamPos = camPos - targetPos;
             float camDistance = (float)Math.Sqrt(relCamPos.DotProduct(relCamPos));
             xCamRotationAnglePHI = 0.5f * (float)Math.PI - (float)Math.Asin((double)(relCamPos.Y / camDistance));
             if (xCamRotationAnglePHI < 0.0)
@@ -467,8 +463,7 @@ namespace OpenViewer
 
         public void SetDeltaFromMouse(float deltaX, float deltaY)
         {
-            float testPHI;
-            testPHI = Reference.Viewer.CamRotationAnglePHI + ((deltaY * CAMERASPEED) * 0.2f);
+            float testPHI = Reference.Viewer.CamRotationAnglePHI + ((deltaY * CAMERASPEED) * 0.2f);
             // convert testPHI to be in range of 0..2PI 
             while(testPHI <0)
             {
@@ -527,8 +522,7 @@ namespace OpenViewer
                 }
                 else
                 {
-                    IrrlichtNETCP.Vector3D camSphericalCoordinates;
-                    camSphericalCoordinates = CalculateSphericalCameraCoordinates(SNCamera.AbsolutePosition, SNCamera.Target);
+                    Vector3D camSphericalCoordinates = CalculateSphericalCameraCoordinates(SNCamera.AbsolutePosition, SNCamera.Target);
                     Reference.Viewer.CameraDistance = camSphericalCoordinates.X;
                     Reference.Viewer.CamRotationAngleTHETA = camSphericalCoordinates.Y;
                     Reference.Viewer.CamRotationAnglePHI = camSphericalCoordinates.Z;
@@ -550,8 +544,6 @@ namespace OpenViewer
         public MoveSpeedType MoveSpeed { get { return moveSpeedMode; } }
         private float turnSpeed = 0.1f;
         private float moveSpeed = 0.25f;
-        private Vector3D movePosition = new Vector3D();
-        private Vector3D moveTarget = new Vector3D();
 
         public void MoveLookAt(float _px, float _py, float _pz, float _tx, float _ty, float _tz)
         {
@@ -689,9 +681,6 @@ namespace OpenViewer
 
             if (SNCamera != null)
             {
-                movePosition = SNCamera.Position;
-                moveTarget = SNCamera.Target;
-
                 CameraMode = ECameraMode.First;
             }
         }

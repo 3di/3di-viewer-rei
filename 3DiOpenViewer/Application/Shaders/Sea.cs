@@ -40,14 +40,12 @@ namespace OpenViewer.Shaders
         // directory
         private string shaderDirectory;
         private string modelDirectory;
-        private string textureDirectory;
 
         public Sea(Viewer viewer, SceneNode _parentNode)
             : base(viewer, -1, _parentNode)
         {
             shaderDirectory = Util.ApplicationDataDirectory + @"/media/shaders/";
             modelDirectory = Util.ApplicationDataDirectory + @"/media/models/";
-            textureDirectory = Util.ApplicationDataDirectory + @"/media/textures/";
         }
 
         public override void Update(uint frame)
