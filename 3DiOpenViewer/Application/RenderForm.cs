@@ -4,11 +4,8 @@ namespace OpenViewer
 {
     public class RenderForm : Form
     {
-        private Viewer viewer = null;
-
-        public RenderForm(Viewer viewer)
+        public RenderForm()
         {
-            this.viewer = viewer;
             this.Cursor = null;
         }
 

@@ -401,7 +401,7 @@ namespace OpenViewer
             SetupAddins();
             SetupLog();
 
-            f = new RenderForm(this);
+            f = new RenderForm();
             f.Width = width;
             f.Height = height;
             f.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

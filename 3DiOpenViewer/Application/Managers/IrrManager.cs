@@ -407,14 +407,15 @@ namespace OpenViewer.Managers
         /// Request asset from IrrDatas by TCP.
         /// </summary>
         /// <param name="_datas">IrrDatas</param>
-        /// <param name="_slProtocol">SLProtocol</param>
-        public void IrrFileTCPRequestToAssetServer_toplevel(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol, string _directory, bool fetchTextures)
+        /// <param name="_directory"></param>
+        /// <param name="fetchTextures"></param>
+        public void IrrFileTCPRequestToAssetServer_toplevel(IrrParseLib.IrrDatas _datas, string _directory, bool fetchTextures)
         {
             IrrFileCreateCache(_datas.Mesh.Param.Name + ".xml", _directory);
-            IrrFileTCPRequestToAssetServer_recursive(_datas, _slProtocol, true, _directory, fetchTextures);
+            IrrFileTCPRequestToAssetServer_recursive(_datas, _directory, fetchTextures);
         }
 
-        private void IrrFileTCPRequestToAssetServer_recursive(IrrParseLib.IrrDatas _datas, SLProtocol _slProtocol, bool _root, string _directory, bool fetchTextures)
+        private void IrrFileTCPRequestToAssetServer_recursive(IrrParseLib.IrrDatas _datas, string _directory, bool fetchTextures)
         {
             IrrFileCreateCache(_datas.Mesh.Param.Mesh, _directory);
 
@@ -433,7 +434,7 @@ namespace OpenViewer.Managers
             if (_datas.Childs != null)
             {
                 foreach (IrrParseLib.IrrDatas datas in _datas.Childs)
-                    IrrFileTCPRequestToAssetServer_recursive(datas, _slProtocol, false, _directory, fetchTextures);
+                    IrrFileTCPRequestToAssetServer_recursive(datas, _directory, fetchTextures);
             }
         }
 

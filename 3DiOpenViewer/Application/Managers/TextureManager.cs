@@ -739,9 +739,12 @@ namespace OpenViewer.Managers
                         sn.DebugDataVisible = DebugSceneType.Off;
 
                         // If it's translucent, register it for the Transparent phase of rendering
-                        if (vObj.Prim.Textures.DefaultTexture.RGBA.A != 1)
+                        if (vObj.Prim.Textures.DefaultTexture != null)
                         {
-                            device.SceneManager.RegisterNodeForRendering(sn, SceneNodeRenderPass.Transparent);
+                            if (vObj.Prim.Textures.DefaultTexture.RGBA.A != 1)
+                            {
+                                device.SceneManager.RegisterNodeForRendering(sn, SceneNodeRenderPass.Transparent);
+                            }
                         }
                         // Add the new triangle selector
                         sn.TriangleSelector = device.SceneManager.CreateTriangleSelector(vObj.Mesh, sn);

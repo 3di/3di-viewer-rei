@@ -72,7 +72,7 @@ namespace OpenViewer
                     {
                         //---------------------------------------------
                         // [YK:NEXT]
-                        Reference.Viewer.IrrManager.IrrFileTCPRequestToAssetServer_toplevel(paser.Datas[0], Reference.Viewer.ProtocolManager.AvatarConnection, workDirectory, obj.requestTexturesDirectlyFromAssetServerWithoutJ2KConversion);
+                        Reference.Viewer.IrrManager.IrrFileTCPRequestToAssetServer_toplevel(paser.Datas[0], workDirectory, obj.requestTexturesDirectlyFromAssetServerWithoutJ2KConversion);
                         Reference.Viewer.IrrManager.AddNewObject(obj.RequestIrrfileUUID, paser.Datas[0]);
                         //
                         //---------------------------------------------

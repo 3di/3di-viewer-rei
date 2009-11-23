@@ -36,8 +36,6 @@ using OpenMetaverse;
 
 namespace OpenViewer.Managers
 {
-    public enum Loglevel { INFO=0, DEBUG=1, WARN=2, ERROR=3, FATAL=4, NONE=5 };
-
     public class DebugManager : BaseComponent
     {
         private EventHandler Action;
@@ -218,47 +216,49 @@ namespace OpenViewer.Managers
                 Reference.Viewer.GuiManager.DebugAdd(key, "NodeScale:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
             }
 
-            p[0] = Reference.Viewer.AvatarManager.UserObject.Prim.Position.X;
-            p[1] = Reference.Viewer.AvatarManager.UserObject.Prim.Position.Y;
-            p[2] = Reference.Viewer.AvatarManager.UserObject.Prim.Position.Z;
-            Reference.Viewer.GuiManager.DebugAdd(key, "PrimPos:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
+            if (Reference.Viewer.AvatarManager.UserObject != null)
+            {
+                p[0] = Reference.Viewer.AvatarManager.UserObject.Prim.Position.X;
+                p[1] = Reference.Viewer.AvatarManager.UserObject.Prim.Position.Y;
+                p[2] = Reference.Viewer.AvatarManager.UserObject.Prim.Position.Z;
+                Reference.Viewer.GuiManager.DebugAdd(key, "PrimPos:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
 
-            p[0] = Reference.Viewer.AvatarManager.UserObject.Prim.Rotation.X;
-            p[1] = Reference.Viewer.AvatarManager.UserObject.Prim.Rotation.Y;
-            p[2] = Reference.Viewer.AvatarManager.UserObject.Prim.Rotation.Z;
-            Reference.Viewer.GuiManager.DebugAdd(key, "PrimRot:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
+                p[0] = Reference.Viewer.AvatarManager.UserObject.Prim.Rotation.X;
+                p[1] = Reference.Viewer.AvatarManager.UserObject.Prim.Rotation.Y;
+                p[2] = Reference.Viewer.AvatarManager.UserObject.Prim.Rotation.Z;
+                Reference.Viewer.GuiManager.DebugAdd(key, "PrimRot:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
 
-            p[0] = Reference.Viewer.AvatarManager.UserObject.Prim.Scale.X;
-            p[1] = Reference.Viewer.AvatarManager.UserObject.Prim.Scale.Y;
-            p[2] = Reference.Viewer.AvatarManager.UserObject.Prim.Scale.Z;
-            Reference.Viewer.GuiManager.DebugAdd(key, "PrimScale:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
+                p[0] = Reference.Viewer.AvatarManager.UserObject.Prim.Scale.X;
+                p[1] = Reference.Viewer.AvatarManager.UserObject.Prim.Scale.Y;
+                p[2] = Reference.Viewer.AvatarManager.UserObject.Prim.Scale.Z;
+                Reference.Viewer.GuiManager.DebugAdd(key, "PrimScale:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
 
-            p[0] = Reference.Viewer.AvatarManager.UserObject.Prim.Velocity.X;
-            p[1] = Reference.Viewer.AvatarManager.UserObject.Prim.Velocity.Y;
-            p[2] = Reference.Viewer.AvatarManager.UserObject.Prim.Velocity.Z;
-            float length = Reference.Viewer.AvatarManager.UserObject.Prim.Velocity.Length();
-            Reference.Viewer.GuiManager.DebugAdd(key, "Velocity:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00") + " L:" + length.ToString("0000.000"));
+                p[0] = Reference.Viewer.AvatarManager.UserObject.Prim.Velocity.X;
+                p[1] = Reference.Viewer.AvatarManager.UserObject.Prim.Velocity.Y;
+                p[2] = Reference.Viewer.AvatarManager.UserObject.Prim.Velocity.Z;
+                float length = Reference.Viewer.AvatarManager.UserObject.Prim.Velocity.Length();
+                Reference.Viewer.GuiManager.DebugAdd(key, "Velocity:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00") + " L:" + length.ToString("0000.000"));
 
-            //-------------------------------------------------------------
-            // Base paramater.
-            //-------------------------------------------------------------
-            Reference.Viewer.GuiManager.DebugAdd(key, "BaseParam:");
+                //-------------------------------------------------------------
+                // Base paramater.
+                //-------------------------------------------------------------
+                Reference.Viewer.GuiManager.DebugAdd(key, "BaseParam:");
 
-            p[0] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Position[0];
-            p[1] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Position[1];
-            p[2] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Position[2];
-            Reference.Viewer.GuiManager.DebugAdd(key, " - Position:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
+                p[0] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Position[0];
+                p[1] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Position[1];
+                p[2] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Position[2];
+                Reference.Viewer.GuiManager.DebugAdd(key, " - Position:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
 
-            p[0] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Rotation[0];
-            p[1] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Rotation[1];
-            p[2] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Rotation[2];
-            Reference.Viewer.GuiManager.DebugAdd(key, " - Rotation:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
+                p[0] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Rotation[0];
+                p[1] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Rotation[1];
+                p[2] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Rotation[2];
+                Reference.Viewer.GuiManager.DebugAdd(key, " - Rotation:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
 
-            p[0] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Scale[0];
-            p[1] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Scale[1];
-            p[2] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Scale[2];
-            Reference.Viewer.GuiManager.DebugAdd(key, " - Scale:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
-
+                p[0] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Scale[0];
+                p[1] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Scale[1];
+                p[2] = Reference.Viewer.AvatarManager.UserObject.BaseParam.Scale[2];
+                Reference.Viewer.GuiManager.DebugAdd(key, " - Scale:" + " X:" + p[0].ToString("0000.00") + " Y:" + p[1].ToString("0000.00") + " Z:" + p[2].ToString("0000.00"));
+            }
             //-------------------------------------------------------------
             // Etc.
             //-------------------------------------------------------------
@@ -272,7 +272,7 @@ namespace OpenViewer.Managers
             }
 
             ulong regionID = Reference.Viewer.ProtocolManager.AvatarConnection.m_user.Network.CurrentSim.Handle;
-            uint localID = Reference.Viewer.AvatarManager.UserObject.Prim.ParentID;
+            uint localID = Reference.Viewer.AvatarManager.UserObject == null ? 0 : Reference.Viewer.AvatarManager.UserObject.Prim.ParentID;
 
             if (Reference.Viewer.EntityManager.Entities.ContainsKey(regionID.ToString() + localID.ToString()))
             {

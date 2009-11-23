@@ -308,7 +308,7 @@ namespace OpenViewer.Shaders
                 }
 
                 // Create  light
-                sunLight = new DirectionalLight(Reference.Viewer, parentNode, "SunLight");
+                sunLight = new DirectionalLight(Reference.Viewer, parentNode);
                 sunLight.Load(Colorf.White, Colorf.Black, Colorf.Black);
             }
             else

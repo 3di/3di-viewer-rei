@@ -39,7 +39,7 @@ namespace OpenViewer.Shaders
         private SceneNode parentNode;
         private LightSceneNode light;
         private Vector3D rotation;
-        private string name;
+
         #endregion
 
         #region property element.
@@ -51,12 +51,11 @@ namespace OpenViewer.Shaders
         public Colorf Ambient = Colorf.Gray;
         #endregion
 
-        public DirectionalLight(Viewer viewer, SceneNode _parentNode, string _name)
+        public DirectionalLight(Viewer viewer, SceneNode _parentNode)
             : base(viewer, -1)
         {
             parentNode = _parentNode;
             rotation = new Vector3D();
-            name = _name;
         }
 
         public LightSceneNode Load(Colorf _diffuse, Colorf _specular, Colorf _ambient)
