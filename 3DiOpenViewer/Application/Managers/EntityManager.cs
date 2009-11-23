@@ -129,11 +129,11 @@ namespace OpenViewer.Managers
 #endif
         #endregion
 
-        private uint objectUpdateRate = 10;
+        private uint objectUpdateRate = 3;
         private uint textureUpdateRate = 10;
 
-        private uint objectUpdateCount = 20;
-        private uint textureUpdateCount = 30;
+        private uint objectUpdateCount = 2000;
+        private uint textureUpdateCount = 500;
 
         private MeshFactory meshFactory = null;
         private Dictionary<string, VObject> interpolationTargets = new Dictionary<string, VObject>();
@@ -504,7 +504,6 @@ namespace OpenViewer.Managers
             // If we don't have the parent, defer dealing with this object altogether
             VObject parentObj = null;
             SceneNode workNode = ParentNode;
-            SceneNode node = null;
 
             if (vObj.Prim.ParentID == 0)
             {
@@ -540,69 +539,62 @@ namespace OpenViewer.Managers
                 }
             }
 
-            // Prim object
+            // Generate SceneNode for the object
             bool isMeshCopied = false;
-            bool isSculpt = false;
-            TextureExtended sculptTexture = null;
+            SceneNode node = null;
 
+            // SCULPTED PRIM
+            // NOTE: Sculpt meshes will not appear anymore while the texture is downloading
             if (vObj.Prim.Sculpt != null && vObj.Prim.Sculpt.SculptTexture != UUID.Zero)
             {
-                isSculpt = true;
+                TextureExtended sculptTexture = null;
                 if (Reference.Viewer.TextureManager.tryGetTexture(vObj.Prim.Sculpt.SculptTexture, out sculptTexture))
                 {
                     // Sculpt texture was already downloaded
+                    // Apply it here
+                    vObj.Mesh = meshFactory.GetSculptMesh(vObj.Prim.Sculpt.SculptTexture, sculptTexture, vObj.Prim.Sculpt.Type, vObj.Prim);
+                    node = Reference.SceneManager.AddMeshSceneNode(vObj.Mesh, workNode, (int)vObj.Prim.LocalID);
+                    vObj.Node = node;
                 }
                 else
                 {
+                    // 1) Request the sculpt texture
                     Reference.Viewer.TextureManager.RequestImage(vObj.Prim.Sculpt.SculptTexture, vObj);
+                    // 2) Wait for sculpt texture to download
+                    pipeline.Enqueue(new Action<VObject>(vObj, op));
+                    return;
                 }
             }
-
-            if (vObj._3DiIrrfileUUID == UUID.Zero && (!isSculpt || sculptTexture == null))
+            // STANDARD PRIM
+            else if (vObj._3DiIrrfileUUID == UUID.Zero)
             {
                 isMeshCopied = meshFactory.GetMeshInstance(vObj.Prim, out vObj.Mesh);
+                // from now on we no longer change the UpdateFullYN status - we just read it.
+                if (vObj.UpdateFullYN)
+                {
+                    node = Reference.SceneManager.AddMeshSceneNode(vObj.Mesh, workNode, (int)vObj.Prim.LocalID);
+                    vObj.Node = node;
+                }
+                else
+                {
+                    // Set the working node to the pre-existing node for this object
+                    node = vObj.Node;
+                    isMeshCopied = false;
+                }
             }
-            else if (sculptTexture != null)
-            {
-                vObj.Mesh = meshFactory.GetSculptMesh(vObj.Prim.Sculpt.SculptTexture, sculptTexture, vObj.Prim.Sculpt.Type, vObj.Prim);
-            }
-            else if (sculptTexture == null)
-            {
-                // Waiting for sculpt texture to download
-                objectQueue.Enqueue(vObj);
-                return;
-            }
-
-            // from now on we no longer change the UpdateFullYN status - we just read it.
-            if (vObj._3DiIrrfileUUID == UUID.Zero && vObj.UpdateFullYN)
-            {
-                //node = Reference.SceneManager.AddOctTreeSceneNode(vObj.Mesh, parentNode, (int)vObj.Prim.LocalID, 128);
-                node = Reference.SceneManager.AddMeshSceneNode(vObj.Mesh, workNode, (int)vObj.Prim.LocalID);
-                //Reference.SceneManager.AddToDeletionQueue(node);
-                //node = null;
-                vObj.Node = node;
-            }
-            else
-            {
-                // Set the working node to the pre-existing node for this object
-                node = vObj.Node;
-                isMeshCopied = false;
-            }
-
-            //meshprim
-            if (vObj._3DiIrrfileUUID != UUID.Zero && vObj.NeedToReload3DiMesh)
+            // MESH PRIM
+            else if (vObj._3DiIrrfileUUID != UUID.Zero && vObj.NeedToReload3DiMesh)
             {
                 node = ProcessIrrMesh(vObj);
             }
+            else
+            {
+                Reference.Log.Warn(@"[ENTITYMANAGER]: An unknown type of Prim was inserted into the queue: PrimID:" + vObj.Prim.ID + @" IrrFileUUID:" + vObj._3DiIrrfileUUID + @" ScultTexture:" + vObj.Prim.Sculpt.SculptTexture);
+                // Break out of this function without further modifications
+                return;
+            }
 
-
-
-
-
-
-
-
-
+            // A SceneNode was generated by either of the above processes
             if (node != null)
             {
                 lock (entities)
@@ -635,7 +627,7 @@ namespace OpenViewer.Managers
                 }
                 else
                 {
-                    // apply rotation and position reported form LibOMV
+                    // Apply rotation and position reported from LibOMV
                     vObj.Prim.Position = vObj.Prim.Position * parentObj.Prim.Rotation;
                     vObj.Prim.Rotation = parentObj.Prim.Rotation * vObj.Prim.Rotation;
 
