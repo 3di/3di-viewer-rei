@@ -500,6 +500,46 @@ namespace OpenViewer.Managers
             string objId = VUtil.GetEntitiesKeyFromPrim(vObj.Prim);
             string parId = VUtil.GetEntitiesParentKeyFromPrim(vObj.Prim);
 
+            // Check if object can be immediately added to the scene (ie we have the parent)
+            // If we don't have the parent, defer dealing with this object altogether
+            VObject parentObj = null;
+            SceneNode workNode = ParentNode;
+            SceneNode node = null;
+
+            if (vObj.Prim.ParentID == 0)
+            {
+                // No parent, continue
+                if (op == Operations.ADD)
+                {
+                    vObj.UpdateFullYN = true;
+                }
+                else
+                {
+                    // update. Don't change UpdateFullYN status. Originally this whole function was responsible for deciding
+                    // whether or not to recreate the SceneNode, but this decision is now done outside and is passed in here
+                    // through the Operations op parameter.
+                }
+            }
+            else
+            {
+                if (op == Operations.ADD)
+                {
+                    if (Entities.ContainsKey(parId))
+                    {
+                        parentObj = Entities[parId];
+                        //workNode = parentObj.Node;    // Don't add parent relationship twice
+                        vObj.UpdateFullYN = true;
+                    }
+                    else
+                    {
+                        // Wait for the parents to arrive first
+                        //objectQueue.Enqueue(vObj);
+                        pipeline.Enqueue(new Action<VObject>(vObj, op));
+                        return;
+                    }
+                }
+            }
+
             // Prim object
             bool isMeshCopied = false;
             bool isSculpt = false;
@@ -533,43 +573,6 @@ namespace OpenViewer.Managers
                 return;
             }
 
-            // If parent is ready, this mesh is ready to be added to the scene
-            VObject parentObj = null;
-            SceneNode workNode = ParentNode;
-            SceneNode node = null;
-
-            if (vObj.Prim.ParentID == 0)
-            {
-                if (op == Operations.ADD)
-                {
-                    vObj.UpdateFullYN = true;
-
-                }
-                else
-                {
-                    // update. Don't change UpdateFullYN status. Originally this whole function was responsible for deciding
-                    // whether or not to recreate the SceneNode, but this decision is now done outside and is passed in here
-                    // through the Operations op parameter.
-                }
-            }
-            else
-            {
-                if (op == Operations.ADD)
-                {
-                    if (Entities.ContainsKey(parId))
-                    {
-                        parentObj = Entities[parId];
-                        //workNode = parentObj.Node;    // Don't add parent relationship twice
-                        vObj.UpdateFullYN = true;
-                    }
-                    else
-                    {
-                        // Wait for the parents to arrive first
-                        objectQueue.Enqueue(vObj);
-                    }
-                }
-            }
-
             // from now on we no longer change the UpdateFullYN status - we just read it.
             if (vObj._3DiIrrfileUUID == UUID.Zero && vObj.UpdateFullYN)
             {
@@ -586,100 +589,10 @@ namespace OpenViewer.Managers
                 isMeshCopied = false;
             }
 
-
-
             //meshprim
             if (vObj._3DiIrrfileUUID != UUID.Zero && vObj.NeedToReload3DiMesh)
             {
-                vObj.NeedToReload3DiMesh = false;
-
-                // load the 3Di Mesh into a new node and set THAT new node as the current node.
-                // also update the mesh (so later operations like generating the triangle picker
-                // use the new mesh and not the old one). discard the old node/mesh.
-
-                SceneNode loadedmeshNode = Reference.SceneManager.AddEmptySceneNode(ParentNode, -1);
-                string irrFilename = vObj._3DiIrrfileUUID.ToString() + ".irr";
-                Reference.SceneManager.LoadScene(Util.ModelFolder + irrFilename, loadedmeshNode);
-
-                Mesh loadedMesh = null;
-                for (int iChild = 0; iChild < loadedmeshNode.Children.Length; iChild++)
-                {
-                    if (loadedmeshNode.Children[iChild] is AnimatedMeshSceneNode)
-                    {
-                        AnimatedMeshSceneNode amnode = loadedmeshNode.Children[iChild] as AnimatedMeshSceneNode;
-                        if (amnode.AnimatedMesh != null)
-                        {
-                            loadedMesh = amnode.AnimatedMesh.GetMesh(0);
-                            break;
-                        }
-                    }
-                }
-                if (loadedMesh != null)
-                {
-                    if (node != null) // delete newly added prim node
-                    {
-                        node.Parent.AddChild(loadedmeshNode);
-                        DeleteNode(vObj.Node);
-                    }
-                    //vObj.Node.SetMaterialFlag(MaterialFlag.PointCloud, true);
-                    //vObj.Node.AddChild(loadedmeshNode);
-                    vObj.Mesh = loadedMesh;
-                    vObj.Node = loadedmeshNode;
-                    if (loadedmeshNode.Children.Length > 0)
-                        vObj.NodeStaticMesh = loadedmeshNode.Children[0];
-                    node = vObj.Node;
-
-                    //vObj.Mesh = null;
-                    //vObj.Node = null;
-                    //node = null;
-                    // request textures for this just-loaded node. This not only
-                    // fetches textures, but also applies them. Even if we already have
-                    // all textures in the cache (and thus loaded them with the .irr 
-                    // file automatically), we need to check if there is an alpha texture
-                    // and if we need to make the node alpha. This check is done during
-                    // texture application, so we force texture re-application in any
-                    // event (regardless of whether or not the textures are already applied)
-                    if (vObj._3DiIrrfileUUID != UUID.Zero && Reference.Viewer.TextureManager != null)
-                    {
-                        // This node is a 3Di mesh node prim. So don't request the normal prim texture(s);
-                        // instead request the textures of the .irr file.
-
-                        if (Reference.Viewer.IrrManager.Contains(vObj._3DiIrrfileUUID))
-                        {
-                            IrrDatas irrData = Reference.Viewer.IrrManager.GetObject(vObj._3DiIrrfileUUID, false);
-                            vObj.IrrData = irrData;
-                            if (irrData != null)
-                            {
-                                foreach (IrrMaterial irrmat in irrData.Materials)
-                                {
-                                    if (irrmat.Texture1.Trim().Length > 0)
-                                    {
-                                        string reqUUIDstring = System.IO.Path.GetFileNameWithoutExtension(irrmat.Texture1.Trim());
-                                        UUID reqUUID = new UUID(reqUUIDstring);
-                                        Reference.Viewer.TextureManager.RequestImage(reqUUID, vObj);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    // we couldn't find the mesh underneath the loaded scene node.
-                    // This means we couldn't load the .irrmesh file in the .irr file.
-                    // This means the .irrmesh file wasn't (yet) downloaded into the assets/ directory.
-                    // Since we are fetching assets asynchronously, this means that the .irrmesh 
-                    // file may still be downloading, or it really doesn't exist on the asset server
-                    // (it may have been deleted, and the reX viewer used its local cached mesh copy 
-                    // to assign the mesh UUID).
-                    // So, we couldn't load the mesh, so just ignore it for now and display it as
-                    // a normal prim.
-                    DeleteNode(loadedmeshNode);
-                    // If and when the irr file arrives from its asynchronous download thread, it
-                    // will enqueue itself again (see end of IrrMeshThread.Requesting), so we will
-                    // come here again. At that time we will use the vObj._3DiIrrFileUUID and
-                    // again realize the mesh needs to be reloaded.
-                }
+                node = ProcessIrrMesh(vObj);
             }
 
 
@@ -822,6 +735,101 @@ namespace OpenViewer.Managers
                     vObj.Mesh.GetMeshBuffer(i).Drop();
                 vObj.Mesh.Drop();
             }
+        }
+
+        private SceneNode ProcessIrrMesh(VObject vObj)
+        {
+            SceneNode node = vObj.Node;
+            vObj.NeedToReload3DiMesh = false;
+
+            // load the 3Di Mesh into a new node and set THAT new node as the current node.
+            // also update the mesh (so later operations like generating the triangle picker
+            // use the new mesh and not the old one). discard the old node/mesh.
+
+            SceneNode loadedmeshNode = Reference.SceneManager.AddEmptySceneNode(ParentNode, -1);
+            string irrFilename = vObj._3DiIrrfileUUID.ToString() + @".irr";
+            Reference.SceneManager.LoadScene(Util.ModelFolder + irrFilename, loadedmeshNode);
+
+            Mesh loadedMesh = null;
+            for (int iChild = 0; iChild < loadedmeshNode.Children.Length; iChild++)
+            {
+                if (loadedmeshNode.Children[iChild] is AnimatedMeshSceneNode)
+                {
+                    AnimatedMeshSceneNode amnode = loadedmeshNode.Children[iChild] as AnimatedMeshSceneNode;
+                    if (amnode.AnimatedMesh != null)
+                    {
+                        loadedMesh = amnode.AnimatedMesh.GetMesh(0);
+                        break;
+                    }
+                }
+            }
+            if (loadedMesh != null)
+            {
+                if (node != null) // delete newly added prim node
+                {
+                    node.Parent.AddChild(loadedmeshNode);
+                    DeleteNode(vObj.Node);
+                }
+                //vObj.Node.SetMaterialFlag(MaterialFlag.PointCloud, true);
+                //vObj.Node.AddChild(loadedmeshNode);
+                vObj.Mesh = loadedMesh;
+                vObj.Node = loadedmeshNode;
+                if (loadedmeshNode.Children.Length > 0)
+                    vObj.NodeStaticMesh = loadedmeshNode.Children[0];
+                node = vObj.Node;
+
+                //vObj.Mesh = null;
+                //vObj.Node = null;
+                //node = null;
+                // request textures for this just-loaded node. This not only
+                // fetches textures, but also applies them. Even if we already have
+                // all textures in the cache (and thus loaded them with the .irr 
+                // file automatically), we need to check if there is an alpha texture
+                // and if we need to make the node alpha. This check is done during
+                // texture application, so we force texture re-application in any
+                // event (regardless of whether or not the textures are already applied)
+                if (vObj._3DiIrrfileUUID != UUID.Zero && Reference.Viewer.TextureManager != null)
+                {
+                    // This node is a 3Di mesh node prim. So don't request the normal prim texture(s);
+                    // instead request the textures of the .irr file.
+
+                    if (Reference.Viewer.IrrManager.Contains(vObj._3DiIrrfileUUID))
+                    {
+                        IrrDatas irrData = Reference.Viewer.IrrManager.GetObject(vObj._3DiIrrfileUUID, false);
+                        vObj.IrrData = irrData;
+                        if (irrData != null)
+                        {
+                            foreach (IrrMaterial irrmat in irrData.Materials)
+                            {
+                                if (irrmat.Texture1.Trim().Length > 0)
+                                {
+                                    string reqUUIDstring = System.IO.Path.GetFileNameWithoutExtension(irrmat.Texture1.Trim());
+                                    UUID reqUUID = new UUID(reqUUIDstring);
+                                    Reference.Viewer.TextureManager.RequestImage(reqUUID, vObj);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // we couldn't find the mesh underneath the loaded scene node.
+                // This means we couldn't load the .irrmesh file in the .irr file.
+                // This means the .irrmesh file wasn't (yet) downloaded into the assets/ directory.
+                // Since we are fetching assets asynchronously, this means that the .irrmesh 
+                // file may still be downloading, or it really doesn't exist on the asset server
+                // (it may have been deleted, and the reX viewer used its local cached mesh copy 
+                // to assign the mesh UUID).
+                // So, we couldn't load the mesh, so just ignore it for now and display it as
+                // a normal prim.
+                DeleteNode(loadedmeshNode);
+                // If and when the irr file arrives from its asynchronous download thread, it
+                // will enqueue itself again (see end of IrrMeshThread.Requesting), so we will
+                // come here again. At that time we will use the vObj._3DiIrrFileUUID and
+                // again realize the mesh needs to be reloaded.
+            }
+            return node;
         }
 
 
