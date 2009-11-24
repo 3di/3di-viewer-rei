@@ -115,7 +115,6 @@ namespace OpenViewer.Managers
         #region Private members
 
         #region Queues
-        private Queue<VObject> objectQueue = new Queue<VObject>();
         private Queue<TextureCompleteNotification> textureQueue = new Queue<TextureCompleteNotification>();
 
         private Queue<Action<VObject>> pipeline = new Queue<Action<VObject>>();
@@ -123,7 +122,6 @@ namespace OpenViewer.Managers
 
 
 #if DEBUG_QUEUE
-        public int ObjectQueueLength { get { return(objectQueue.Count); } }
         public int TextureQueueLength { get { return (textureQueue.Count); } }
         public int PipelineQueueLength { get { return (pipeline.Count); } }
 #endif
@@ -165,10 +163,6 @@ namespace OpenViewer.Managers
 
         public override void Cleanup()
         {
-            lock (objectQueue)
-            {
-                objectQueue.Clear();
-            }
             lock (textureQueue)
             {
                 textureQueue.Clear();
@@ -331,12 +325,6 @@ namespace OpenViewer.Managers
                     Primitive.SculptData sculpt = tx.vObj.Prim.Sculpt;
                     if (sculpt != null && tx.textureID == sculpt.SculptTexture)
                     {
-                        DeleteNode(tx.vObj.Node);
-                        lock (objectQueue)
-                        {
-                            objectQueue.Enqueue(tx.vObj);
-                        }
-
                         continue;
                         // applyTexture will skip over textures that are not 
                         // defined in the textureentry
@@ -532,7 +520,6 @@ namespace OpenViewer.Managers
                     else
                     {
                         // Wait for the parents to arrive first
-                        //objectQueue.Enqueue(vObj);
                         pipeline.Enqueue(new Action<VObject>(vObj, op));
                         return;
                     }

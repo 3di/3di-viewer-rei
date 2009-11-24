@@ -484,7 +484,6 @@ namespace OpenViewer.Managers
 #if DEBUG_QUEUE
             int key = 8;
 
-            Reference.Viewer.GuiManager.DebugAdd(key, "EntityManager: objectQueue " + Reference.Viewer.EntityManager.ObjectQueueLength);
             Reference.Viewer.GuiManager.DebugAdd(key, "EntityManager: pipeline " + Reference.Viewer.EntityManager.PipelineQueueLength);
             Reference.Viewer.GuiManager.DebugAdd(key, "EntityManager: textureQueue " + Reference.Viewer.EntityManager.TextureQueueLength);
 
