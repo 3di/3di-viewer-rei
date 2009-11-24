@@ -98,7 +98,6 @@ namespace OpenViewer.Managers
         public event TextureCallback OnTextureLoaded;
 
         private Viewer viewer = null;
-        private VideoDriver driver = null;
         private string imagefolder = string.Empty;
         private bool shaderYN = true;
         private int newMaterialType1 = 0;
@@ -112,7 +111,7 @@ namespace OpenViewer.Managers
         /// Texture requests outstanding.
         /// </summary>
         private Dictionary<UUID, List<VObject>> ouststandingRequests = new Dictionary<UUID, List<VObject>>();
-        private IrrlichtDevice device = null;
+
         private SLProtocol m_user = null;
         private static readonly log4net.ILog m_log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
@@ -262,23 +261,21 @@ namespace OpenViewer.Managers
             : base(viewer, -1)
         {
             this.viewer = viewer;
-            driver = Reference.VideoDriver;
-            device = Reference.Device;
             imagefolder = Util.TextureFolder;
             m_user = Reference.Viewer.ProtocolManager.AvatarConnection;
             m_user.OnImageReceived += imageReceivedCallback;
 
-            if (!driver.QueryFeature(VideoDriverFeature.PixelShader_1_1) &&
-                !driver.QueryFeature(VideoDriverFeature.ARB_FragmentProgram_1))
+            if (!Reference.VideoDriver.QueryFeature(VideoDriverFeature.PixelShader_1_1) &&
+                !Reference.VideoDriver.QueryFeature(VideoDriverFeature.ARB_FragmentProgram_1))
             {
-                device.Logger.Log("WARNING: Pixel shaders disabled \n" +
+                Reference.Device.Logger.Log("WARNING: Pixel shaders disabled \n" +
                    "because of missing driver/hardware support.");
                 shaderYN=false;
             }
-            if (!driver.QueryFeature(VideoDriverFeature.VertexShader_1_1) &&
-                !driver.QueryFeature(VideoDriverFeature.ARB_FragmentProgram_1))
+            if (!Reference.VideoDriver.QueryFeature(VideoDriverFeature.VertexShader_1_1) &&
+                !Reference.VideoDriver.QueryFeature(VideoDriverFeature.ARB_FragmentProgram_1))
             {
-                device.Logger.Log("WARNING: Vertex shaders disabled \n" +
+                Reference.Device.Logger.Log("WARNING: Vertex shaders disabled \n" +
                    "because of missing driver/hardware support.");
                 shaderYN = false;
             }
@@ -286,7 +283,7 @@ namespace OpenViewer.Managers
 
             if (shaderYN)
             {
-                GPUProgrammingServices gpu = driver.GPUProgrammingServices;
+                GPUProgrammingServices gpu = Reference.VideoDriver.GPUProgrammingServices;
                 if (gpu != null)
                 {
                     OnShaderConstantSetDelegate callBack = OnSetConstants;
@@ -341,7 +338,7 @@ namespace OpenViewer.Managers
             string texturefolderpath = imagefolder;
             if (File.Exists(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga")))
             {
-                Texture texTnorm = driver.GetTexture(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga"));
+                Texture texTnorm = Reference.VideoDriver.GetTexture(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga"));
                 if (texTnorm != null)
                     tex = new TextureExtended(texTnorm.Raw, ".tga");
                 if (tex != null)
@@ -449,7 +446,7 @@ namespace OpenViewer.Managers
             // Check if we've got this texture on the file system.
             if (File.Exists(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga")))
             {
-                Texture texTnorm = driver.GetTexture(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga"));
+                Texture texTnorm = Reference.VideoDriver.GetTexture(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga"));
                 tex = new TextureExtended(texTnorm.Raw, ".tga");
                 if (tex != null)
                 {
@@ -496,7 +493,6 @@ namespace OpenViewer.Managers
         /// <param name="AssetID"></param>
         public void applyTexture(TextureExtended tex, VObject vObj, UUID AssetID)
         {
-            //return;
             try
             {
                 // works
@@ -511,141 +507,60 @@ namespace OpenViewer.Managers
                     return;
                 }
 
-                bool alphaimage = false;
-                // Check if we've already run this through our image alpha checker
-                if (tex.Userdata == null)
-                {
-                    // Check if this image has an alpha channel in use
-                    // All textures are 32 Bit and alpha capable, so we have to scan it for an 
-                    // alpha pixel
-                    Color[,] imgcolors;
+                bool alphaimage = IsAlphaImage(tex);
 
-                    //tex.Lock();
-                    try
-                    {
-                        imgcolors = tex.Retrieve();
-                        //tex.Unlock();
-                        for (int i = 0; i < imgcolors.GetUpperBound(0); i++)
-                        {
-                            for (int j = 0; j < imgcolors.GetUpperBound(1); j++)
-                            {
-                                if (imgcolors[i, j].A != 255)
-                                {
-                                    alphaimage = true;
-                                    break;
-                                }
-                            }
-                            if (alphaimage)
-                                break;
-                        }
-                    }
-                    catch (OutOfMemoryException)
-                    {
-                        alphaimage = false;
-                    }
-                    // Save result
-                    tex.Userdata = (object)alphaimage;
-                }
-                else
-                {
-                    // Use cached result
-                    alphaimage = (bool)tex.Userdata;
-                }
-
+                // MeshPrim
                 if (vObj._3DiIrrfileUUID != UUID.Zero && vObj.IrrData != null)
                 {
                     for (int iTex = 0; iTex < vObj.IrrData.Materials.Count; iTex++)
                     {
-                        if (System.IO.Path.GetFileNameWithoutExtension(vObj.IrrData.Materials[iTex].Texture1) == AssetID.ToString())
+                        if (Path.GetFileNameWithoutExtension(vObj.IrrData.Materials[iTex].Texture1) == AssetID.ToString())
                         {
-                            Texture loadedTex = device.VideoDriver.GetTexture(AssetID.ToString() + tex.extension);
+                            Texture loadedTex = Reference.VideoDriver.GetTexture(AssetID.ToString() + tex.extension);
                             if (vObj.Node.Children.Length > 0)
                             {
                                 vObj.Node.Children[0].GetMaterial(iTex).Texture1 = loadedTex;
                             }
+                            break;
                         }
                     }
 
                     if (alphaimage)
                     {
                         vObj.Node.Children[0].SetMaterialType(MaterialType.TransparentAlphaChannel);
-                        device.SceneManager.RegisterNodeForRendering(vObj.Node.Children[0], SceneNodeRenderPass.Transparent);
+                        Reference.SceneManager.RegisterNodeForRendering(vObj.Node.Children[0], SceneNodeRenderPass.Transparent);
                     }
 
                 }
-                else 
-
-                // Apply the Texture based on the TextureEntry
-                if(vObj.Prim.Textures != null)
+                // Normal prim
+                else
                 {
-                    device.SceneManager.MeshCache.RemoveMesh(vObj.Mesh);
-                    // Check the default texture to ensure that it's not null (why would it be null?)
-                    if (vObj.Prim.Textures.DefaultTexture != null)
+                    // Apply the Texture based on the TextureEntry
+                    if (vObj.Prim.Textures != null)
                     {
-                        Color4 coldata = vObj.Prim.Textures.DefaultTexture.RGBA;
-
-                        float shinyval = 0;
-                        switch (vObj.Prim.Textures.DefaultTexture.Shiny)
-                        {
-                            case Shininess.Low:
-                                shinyval = 0.8f;
-                                coldata.R *= 0.8f;
-                                coldata.B *= 0.8f;
-                                coldata.G *= 0.8f;
-                                break;
-                            case Shininess.Medium:
-                                shinyval = 0.7f;
-                                coldata.R *= 0.6f;
-                                coldata.B *= 0.6f;
-                                coldata.G *= 0.6f;
-                                break;
-                            case Shininess.High:
-                                shinyval = 0.6f;
-                                coldata.R *= 0.3f;
-                                coldata.B *= 0.3f;
-                                coldata.G *= 0.3f;
-                                break;
-                        }
+                        Reference.SceneManager.MeshCache.RemoveMesh(vObj.Mesh);
                         
-                        // The mesh buffers correspond to the faces defined in the textureentry
-
-                        int mbcount = vObj.Mesh.MeshBufferCount;
-                        for (int j = 0; j < mbcount; j++)
+                        // TODO: Apply texture per face (including DefaultTexture if a FaceTexture was not specified)
+                        for (int i = 0; i < vObj.Mesh.MeshBufferCount; i++)
                         {
-                            // Only apply default texture if there isn't one already!
-                            // we don't want to overwrite a face specific texture with the default
-                            if (vObj.Prim.Textures.DefaultTexture.TextureID == AssetID)
+                            float shinyval = 0;
+                            // Check if there is a facetexture for this MB
+                            Primitive.TextureEntryFace applyTexture = null;
+                            if (i <  vObj.Prim.Textures.FaceTextures.Length && vObj.Prim.Textures.FaceTextures[i] != null)
                             {
-                                ApplyFaceSettings(vObj, alphaimage, vObj.Prim.Textures.DefaultTexture, tex, j, shinyval, coldata);
-
+                                // Apply FaceTexture
+                                applyTexture = vObj.Prim.Textures.FaceTextures[i];
                             }
-                            else
+                            else if (vObj.Prim.Textures.DefaultTexture != null)
                             {
-                                // Apply color settings
-                                ApplyFaceSettings(vObj, alphaimage, vObj.Prim.Textures.DefaultTexture, null, j, shinyval, coldata);
+                                // Apply DefaultTexture
+                                applyTexture = vObj.Prim.Textures.DefaultTexture;
                             }
 
-
-                            vObj.Mesh.GetMeshBuffer(j).Material.NormalizeNormals = true;
-                            vObj.Mesh.GetMeshBuffer(j).Material.GouraudShading = true;
-                            vObj.Mesh.GetMeshBuffer(j).Material.BackfaceCulling = (this.texDownloadStyle == TextureDownloadStyle.TEX_DOWNLOAD_ASSETSERVER);
-                        }
-
-                    }
-
-                    // default taken care of..   now on to the individual face settings.
-                    for (int i = 0; i < vObj.Prim.Textures.FaceTextures.Length; i++)
-                    {
-                        if (vObj.Prim.Textures.FaceTextures[i] != null)
-                        {
-                            Primitive.TextureEntryFace teface = vObj.Prim.Textures.FaceTextures[i];
-
-                            if (vObj.Mesh.MeshBufferCount > i)
+                            if (applyTexture != null)
                             {
-                                //if (tex.
-                                Color4 coldata = teface.RGBA;
-                                float shinyval = 0;
-                                switch (teface.Shiny)
+                                Color4 coldata = applyTexture.RGBA;
+                                switch (applyTexture.Shiny)
                                 {
                                     case Shininess.Low:
                                         shinyval = 0.8f;
@@ -667,97 +582,92 @@ namespace OpenViewer.Managers
                                         break;
                                 }
 
-                                // Apply texture only if this face has it linked
-                                if (teface.TextureID == AssetID)
+                                if (applyTexture.TextureID == AssetID)
                                 {
-                                    ApplyFaceSettings(vObj, alphaimage, teface, tex, i, shinyval, coldata);
+                                    ApplyFaceSettings(vObj, alphaimage, applyTexture, tex, i, shinyval, coldata);
                                 }
                                 else
                                 {
-                                    // Only apply the color settings..
-                                    ApplyFaceSettings(vObj, alphaimage, teface, null, i, shinyval, coldata);
+                                    // Apply color settings
+                                    ApplyFaceSettings(vObj, alphaimage, applyTexture, null, i, shinyval, coldata);
                                 }
+
                                 vObj.Mesh.GetMeshBuffer(i).Material.NormalizeNormals = true;
                                 vObj.Mesh.GetMeshBuffer(i).Material.GouraudShading = true;
-                                vObj.Mesh.GetMeshBuffer(i).Material.BackfaceCulling = (this.texDownloadStyle == TextureDownloadStyle.TEX_DOWNLOAD_ASSETSERVER);
+                                vObj.Mesh.GetMeshBuffer(i).Material.BackfaceCulling = (texDownloadStyle == TextureDownloadStyle.TEX_DOWNLOAD_ASSETSERVER);
                             }
-                            else
-                            {
-                                m_log.Warn("[TEXTUREDEF]: Unable to apply Texture to face because mesh buffer doesn't have definition for face");
+                        }
 
-                            }
-                        }// end check if textureentry face is null
-                    } // end loop over textureentry faces array
-
-                    if (vObj.Node is MeshSceneNode)
-                    {
-                        MeshSceneNode msn = (MeshSceneNode)vObj.Node;
-                        
-                        msn.SetMesh(vObj.Mesh);
-                        if (vObj.Prim.Textures != null)
+                        if (vObj.Node is MeshSceneNode)
                         {
-                            // Check the default texture to ensure that it's not null (why would it be null?)
-                            if (vObj.Prim.Textures.DefaultTexture != null)
-                            {
-                                Color4 coldata = vObj.Prim.Textures.DefaultTexture.RGBA;
-                                IrrlichtNETCP.Color objColor = new Color(
-                                    Util.Clamp<int>((int)(coldata.A * 255), 0, 255),
-                                    Util.Clamp<int>((int)(coldata.R * 255), 0, 255),
-                                    Util.Clamp<int>((int)(coldata.G * 255), 0, 255),
-                                    Util.Clamp<int>((int)(coldata.B * 255), 0, 255)
-                                    );
+                            MeshSceneNode msn = (MeshSceneNode) vObj.Node;
 
-                                // Set material color.
-                                for (int i = 0; i < msn.MaterialCount; i++)
+                            msn.SetMesh(vObj.Mesh);
+                            if (vObj.Prim.Textures != null)
+                            {
+                                // Check the default texture to ensure that it's not null (why would it be null?)
+                                if (vObj.Prim.Textures.DefaultTexture != null)
                                 {
-                                    msn.GetMaterial(i).AmbientColor = objColor;
-                                    msn.GetMaterial(i).DiffuseColor = objColor;
-                                    msn.GetMaterial(i).SpecularColor = Color.Black;
-                                    msn.GetMaterial(i).EmissiveColor = Color.Black;
-                                    msn.GetMaterial(i).Shininess = 0;
+                                    Color4 coldata = vObj.Prim.Textures.DefaultTexture.RGBA;
+                                    IrrlichtNETCP.Color objColor = new Color(
+                                        Util.Clamp<int>((int) (coldata.A*255), 0, 255),
+                                        Util.Clamp<int>((int) (coldata.R*255), 0, 255),
+                                        Util.Clamp<int>((int) (coldata.G*255), 0, 255),
+                                        Util.Clamp<int>((int) (coldata.B*255), 0, 255)
+                                        );
+
+                                    // Set material color.
+                                    for (int i = 0; i < msn.MaterialCount; i++)
+                                    {
+                                        msn.GetMaterial(i).AmbientColor = objColor;
+                                        msn.GetMaterial(i).DiffuseColor = objColor;
+                                        msn.GetMaterial(i).SpecularColor = Color.Black;
+                                        msn.GetMaterial(i).EmissiveColor = Color.Black;
+                                        msn.GetMaterial(i).Shininess = 0;
+                                    }
                                 }
                             }
-                        }
 
-                        Box3D box = new Box3D(0, 0, 0, 0, 0, 0);
-                        for (int i = 0; i < msn.GetMesh().MeshBufferCount; i++)
-                        {
-                            msn.GetMesh().GetMeshBuffer(i).RecalculateBoundingBox();
-                            box.AddInternalBox(msn.GetMesh().GetMeshBuffer(i).BoundingBox);
-                        }
-                        msn.GetMesh().BoundingBox = box;
-                    }
-                    else
-                    {
-                        // Swap out the visible untextured object with a textured one.
-                        // SceneNode sn = device.SceneManager.AddMeshSceneNode(vObj.Mesh, ParentNode, -1);
-                        // ZAKI: Change TextureManager Parent to actual parent node
-                        SceneNode sn = device.SceneManager.AddMeshSceneNode(vObj.Mesh, vObj.Node.Parent, -1);
-                        sn.Position = vObj.Node.Position;
-                        sn.Rotation = vObj.Node.Rotation;
-                        sn.Scale = vObj.Node.Scale;
-                        sn.DebugDataVisible = DebugSceneType.Off;
-
-                        // If it's translucent, register it for the Transparent phase of rendering
-                        if (vObj.Prim.Textures.DefaultTexture != null)
-                        {
-                            if (vObj.Prim.Textures.DefaultTexture.RGBA.A != 1)
+                            Box3D box = new Box3D(0, 0, 0, 0, 0, 0);
+                            for (int i = 0; i < msn.GetMesh().MeshBufferCount; i++)
                             {
-                                device.SceneManager.RegisterNodeForRendering(sn, SceneNodeRenderPass.Transparent);
+                                msn.GetMesh().GetMeshBuffer(i).RecalculateBoundingBox();
+                                box.AddInternalBox(msn.GetMesh().GetMeshBuffer(i).BoundingBox);
                             }
+                            msn.GetMesh().BoundingBox = box;
                         }
-                        // Add the new triangle selector
-                        sn.TriangleSelector = device.SceneManager.CreateTriangleSelector(vObj.Mesh, sn);
-                        sn.TriangleSelector.Drop();
-                        Reference.Viewer.EntityManager.AddTriangleSelector(sn.TriangleSelector, sn); 
+                        else
+                        {
+                            // Swap out the visible untextured object with a textured one.
+                            // SceneNode sn = device.SceneManager.AddMeshSceneNode(vObj.Mesh, ParentNode, -1);
+                            // ZAKI: Change TextureManager Parent to actual parent node
+                            SceneNode sn = Reference.SceneManager.AddMeshSceneNode(vObj.Mesh, vObj.Node.Parent, -1);
+                            sn.Position = vObj.Node.Position;
+                            sn.Rotation = vObj.Node.Rotation;
+                            sn.Scale = vObj.Node.Scale;
+                            sn.DebugDataVisible = DebugSceneType.Off;
 
-                        // Delete the old node. 
-                        SceneNode oldnode = vObj.Node;
-                        Reference.Viewer.EntityManager.DeleteNode(oldnode);
+                            // If it's translucent, register it for the Transparent phase of rendering
+                            if (vObj.Prim.Textures.DefaultTexture != null)
+                            {
+                                if (vObj.Prim.Textures.DefaultTexture.RGBA.A != 1)
+                                {
+                                    Reference.SceneManager.RegisterNodeForRendering(sn, SceneNodeRenderPass.Transparent);
+                                }
+                            }
+                            // Add the new triangle selector
+                            sn.TriangleSelector = Reference.SceneManager.CreateTriangleSelector(vObj.Mesh, sn);
+                            sn.TriangleSelector.Drop();
+                            Reference.Viewer.EntityManager.AddTriangleSelector(sn.TriangleSelector, sn);
 
-                        // Assign new node
-                        vObj.Node = sn;
+                            // Delete the old node. 
+                            SceneNode oldnode = vObj.Node;
+                            Reference.Viewer.EntityManager.DeleteNode(oldnode);
 
+                            // Assign new node
+                            vObj.Node = sn;
+
+                        }
                     }
                 } // prim texture is not null
 
@@ -772,6 +682,49 @@ namespace OpenViewer.Managers
             {
                 m_log.Error("unable to update texture");
             }
+        }
+
+        private bool IsAlphaImage(TextureExtended tex)
+        {
+            bool alphaimage = false;
+            // Check if we've already run this through our image alpha checker
+            if (tex.Userdata == null)
+            {
+                // Check if this image has an alpha channel in use
+                // All textures are 32 Bit and alpha capable, so we have to scan it for an 
+                // alpha pixel
+                Color[,] imgcolors;
+                    
+                try
+                {
+                    imgcolors = tex.Retrieve();
+                    for (int i = 0; i < imgcolors.GetUpperBound(0); i++)
+                    {
+                        for (int j = 0; j < imgcolors.GetUpperBound(1); j++)
+                        {
+                            if (imgcolors[i, j].A != 255)
+                            {
+                                alphaimage = true;
+                                break;
+                            }
+                        }
+                        if (alphaimage)
+                            break;
+                    }
+                }
+                catch (OutOfMemoryException)
+                {
+                    alphaimage = false;
+                }
+                // Save result
+                tex.Userdata = (object)alphaimage;
+            }
+            else
+            {
+                // Use cached result
+                alphaimage = (bool)tex.Userdata;
+            }
+            return alphaimage;
         }
 
         /// <summary>
