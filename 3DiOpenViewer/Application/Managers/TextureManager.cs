@@ -97,11 +97,9 @@ namespace OpenViewer.Managers
         public Dictionary<UUID, long[]> downloadQueue = new Dictionary<UUID, long[]>();
         public event TextureCallback OnTextureLoaded;
 
-        private Viewer viewer = null;
         private string imagefolder = string.Empty;
         private bool shaderYN = true;
         private int newMaterialType1 = 0;
-
         /// <summary>
         /// In Memory texture cache
         /// </summary>
@@ -112,7 +110,6 @@ namespace OpenViewer.Managers
         /// </summary>
         private Dictionary<UUID, List<VObject>> ouststandingRequests = new Dictionary<UUID, List<VObject>>();
 
-        private SLProtocol m_user = null;
         private static readonly log4net.ILog m_log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
         private BlockingQueue<TextureDownloadRequest> downloadTextureQueue = new BlockingQueue<TextureDownloadRequest>();
@@ -220,7 +217,7 @@ namespace OpenViewer.Managers
                     foreach (UUID uuid in pruneList)
                     {
                         downloadQueue.Remove(uuid);
-                        m_user.CancelTexture(uuid);
+                        Reference.Viewer.ProtocolManager.AvatarConnection.CancelTexture(uuid);
                         TextureDownloadRequest req = new TextureDownloadRequest();
                         req.uuid = uuid;
                         downloadTextureQueue.Enqueue(req);
@@ -244,12 +241,12 @@ namespace OpenViewer.Managers
                                 downloadQueue[req.uuid][2] = 1;
                             }
                             downloadQueue[req.uuid][3] = System.DateTime.Now.Ticks;
-                            m_user.RequestTexture(req.uuid);
+                            Reference.Viewer.ProtocolManager.AvatarConnection.RequestTexture(req.uuid);
                             m_log.Info("[TEXTURE]: RequestedTexture " + req.uuid);
                         }
                         else
                         {
-                            viewer.IrrManager.IrrWorkItemQueue(new IrrManager.IrrWorkItem("TextureFetchJob", new WorkItemCallback(TextureFetchJob), req));
+                            Reference.Viewer.IrrManager.IrrWorkItemQueue(new IrrManager.IrrWorkItem("TextureFetchJob", new WorkItemCallback(TextureFetchJob), req));
                         }
                     }
                     req = null;
@@ -260,10 +257,8 @@ namespace OpenViewer.Managers
         public TextureManager(Viewer viewer)
             : base(viewer, -1)
         {
-            this.viewer = viewer;
             imagefolder = Util.TextureFolder;
-            m_user = Reference.Viewer.ProtocolManager.AvatarConnection;
-            m_user.OnImageReceived += imageReceivedCallback;
+            Reference.Viewer.ProtocolManager.AvatarConnection.OnImageReceived += imageReceivedCallback;
 
             if (!Reference.VideoDriver.QueryFeature(VideoDriverFeature.PixelShader_1_1) &&
                 !Reference.VideoDriver.QueryFeature(VideoDriverFeature.ARB_FragmentProgram_1))
@@ -393,7 +388,7 @@ namespace OpenViewer.Managers
                 }
             }
 
-            if (string.IsNullOrEmpty(m_user.m_user.Network.AssetServerUri))
+            if (string.IsNullOrEmpty(Reference.Viewer.ProtocolManager.AvatarConnection.m_user.Network.AssetServerUri))
             {
                 this.texDownloadStyle = TextureDownloadStyle.TEX_DOWNLOAD_LIBOMV;
             }
