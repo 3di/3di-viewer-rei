@@ -410,9 +410,10 @@ namespace OpenViewer
             {
                 SetParent(f.Handle, (IntPtr)target);
             }
-            catch (System.Exception)
+            catch (Exception e)
             {
-
+                Reference.Log.Warn(@"[REI]: Exception occured while trying to set parent window - " + e.Message);
+                Reference.Log.Debug(@"[REI]: Exception occured while trying to set parent window - " + e.StackTrace);
             }
             f.Location = new System.Drawing.Point(0, 0);
             //f.FormClosed += new System.Windows.Forms.FormClosedEventHandler(f_FormClosed);
@@ -1520,6 +1521,7 @@ namespace OpenViewer
                         break;
 #if DEBUG
                     case KeyCode.F1:
+                        
                         break;
                     case KeyCode.F2:
                         break;
@@ -1900,8 +1902,10 @@ namespace OpenViewer
                         guithread.Abort();
                     }
                 }
-                catch
+                catch (Exception e)
                 {
+                    Reference.Log.Warn(@"[REI]: An exception occured in Shutdown - " + e.Message);
+                    Reference.Log.Debug(@"[REI]: An exception occured in Shutdown - " + e.StackTrace);
                 }
             }
         }

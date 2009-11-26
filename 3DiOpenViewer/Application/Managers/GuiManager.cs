@@ -251,7 +251,10 @@ namespace OpenViewer.Managers
                     {
                         parentElement.Remove();
                     }
-                    catch { }
+                    catch (Exception e)                    {
+                        Reference.Log.Warn(@"[GUIMANAGER]: Exception occured in Cleanup - " + e.Message);
+                        Reference.Log.Debug(@"[GUIMANAGER]: Exception occured in Cleanup - " + e.StackTrace);
+                    }
                 }
                 finally
                 {

@@ -154,7 +154,10 @@ namespace OpenViewer.Managers
                         */
                     }
                 }
-                catch { }
+                catch (Exception e)                {
+                    Reference.Log.Warn(@"[PROTOCOLMANAGER]: Exception occured in Update - " + e.Message);
+                    Reference.Log.Debug(@"[PROTOCOLMANAGER]: Exception occured in Update - " + e.StackTrace);
+                }
             }
         }
 
