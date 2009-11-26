@@ -598,6 +598,7 @@ namespace OpenViewer.Managers
                             MeshSceneNode msn = (MeshSceneNode) vObj.Node;
 
                             msn.SetMesh(vObj.Mesh);
+                            /*
                             if (vObj.Prim.Textures != null)
                             {
                                 // Check the default texture to ensure that it's not null (why would it be null?)
@@ -622,6 +623,7 @@ namespace OpenViewer.Managers
                                     }
                                 }
                             }
+                            */
 
                             Box3D box = new Box3D(0, 0, 0, 0, 0, 0);
                             for (int i = 0; i < msn.GetMesh().MeshBufferCount; i++)
@@ -794,7 +796,8 @@ namespace OpenViewer.Managers
             }
             else
             {
-                mb.Material.Lighting = !teface.Fullbright;
+                mb.Material.Lighting = false;
+                //mb.Material.Lighting = !teface.Fullbright;
 
                 if (shinyval > 0)
                 {
