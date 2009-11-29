@@ -279,7 +279,7 @@
     <value>ボイス</value>
   </data>
   <data name="WarningGraphicCardCaption" xml:space="preserve">
-    <value>3Di OpenViewerの推奨環境を確認してください。</value>
+    <value>3Di Viewer "Rei"の推奨環境を確認してください。</value>
   </data>
   <data name="WarningGraphicCardMessage" xml:space="preserve">
     <value>ご利用中のグラフィックカードには現在対応しておりません。

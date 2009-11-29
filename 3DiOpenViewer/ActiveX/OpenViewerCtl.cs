@@ -634,7 +634,7 @@ namespace OpenViewerAX
                     if (!String.IsNullOrEmpty(description))
                     {
                         if (title == null)
-                            title = "3Di OpenViewer Update";
+                            title = "3Di Viewer \"Rei\" Update";
                         System.Windows.Forms.MessageBox.Show(description, title, System.Windows.Forms.MessageBoxButtons.OK);
                         return false;
                     }
@@ -642,7 +642,7 @@ namespace OpenViewerAX
             }
             catch (Exception e)
             {
-                VersionCheckError(e.Message, "バージョンを確認中にエラーが発生しました");
+                VersionCheckError(e.Message, DialogText.VersionCheckError);
                 return false;
             }
             return true;
@@ -670,7 +670,7 @@ namespace OpenViewerAX
             }
             catch (Exception e)
             {
-                VersionCheckError(e.Message, "最新バージョンを問い合わせ中にエラーが発生しました");
+                VersionCheckError(e.Message, DialogText.LatestVersionCheckError);
                 return false;
             }
             return true;
@@ -691,12 +691,12 @@ namespace OpenViewerAX
                 DialogResult res = DialogResult.OK;
                 if (size < 500) // 500MB
                 {
-                    res = System.Windows.Forms.MessageBox.Show("「HDDの空き容量が足りないために正常に起動できませんでした。", "起動エラー");
+                    res = System.Windows.Forms.MessageBox.Show(DialogText.InsufficientDiskSpaceError, DialogText.StartupError);
                     res = DialogResult.Cancel;
                 }
                 else if (size < 3 * 1024) // 3GB
                 {
-                    res = System.Windows.Forms.MessageBox.Show("正常に動作するために必要なHDD容量（3GB）が足りていません\nこのまま起動しますか？", "起動確認", MessageBoxButtons.OKCancel);
+                    res = System.Windows.Forms.MessageBox.Show(DialogText.InsufficientDiskSpaceWarning, DialogText.StartupWarning, MessageBoxButtons.OKCancel);
                 }
 
                 if (res != DialogResult.OK)
@@ -736,7 +736,7 @@ namespace OpenViewerAX
             }
             catch (Exception e)
             {
-                VUtil.LogConsole(this.ToString(), "SetupConfig: FETAL:" + e.Message);
+                VUtil.LogConsole(this.ToString(), "SetupConfig: FATAL:" + e.Message);
             }
         }
         #endregion
@@ -766,7 +766,7 @@ namespace OpenViewerAX
                 if (!String.IsNullOrEmpty(RequireVersion) && !IsVersionRequirementSatisfied(RequireVersion))
                 {
                     Label warning = new Label();
-                    warning.Text = "本サービスをご使用いただくには、3Di OpenViewerのアップデートが必要です。";
+                    warning.Text = DialogText.UpdateRequired;
                     warning.Location = new Point(10, Height / 2 - 40 + 30);
                     warning.Size = new Size(Width - 20, 40);
                     warning.ForeColor = Color.Red;
@@ -774,7 +774,7 @@ namespace OpenViewerAX
                     warning.TextAlign = ContentAlignment.MiddleCenter;
                     this.Controls.Add(warning);
                     LinkLabel link = new LinkLabel();
-                    link.Text = "最新の情報はこちらでご覧いただけます。";
+                    link.Text = DialogText.LatestVersionInfo;
                     link.Links.Add(6, 3);
                     link.Location = new Point(10, Height / 2 + 30);
                     link.Size = new Size(Width - 20, 40);
@@ -848,7 +848,7 @@ namespace OpenViewerAX
             else
             {
                 Label warning = new Label();
-                warning.Text = "複数の3Di OpenViewerを同時に使用することはできません\r\nこちらのページをご覧になる前に、ご使用中の3Di OpenViewerをすべて閉じてください。";
+                warning.Text = DialogText.MultipleStartupError;
                 warning.Location = new Point(10, Height / 2 - 20 + 40);
                 warning.Size = new Size(Width - 20, 40);
                 warning.ForeColor = Color.Red;
