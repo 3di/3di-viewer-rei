@@ -92,6 +92,11 @@ namespace OpenViewer.Managers
             base.Update(frame);
         }
 
+        private static int Clip(int x, int min, int max)
+        {
+            return System.Math.Min(System.Math.Max(x, min), max);
+        }
+
         private void UpdateTerrain()
         {
             // Terrain updates
@@ -116,8 +121,16 @@ namespace OpenViewer.Managers
                         }
 
                         float[,] h = ResizeTerrain512Interpolation(landmaps[sim]);
+                        float[,] h2 = new float[514, 514];
+                        for (int x = 0; x < 514; x++)
+                        {
+                            for (int y = 0; y < 514; y++)
+                            {
+                                h2[x,y] = h[Clip(y - 1, 0, 511), Clip(x - 1, 0, 511)];
+                            }
+                        }
 
-                        TerrainSceneNode tsn = Reference.SceneManager.AddTerrainSceneNodeFromRawData(h,
+                        TerrainSceneNode tsn = Reference.SceneManager.AddTerrainSceneNodeFromRawData(h2,
                                                                                           514,
                                                                                           ParentNode,
                                                                                           -1,
@@ -127,7 +140,7 @@ namespace OpenViewer.Managers
                                                                                           IrrlichtNETCP.Color.TransparentWhite,
                                                                                           4,
                                                                                           TerrainPatchSize.TPS9,
-                                                                                          4);
+                                                                                          1);
 
                         if (tsn != null)
                         {
