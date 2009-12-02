@@ -640,10 +640,14 @@ namespace OpenViewer.Managers
 
                 if (op == Operations.ADD)
                 {
-                    TriangleSelector trisel = Reference.SceneManager.CreateTriangleSelector(vObj.Mesh, vObj.Node);
-                    vObj.Node.TriangleSelector = trisel;
-                    AddTriangleSelector(trisel, vObj.Node);
-                    trisel.Drop();
+                    // disable grabbing objects that are not touchable/sitable
+                    if (vObj.Prim.ClickAction == ClickAction.Sit || ((vObj.Prim.Flags & PrimFlags.Touch) != 0))
+                    {
+                        TriangleSelector trisel = Reference.SceneManager.CreateTriangleSelector(vObj.Mesh, vObj.Node);
+                        vObj.Node.TriangleSelector = trisel;
+                        AddTriangleSelector(trisel, vObj.Node);
+                        trisel.Drop();
+                    }
                 }
 
                 RequestTexturesForObject(vObj);
