@@ -337,12 +337,16 @@ namespace OpenViewer.Managers
 
         private void ProcessObjectQueue() 
         {
-            lock (pipeline)
             {
                 uint processed = 0;
                 while (pipeline.Count > 0 && processed < objectUpdateCount)
                 {
-                    Action<VObject> action = pipeline.Dequeue();
+                    // There is only one consumer thread (this), therefore if Count was above zero, it must still be
+                    Action<VObject> action;
+                    lock (pipeline)
+                    {
+                        action = pipeline.Dequeue();
+                    }
                     processed++;
 
                     PCode pCode = action.Object.Prim.PrimData.PCode;
@@ -520,7 +524,10 @@ namespace OpenViewer.Managers
                     else
                     {
                         // Wait for the parents to arrive first
-                        pipeline.Enqueue(new Action<VObject>(vObj, op));
+                        lock (pipeline)
+                        {
+                            pipeline.Enqueue(new Action<VObject>(vObj, op));
+                        }
                         return;
                     }
                 }
@@ -550,7 +557,10 @@ namespace OpenViewer.Managers
                     // 1) Request the sculpt texture
                     Reference.Viewer.TextureManager.RequestImage(vObj.Prim.Sculpt.SculptTexture, vObj);
                     // 2) Wait for sculpt texture to download
-                    pipeline.Enqueue(new Action<VObject>(vObj, op));
+                    lock (pipeline)
+                    {
+                        pipeline.Enqueue(new Action<VObject>(vObj, op));
+                    }
                     return;
                 }
             }
