@@ -117,6 +117,7 @@ namespace OpenViewer.Managers
 
 #if DEBUG_QUEUE
         public int PipelineQueueLength { get { return(pipelineUpdate.Count); } }
+        public int EventQueueLength { get { return (eventQueue.Count); } }
 #endif
         //********************************************************
         // Property.
@@ -314,6 +315,10 @@ namespace OpenViewer.Managers
             lock (pipelineUpdate)
             {
                 pipelineUpdate.Clear();
+            }
+            lock (eventQueue)
+            {
+                eventQueue.Clear();
             }
             base.Cleanup();
         }
@@ -957,7 +962,7 @@ namespace OpenViewer.Managers
 
             Reference.Viewer.Adapter.CallAnimationEndEvent(userObject.AnimationCurrentName);
 
-            if (userObject != null && userObject.MeshNode.Raw == targetVObj.MeshNode.Raw)
+            if (userObject != null && userObject.MeshNode != null && userObject.MeshNode.Raw == targetVObj.MeshNode.Raw)
             {
                 bool custAnim = false;
                 foreach (UUID uuid in UtilityAnimation.CUSTOM_ANIMATIONS)

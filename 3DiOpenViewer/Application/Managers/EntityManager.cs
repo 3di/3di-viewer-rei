@@ -124,6 +124,7 @@ namespace OpenViewer.Managers
 #if DEBUG_QUEUE
         public int TextureQueueLength { get { return (textureQueue.Count); } }
         public int PipelineQueueLength { get { return (pipeline.Count); } }
+        public int EventQueueLength { get { return (eventQueue.Count); } }
 #endif
         #endregion
 
@@ -193,6 +194,11 @@ namespace OpenViewer.Managers
                     }
                 }
                 entities.Clear();
+            }
+
+            lock (eventQueue)
+            {
+                eventQueue.Clear();
             }
 
             metaTriangleSelector.Dispose();

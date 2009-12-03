@@ -486,8 +486,10 @@ namespace OpenViewer.Managers
 
             Reference.Viewer.GuiManager.DebugAdd(key, "EntityManager: pipeline " + Reference.Viewer.EntityManager.PipelineQueueLength);
             Reference.Viewer.GuiManager.DebugAdd(key, "EntityManager: textureQueue " + Reference.Viewer.EntityManager.TextureQueueLength);
+            Reference.Viewer.GuiManager.DebugAdd(key, "EntityManager: eventQueue " + Reference.Viewer.EntityManager.EventQueueLength);
 
             Reference.Viewer.GuiManager.DebugAdd(key, "AvatarManager: pipeline " + Reference.Viewer.AvatarManager.PipelineQueueLength);
+            Reference.Viewer.GuiManager.DebugAdd(key, "AvatarManager: eventQueue " + Reference.Viewer.AvatarManager.EventQueueLength);
 #endif
         }
         #endregion
