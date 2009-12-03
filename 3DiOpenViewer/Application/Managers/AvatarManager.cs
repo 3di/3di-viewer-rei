@@ -1512,6 +1512,17 @@ namespace OpenViewer.Managers
         void TextureManager_OnTextureLoaded(string texname, string extension, VObject node, UUID AssetID)
         {
             EventQueueParam param = new EventQueueParam(EventQueueType.TextureDownloaded, AssetID.ToString());
+            bool found = false;
+            foreach (SetTextureParam stp in requestTextureList)
+            {
+                if (stp.TextureUUID == AssetID.ToString())
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                return;
             lock (eventQueue)
                 eventQueue.Enqueue(param);
         }
