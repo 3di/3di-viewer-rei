@@ -154,7 +154,8 @@ namespace OpenViewer.Managers
                         */
                     }
                 }
-                catch (Exception e)                {
+                catch (Exception e)
+                {
                     Reference.Log.Warn(@"[PROTOCOLMANAGER]: Exception occured in Update - " + e.Message);
                     Reference.Log.Debug(@"[PROTOCOLMANAGER]: Exception occured in Update - " + e.StackTrace);
                 }
@@ -769,7 +770,8 @@ namespace OpenViewer.Managers
                         obj.Prim.Position = update.Position;
                         obj.Prim.Rotation = update.Rotation;
                         obj.Prim.PrimData.State = update.State;
-                        obj.Prim.Textures = update.Textures;
+                        if (update.Textures != null)
+                            obj.Prim.Textures = update.Textures;
                         obj.Prim.Velocity = update.Velocity;
 
                         obj.UpdateFullYN = false;
