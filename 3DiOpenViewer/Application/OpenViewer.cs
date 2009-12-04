@@ -412,8 +412,8 @@ namespace OpenViewer
             }
             catch (Exception e)
             {
-                Reference.Log.Warn(@"[REI]: Exception occured while trying to set parent window - " + e.Message);
-                Reference.Log.Debug(@"[REI]: Exception occured while trying to set parent window - " + e.StackTrace);
+                m_log.Warn(@"[REI]: Exception occured while trying to set parent window - " + e.Message);
+                m_log.Debug(@"[REI]: Exception occured while trying to set parent window - " + e.StackTrace);
             }
             f.Location = new System.Drawing.Point(0, 0);
             //f.FormClosed += new System.Windows.Forms.FormClosedEventHandler(f_FormClosed);
