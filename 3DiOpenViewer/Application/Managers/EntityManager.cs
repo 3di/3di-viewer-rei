@@ -92,6 +92,20 @@ namespace OpenViewer.Managers
         public UUID textureID;
     }
 
+    public struct FoliageInfo
+    {
+        public string XmlType;
+        public Texture[] Textures;
+        public float ScaleFactor;
+
+        public FoliageInfo(string xmlType, Texture[] textures, float scaleFactor)
+        {
+            XmlType = xmlType;
+            Textures = textures;
+            ScaleFactor = scaleFactor;
+        }
+    }
+
     public class EntityManager : BaseManager
     {
         #region Properties
@@ -139,12 +153,81 @@ namespace OpenViewer.Managers
         private List<SetTextureParam> requestTextureList = new List<SetTextureParam>();
         #endregion
 
+        #region Foliage Textures
+        private Texture[] Aspen = new Texture[3];
+        private Texture[] Oak = new Texture[3];
+        private Texture[] Pine = new Texture[3];
+        private Texture[] Willow = new Texture[3];
+
+        private FoliageInfo[] FoliageList = new FoliageInfo[21];
+        #endregion
+
         public EntityManager(Viewer viewer)
             : base(viewer, -1)
         {
             // MeshFactory needs to stay and not be cleaned up between sessions to speed up construction
             // of meshes (needs to be properly released at the end of its lifecycle though)
             meshFactory = new MeshFactory(Reference.SceneManager.MeshManipulator, Reference.Device);
+
+            // Load foliage textures only once per instance to minimize memory usage
+            Aspen[0] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/AspenBark.png");
+            Aspen[1] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/AspenLeaf.png");
+            Aspen[2] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/AspenBillboard.png");
+            Oak[0] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/OakBark.png");
+            Oak[1] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/OakLeaf.png");
+            Oak[2] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/OakBillboard.png");
+            Pine[0] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/PineBark.png");
+            Pine[1] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/PineLeaf.png");
+            Pine[2] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/PineBillboard.png");
+            Willow[0] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/WillowBark.png");
+            Willow[1] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/WillowLeaf.png");
+            Willow[2] =
+                Reference.VideoDriver.GetTexture(Util.ApplicationDataDirectory +
+                                                 @"/media/textures/foliage/WillowBillboard.png");
+
+            FoliageList[0] = new FoliageInfo("Pine", Pine, 0.1f);
+            FoliageList[1] = new FoliageInfo("Oak", Oak, 0.1f);
+            FoliageList[2] = new FoliageInfo("Pine", Pine, 0.025f);
+            FoliageList[3] = new FoliageInfo("Oak", Oak, 0.1f);
+            FoliageList[4] = new FoliageInfo("Oak", Oak, 0.1f);
+            FoliageList[5] = new FoliageInfo("Oak", Oak, 0.025f);
+            FoliageList[6] = new FoliageInfo("Pine", Pine, 0.1f);
+            FoliageList[7] = new FoliageInfo("Oak", Oak, 0.1f);
+            FoliageList[8] = new FoliageInfo("Pine", Pine, 0.1f);
+            FoliageList[9] = new FoliageInfo("Oak", Oak, 0.1f);
+            FoliageList[10] = new FoliageInfo("Pine", Pine, 0.1f);
+            FoliageList[11] = new FoliageInfo("Pine", Pine, 0.1f);
+            FoliageList[12] = new FoliageInfo("Aspen", Aspen, 0.01f);
+            FoliageList[13] = new FoliageInfo("Pine", Pine, 0.1f);
+            FoliageList[14] = new FoliageInfo("Pine", Pine, 0.1f);
+            FoliageList[15] = new FoliageInfo("Pine", Pine, 0.01f);
+            FoliageList[16] = new FoliageInfo("Pine", Pine, 0.01f);
+            FoliageList[17] = new FoliageInfo("Pine", Pine, 0.01f);
+            FoliageList[18] = new FoliageInfo("Pine", Pine, 0.01f);
+            FoliageList[19] = new FoliageInfo("Pine", Pine, 0.01f);
+            FoliageList[20] = new FoliageInfo("Pine", Pine, 0.01f);
         }
 
         #region Public Interface
@@ -355,11 +438,11 @@ namespace OpenViewer.Managers
                     }
                     processed++;
 
-                    PCode pCode = action.Object.Prim.PrimData.PCode;
-                    if (pCode == PCode.Grass || pCode == PCode.NewTree || pCode == PCode.Tree)
-                    {
-                        continue;
-                    }
+                    //PCode pCode = action.Object.Prim.PrimData.PCode;
+                    //if (pCode == PCode.Grass || pCode == PCode.NewTree || pCode == PCode.Tree)
+                    //{
+                    //    continue;
+                    //}
 
                     // [YK:NEXT]
                     //ProcessObjectQueue(action.Object);
@@ -541,6 +624,7 @@ namespace OpenViewer.Managers
 
             // Generate SceneNode for the object
             bool isMeshCopied = false;
+            float scaleFactor = 1.0f;
 
             // SCULPTED PRIM
             // NOTE: Sculpt meshes will not appear anymore while the texture is downloading
@@ -569,6 +653,28 @@ namespace OpenViewer.Managers
                     }
                     return;
                 }
+            }
+            // FOLIAGE OBJECT
+            else if (vObj.Prim.PrimData.PCode == PCode.Grass || vObj.Prim.PrimData.PCode == PCode.NewTree || vObj.Prim.PrimData.PCode == PCode.Tree)
+            {
+                int foliageType = vObj.Prim.PrimData.State;
+
+                if (foliageType < 0 || foliageType >= FoliageList.Length)
+                    foliageType = 0;
+
+                scaleFactor = FoliageList[foliageType].ScaleFactor;
+                vObj.Node = Reference.SceneManager.AddTreeSceneNode(Util.ApplicationDataDirectory + @"/media/textures/foliage/"+FoliageList[foliageType].XmlType+".xml",
+                            null,
+                            -1,
+                            new Vector3D(vObj.Prim.Position.X,
+                                         vObj.Prim.Position.Z,
+                                         vObj.Prim.Position.Y),
+                            new Vector3D(),
+                            new Vector3D(vObj.Prim.Scale.X, vObj.Prim.Scale.Z,
+                                         vObj.Prim.Scale.Y),
+                            FoliageList[foliageType].Textures[0],
+                            FoliageList[foliageType].Textures[1],
+                            FoliageList[foliageType].Textures[2]);
             }
             // STANDARD PRIM
             else if (vObj._3DiIrrfileUUID == UUID.Zero)
@@ -611,7 +717,7 @@ namespace OpenViewer.Managers
                 }
 
                 // 1) SCALE
-                vObj.Node.Scale = new Vector3D(vObj.Prim.Scale.X, vObj.Prim.Scale.Z, vObj.Prim.Scale.Y);
+                vObj.Node.Scale = new Vector3D(vObj.Prim.Scale.X * scaleFactor, vObj.Prim.Scale.Z * scaleFactor, vObj.Prim.Scale.Y * scaleFactor);
 
                 // 2) POSITION
                 Vector3 worldOffsetPos = Vector3.Zero;  // TODO: Multiregion support needs proper offset coordinates
