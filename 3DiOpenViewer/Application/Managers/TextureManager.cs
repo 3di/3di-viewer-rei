@@ -108,7 +108,7 @@ namespace OpenViewer.Managers
         /// <summary>
         /// Texture requests outstanding.
         /// </summary>
-        private Dictionary<UUID, List<VObject>> ouststandingRequests = new Dictionary<UUID, List<VObject>>();
+        private Dictionary<UUID, List<VObject>> outstandingRequests = new Dictionary<UUID, List<VObject>>();
 
         private static readonly log4net.ILog m_log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
@@ -144,9 +144,9 @@ namespace OpenViewer.Managers
             {
                 memoryTextures.Clear();
             }
-            lock (ouststandingRequests)
+            lock (outstandingRequests)
             {
-                ouststandingRequests.Clear();
+                outstandingRequests.Clear();
             }
             base.Cleanup();
         }
@@ -312,16 +312,16 @@ namespace OpenViewer.Managers
                 applyTexture(tex, requestor, assetID);
 
                 // Apply the texture to all objects that are already waiting for this texture
-                lock (ouststandingRequests)
+                lock (outstandingRequests)
                 {
-                    if (ouststandingRequests.ContainsKey(assetID))
+                    if (outstandingRequests.ContainsKey(assetID))
                     {
                         m_log.Warn("[TEXTURE]: Applying texture from memory to outstanding requestors.");
-                        foreach (VObject vObj in ouststandingRequests[assetID])
+                        foreach (VObject vObj in outstandingRequests[assetID])
                         {
                             applyTexture(tex, vObj, assetID);
                         }
-                        ouststandingRequests.Remove(assetID);
+                        outstandingRequests.Remove(assetID);
                     }
                 }
 
@@ -331,7 +331,15 @@ namespace OpenViewer.Managers
             // Check to see if we've got the texture on disk
 
             string texturefolderpath = imagefolder;
-            if (File.Exists(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga")))
+            bool alreadyRequesting = false;
+            lock (outstandingRequests)
+            {
+                if (outstandingRequests.ContainsKey(assetID))
+                {
+                    alreadyRequesting = true;
+                }
+            }
+            if (!alreadyRequesting && File.Exists(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga")))
             {
                 Texture texTnorm = Reference.VideoDriver.GetTexture(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga"));
                 if (texTnorm != null)
@@ -351,16 +359,16 @@ namespace OpenViewer.Managers
                     applyTexture(tex, requestor, assetID);
 
                     // Apply the texture to all objects that are already waiting for this texture
-                    lock (ouststandingRequests)
+                    lock (outstandingRequests)
                     {
-                        if (ouststandingRequests.ContainsKey(assetID))
+                        if (outstandingRequests.ContainsKey(assetID))
                         {
                             m_log.Warn("[TEXTURE]: Applying texture from memory to outstanding requestors.");
-                            foreach (VObject vObj in ouststandingRequests[assetID])
+                            foreach (VObject vObj in outstandingRequests[assetID])
                             {
                                 applyTexture(tex, vObj, assetID);
                             }
-                            ouststandingRequests.Remove(assetID);
+                            outstandingRequests.Remove(assetID);
                         }
                     }
 
@@ -370,12 +378,12 @@ namespace OpenViewer.Managers
             }
 
             // Check if we've already got an outstanding request for this texture
-            lock (ouststandingRequests)
+            lock (outstandingRequests)
             {
-                if (ouststandingRequests.ContainsKey(assetID))
+                if (outstandingRequests.ContainsKey(assetID))
                 {
                     // Add it to the objects to be notified when this texture download is complete.
-                    ouststandingRequests[assetID].Add(requestor);
+                    outstandingRequests[assetID].Add(requestor);
                     return;
                 }
                 else 
@@ -383,7 +391,7 @@ namespace OpenViewer.Managers
                     // Create a new outstanding request entry
                     List<VObject> requestors = new List<VObject>();
                     requestors.Add(requestor);
-                    ouststandingRequests.Add(assetID,requestors);
+                    outstandingRequests.Add(assetID,requestors);
                     
                 }
             }
@@ -437,9 +445,16 @@ namespace OpenViewer.Managers
             }
 
             string texturefolderpath = imagefolder;
-
+            bool alreadyRequesting = false;
+            lock (outstandingRequests)
+            {
+                if (outstandingRequests.ContainsKey(assetID))
+                {
+                    alreadyRequesting = true;                           
+                }
+            }
             // Check if we've got this texture on the file system.
-            if (File.Exists(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga")))
+            if (!alreadyRequesting && File.Exists(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga")))
             {
                 Texture texTnorm = Reference.VideoDriver.GetTexture(System.IO.Path.Combine(texturefolderpath, assetID.ToString() + ".tga"));
                 tex = new TextureExtended(texTnorm.Raw, ".tga");
@@ -816,9 +831,6 @@ namespace OpenViewer.Managers
             if (asset == null)
             {
                 m_log.Debug("[TEXTURE]: GotLIBOMV callback but asset was null");
-                lock (ouststandingRequests)
-                {
-                }
                 return;
             }
             m_log.Debug("[TEXTURE]: GotLIBOMV callback for asset" + asset.AssetID);
@@ -893,15 +905,32 @@ namespace OpenViewer.Managers
                 bw.Write(imgdata);
                 bw.Flush();
                 bw.Close();
+
+                // Immediately load it to memory
+                if (File.Exists(System.IO.Path.Combine(texturefolderpath, asset.AssetID.ToString() + ".tga")))
+                {
+                    Texture texTnorm = Reference.VideoDriver.GetTexture(System.IO.Path.Combine(texturefolderpath, asset.AssetID.ToString() + ".tga"));
+                    TextureExtended tex = new TextureExtended(texTnorm.Raw, ".tga");
+                    if (tex != null)
+                    {
+                        lock (memoryTextures)
+                        {
+                            if (!memoryTextures.ContainsKey(asset.AssetID))
+                            {
+                                memoryTextures.Add(asset.AssetID, tex);
+                            }
+                        }
+                    }
+                }
                 
                 // Update nodes that the texture is downloaded.
                 List<VObject> nodesToUpdate = null;
-                lock (ouststandingRequests)
+                lock (outstandingRequests)
                 {
-                    if (ouststandingRequests.ContainsKey(asset.AssetID))
+                    if (outstandingRequests.ContainsKey(asset.AssetID))
                     {
-                        nodesToUpdate = ouststandingRequests[asset.AssetID];
-                        ouststandingRequests.Remove(asset.AssetID);
+                        nodesToUpdate = outstandingRequests[asset.AssetID];
+                        outstandingRequests.Remove(asset.AssetID);
                     }
                 }
 
