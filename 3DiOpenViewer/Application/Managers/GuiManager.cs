@@ -984,14 +984,14 @@ namespace OpenViewer.Managers
             if (Reference.Viewer.IsVisibleDebutTab)
             {
                 debugTab = Reference.GUIEnvironment.AddTabControl(rect, wnd, true, true, (int)GUIElementIDS.DEBUG_DTAB_CONTROLLER);
-                GUITab dt0 = debugTab.AddTab("Sys", -1);
-                GUITab dt1 = debugTab.AddTab("Node", -1);
-                GUITab dt2 = debugTab.AddTab("User", -1);
-                GUITab dt3 = debugTab.AddTab("View", -1);
+                GUITab dt0 = debugTab.AddTab("SYS", -1);
+                GUITab dt1 = debugTab.AddTab("NOD", -1);
+                GUITab dt2 = debugTab.AddTab("USR", -1);
+                GUITab dt3 = debugTab.AddTab("VIE", -1);
                 GUITab dt4 = debugTab.AddTab("P-N", -1);
                 GUITab dt5 = debugTab.AddTab("P-C", -1);
-                GUITab dt6 = debugTab.AddTab("LMNT", -1);
-                GUITab dt7 = debugTab.AddTab("Voice", -1);
+                GUITab dt6 = debugTab.AddTab("LMN", -1);
+                GUITab dt7 = debugTab.AddTab("VOI", -1);
 
                 debugListBoxList = new Dictionary<int, GUIListBox>(10);
                 debugListBoxList.Add(0, Reference.GUIEnvironment.AddListBox(new Rect(new Position2D(0, 0), new Dimension2D(Reference.Viewer.Width / 2, Reference.Viewer.Height - 64)), dt0, -1, false));
@@ -1003,7 +1003,7 @@ namespace OpenViewer.Managers
                 debugListBoxList.Add(6, Reference.GUIEnvironment.AddListBox(new Rect(new Position2D(0, 0), new Dimension2D(Reference.Viewer.Width / 2, Reference.Viewer.Height - 64)), dt6, -1, false));
                 debugListBoxList.Add(7, Reference.GUIEnvironment.AddListBox(new Rect(new Position2D(0, 0), new Dimension2D(Reference.Viewer.Width / 2, Reference.Viewer.Height - 64)), dt7, -1, false));
 #if DEBUG_QUEUE
-                GUITab dt8 = debugTab.AddTab("QUEUE", -1);
+                GUITab dt8 = debugTab.AddTab("QUE", -1);
                 debugListBoxList.Add(8, Reference.GUIEnvironment.AddListBox(new Rect(new Position2D(0, 0), new Dimension2D(Reference.Viewer.Width / 2, Reference.Viewer.Height - 64)), dt8, -1, false));
 #endif
             
