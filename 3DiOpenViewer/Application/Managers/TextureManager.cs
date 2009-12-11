@@ -796,12 +796,13 @@ namespace OpenViewer.Managers
                 coldata.G *= coldata.A;
             }
 
-            mb.SetColor(new Color(
-                Util.Clamp<int>((int)(coldata.A * 255), 0, 255),
-                Util.Clamp<int>((int)(coldata.R * 255), 0, 255),
-                Util.Clamp<int>((int)(coldata.G * 255), 0, 255),
-                Util.Clamp<int>((int)(coldata.B * 255), 0, 255)
-                ));
+            if (coldata.R != 1 || coldata.G != 1 || coldata.B != 1)
+                mb.SetColor(new Color(
+                    Util.Clamp<int>((int)(coldata.A * 255), 0, 255),
+                    Util.Clamp<int>((int)(coldata.R * 255), 0, 255),
+                    Util.Clamp<int>((int)(coldata.G * 255), 0, 255),
+                    Util.Clamp<int>((int)(coldata.B * 255), 0, 255)
+                    ));
 
             // If it's partially translucent inform Irrlicht
             if (coldata.A != 1)

@@ -94,7 +94,7 @@ namespace OpenViewer
 
         private static Mesh FacesToIrrMesh(List<ViewerFace> viewerFaces, int numPrimFaces)
         {
-            Color color = new Color(255, 255, 0, 50);
+            Color color = new Color(255, 255, 255, 255);
 
             Mesh mesh;
             try
