@@ -173,7 +173,7 @@ namespace OpenViewer
         // experimental - build sculpt mesh using indexed access to vertex, normal, and UV lists
         private static Mesh SculptMeshToIrrMesh(SculptMesh sculptMesh)
         {
-            Color color = new Color(255, 255, 0, 50);
+            Color color = new Color(255, 255, 255, 255);
 
             Mesh mesh = new Mesh();
 
