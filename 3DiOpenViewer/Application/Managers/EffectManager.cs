@@ -195,6 +195,8 @@ namespace OpenViewer.Managers
                 );
 
             node.SetEmitter(em);
+            em.MinStartSize = new Dimension2Df(0.6f, 0.6f);
+            em.MaxStartSize = new Dimension2Df(0.6f, 0.6f);
             em.Drop();
             lock (emitterCleanup) { if (!emitterCleanup.ContainsKey(_parentNode.Raw)) { emitterCleanup.Add(_parentNode.Raw, em); } }
 
@@ -205,7 +207,6 @@ namespace OpenViewer.Managers
             lock (affectorCleanup) { if (!affectorCleanup.ContainsKey(_parentNode.Raw)) { affectorCleanup.Add(_parentNode.Raw, paf); } }
 
             node.Position = new Vector3D(0, 0, 0);
-            node.ParticleSize = new Dimension2Df(0.6f, 0.6f);
             node.SetMaterialFlag(MaterialFlag.Lighting, false);
             node.SetMaterialType(MaterialType.TransparentVertexAlpha);
 
