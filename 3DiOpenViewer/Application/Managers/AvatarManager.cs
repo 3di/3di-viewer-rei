@@ -1026,6 +1026,7 @@ namespace OpenViewer.Managers
                 node = Reference.SceneManager.AddEmptySceneNode(ParentNode, -1);
             }
             Reference.SceneManager.AddToDeletionQueue(_obj.Node);
+            _obj.MeshNode = null;
 
             if (node != null)
                 userObject.Node = node;
