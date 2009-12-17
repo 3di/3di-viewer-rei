@@ -628,7 +628,7 @@ namespace OpenViewer
 
             // Zaki: Adding Japanese support end
 
-            Reference.VideoDriver.SetFog(new Color(0, 255, 255, 255), false, 9999, 9999, 0, false, false);
+            Reference.VideoDriver.SetFog(new Color(0, 255, 255, 255), FogType.Exponential, 9999, 9999, 0, false, false);
 
             //Reference.Device.FileSystem.WorkingDirectory = Util.UserCacheDirectory;
             Reference.Device.FileSystem.AddFolderFileArchive(Util.ApplicationDataDirectory);
