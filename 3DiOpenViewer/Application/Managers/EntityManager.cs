@@ -766,9 +766,9 @@ namespace OpenViewer.Managers
             }
             if (isMeshCopied)
             {
-                for (int i = 0; i < vObj.Mesh.MeshBufferCount; i++)
-                    vObj.Mesh.GetMeshBuffer(i).Drop();
-                vObj.Mesh.Drop();
+                //for (int i = 0; i < vObj.Mesh.MeshBufferCount; i++)
+                //    vObj.Mesh.GetMeshBuffer(i).Drop();
+                //vObj.Mesh.Drop();
             }
         }
 

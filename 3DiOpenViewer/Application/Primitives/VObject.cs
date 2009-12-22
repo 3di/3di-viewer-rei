@@ -224,10 +224,10 @@ namespace OpenViewer
 
         public void Dispose()
         {
-            if (MeshNode != null)
-            {
-                MeshNode.Dispose();
-            }
+            //if (MeshNode != null)
+            //{
+            //    MeshNode.Dispose();
+            //}
         }
     }
 }
