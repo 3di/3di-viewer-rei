@@ -227,7 +227,7 @@ namespace OpenViewer.Managers
             Reference.GUIEnvironment.Skin.SetColor(GuiDefaultColor.Scrollbar, Color.White);
             Reference.GUIEnvironment.Skin.SetColor(GuiDefaultColor.Shadow3D, new Color(240, 204, 204, 204));
             Reference.GUIEnvironment.Skin.SetColor(GuiDefaultColor.ToolTip, Color.Black);
-            Reference.GUIEnvironment.Skin.SetColor(GuiDefaultColor.Window, new Color(191, 95, 95, 95));
+            Reference.GUIEnvironment.Skin.SetColor(GuiDefaultColor.Window, Color.White);
 
             blinkTimer.Enabled = true;
 
@@ -1092,6 +1092,10 @@ namespace OpenViewer.Managers
 
                 case GUIEventType.ElementClosed:
                     focused = false;
+                    if (evnt.Caller.ID == (int)GUIElementIDS.CHAT_WINDOW)
+                    {
+                        chatBoxMessageList = null;
+                    }
                     break;
 
                 case GUIEventType.TabChanged:
