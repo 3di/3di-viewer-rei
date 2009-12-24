@@ -672,6 +672,10 @@ namespace OpenViewer.Managers
             else
             {
                 // TODO: start waiting timeout
+                if (string.IsNullOrEmpty(VUtil.assetServerUri))
+                {
+                    Reference.Viewer.TextureManager.texDownloadStyle = TextureDownloadStyle.TEX_DOWNLOAD_LIBOMV;
+                }
             }
         }
 
