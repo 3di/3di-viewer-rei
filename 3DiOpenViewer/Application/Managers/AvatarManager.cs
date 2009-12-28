@@ -299,8 +299,10 @@ namespace OpenViewer.Managers
 
         public override void Cleanup()
         {
-            // initialize userObject.
-            Start();
+            ProcessObjectQueueDeleteToNode(userObject);
+            if (userObject.Node != null)
+                Reference.SceneManager.AddToDeletionQueue(userObject.Node);
+            userObject = null;
 
             OnRequest = null;
 
