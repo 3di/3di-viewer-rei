@@ -1016,7 +1016,7 @@ namespace OpenViewer.Managers
             }
 
             // Remove this object from our picker.
-            if (_obj.PickNode.TriangleSelector != null)
+            if (_obj.PickNode != null && _obj.PickNode.TriangleSelector != null)
             {
                 if (trianglePickerMapper != null)
                 {
@@ -1031,7 +1031,7 @@ namespace OpenViewer.Managers
             _obj.PickNode = null;
 
             SceneNode node = null;
-            if (userObject.Node.Raw == _obj.Node.Raw)
+            if (userObject.Node != null && userObject.Node.Raw == _obj.Node.Raw)
             {
                 node = Reference.SceneManager.AddEmptySceneNode(ParentNode, -1);
             }
