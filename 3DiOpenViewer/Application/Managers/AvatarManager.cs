@@ -1001,7 +1001,15 @@ namespace OpenViewer.Managers
             if (_obj.Node == null)
                 return;
 
-            Reference.Log.Debug("Delete avatar: Name:" + ((Avatar)_obj.Prim).Name + " Pos:" + _obj.Prim.Position.ToString());
+            if (_obj.Prim != null)
+            {
+                Reference.Log.Debug("Delete avatar: Name:" + ((Avatar)_obj.Prim).Name + " Pos:" + _obj.Prim.Position.ToString());
+            }
+            else
+            {
+                Reference.Log.Debug("Delete avatar: Name: (NULL)");
+            }
+
             if (_obj.IsGhost)
             {
                 Reference.Viewer.EffectManager.RemoveGhostNode(_obj.Node);
