@@ -908,10 +908,10 @@ namespace OpenViewer.Managers
                 bw.Close();
 
                 // Immediately load it to memory
-                if (File.Exists(System.IO.Path.Combine(texturefolderpath, asset.AssetID.ToString() + ".tga")))
+                if (File.Exists(System.IO.Path.Combine(texturefolderpath, asset.AssetID.ToString() + extension)))
                 {
-                    Texture texTnorm = Reference.VideoDriver.GetTexture(System.IO.Path.Combine(texturefolderpath, asset.AssetID.ToString() + ".tga"));
-                    TextureExtended tex = new TextureExtended(texTnorm.Raw, ".tga");
+                    Texture texTnorm = Reference.VideoDriver.GetTexture(System.IO.Path.Combine(texturefolderpath, asset.AssetID.ToString() + extension));
+                    TextureExtended tex = new TextureExtended(texTnorm.Raw, extension);
                     if (tex != null)
                     {
                         lock (memoryTextures)
