@@ -372,7 +372,7 @@ namespace OpenViewer
         private void gridConnectedCallback(object sender)
         {
            
-            m_user.Appearance.SetPreviousAppearance(false);
+            m_user.Appearance.SetPreviousAppearance(true);
 
 
 
