@@ -608,6 +608,9 @@ namespace OpenViewer.Managers
                     {
                         parentObj = Entities[parId];
                         //workNode = parentObj.Node;    // Don't add parent relationship twice
+                        workNode = Reference.SceneManager.AddEmptySceneNode(ParentNode, -1);
+                        workNode.Position = parentObj.Node.Position;
+                        workNode.Rotation = parentObj.Node.Rotation;
                         vObj.UpdateFullYN = true;
                     }
                     else
@@ -717,7 +720,14 @@ namespace OpenViewer.Managers
                 }
 
                 // 1) SCALE
-                vObj.Node.Scale = new Vector3D(vObj.Prim.Scale.X * scaleFactor, vObj.Prim.Scale.Z * scaleFactor, vObj.Prim.Scale.Y * scaleFactor);
+                if (vObj.Prim.ParentID != 0)                {
+                    vObj.Node.Scale = new Vector3D(vObj.Prim.Scale.X*scaleFactor,
+                                                   vObj.Prim.Scale.Z*scaleFactor,
+                                                   vObj.Prim.Scale.Y*scaleFactor);
+                }                else
+                {
+                    vObj.Node.Scale = new Vector3D(vObj.Prim.Scale.X * scaleFactor, vObj.Prim.Scale.Z * scaleFactor, vObj.Prim.Scale.Y * scaleFactor);
+                }
 
                 // 2) POSITION
                 Vector3 worldOffsetPos = Vector3.Zero;  // TODO: Multiregion support needs proper offset coordinates
@@ -729,10 +739,12 @@ namespace OpenViewer.Managers
                 else
                 {
                     // Apply rotation and position reported from LibOMV
-                    vObj.Prim.Position = vObj.Prim.Position * parentObj.Prim.Rotation;
-                    vObj.Prim.Rotation = parentObj.Prim.Rotation * vObj.Prim.Rotation;
+                    ////vObj.Prim.Position = vObj.Prim.Position * parentObj.Prim.Rotation;
+                    ////vObj.Prim.Rotation = parentObj.Prim.Rotation * vObj.Prim.Rotation;
 
-                    vObj.Node.Position = new Vector3D(worldOffsetPos.X + parentObj.Prim.Position.X + vObj.Prim.Position.X, worldOffsetPos.Z + parentObj.Prim.Position.Z + vObj.Prim.Position.Z, worldOffsetPos.Y + parentObj.Prim.Position.Y + vObj.Prim.Position.Y);
+                    ////vObj.Node.Position = new Vector3D(worldOffsetPos.X + parentObj.Prim.Position.X + vObj.Prim.Position.X, worldOffsetPos.Z + parentObj.Prim.Position.Z + vObj.Prim.Position.Z, worldOffsetPos.Y + parentObj.Prim.Position.Y + vObj.Prim.Position.Y);
+                    vObj.Node.Position = new Vector3D(vObj.Prim.Position.X, vObj.Prim.Position.Z, vObj.Prim.Position.Y);
+                    vObj.Node.DebugDataVisible = DebugSceneType.MeshWireOverlay;
                 }
 
                 // 3) ROTATION
@@ -746,14 +758,13 @@ namespace OpenViewer.Managers
                 //finalpos = Viewer.Coordinate_XYZ_XZY * finalpos;
                 Vector3D baseRotation = new Vector3D(vObj.BaseParam.Rotation[0], vObj.BaseParam.Rotation[1], vObj.BaseParam.Rotation[2]);
                 vObj.Node.Rotation = finalpos.Matrix.RotationDegrees + baseRotation;
-
                 // If the object is physical, add to interpolation targets
                 UpdateInterpolationTargets(vObj, objId);
 
                 if (op == Operations.ADD)
                 {
                     // disable grabbing objects that are not touchable/sitable
-                    if (vObj.Prim.ClickAction == ClickAction.Sit || ((vObj.Prim.Flags & PrimFlags.Touch) != 0))
+                    //if (vObj.Prim.ClickAction == ClickAction.Sit || ((vObj.Prim.Flags & PrimFlags.Touch) != 0))
                     {
                         TriangleSelector trisel = Reference.SceneManager.CreateTriangleSelector(vObj.Mesh, vObj.Node);
                         vObj.Node.TriangleSelector = trisel;
@@ -769,6 +780,22 @@ namespace OpenViewer.Managers
                 //for (int i = 0; i < vObj.Mesh.MeshBufferCount; i++)
                 //    vObj.Mesh.GetMeshBuffer(i).Drop();
                 //vObj.Mesh.Drop();
+            }
+
+            if (vObj.Prim.ParentID != 0 && parentObj.Prim.AngularVelocity != Vector3.Zero && workNode != ParentNode)            {
+                if (workNode.Name != "animated")
+                {
+                    Animator ani =
+                        Reference.SceneManager.CreateRotationAnimator(new Vector3D(parentObj.Prim.AngularVelocity.X,
+                                                                                   parentObj.Prim.AngularVelocity.Z,
+                                                                                   parentObj.Prim.AngularVelocity.Y));
+
+
+                    workNode.RemoveAnimators();
+                    workNode.AddAnimator(ani);
+                    ani.Drop();
+                    workNode.Name = "animated";
+                }
             }
         }
 
