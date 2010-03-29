@@ -92,6 +92,7 @@ namespace OpenViewer.Managers
         public UUID textureID;
     }
 
+
     public struct FoliageInfo
     {
         public string XmlType;
@@ -720,11 +721,13 @@ namespace OpenViewer.Managers
                 }
 
                 // 1) SCALE
-                if (vObj.Prim.ParentID != 0)                {
+                if (vObj.Prim.ParentID != 0)
+                {
                     vObj.Node.Scale = new Vector3D(vObj.Prim.Scale.X*scaleFactor,
                                                    vObj.Prim.Scale.Z*scaleFactor,
                                                    vObj.Prim.Scale.Y*scaleFactor);
-                }                else
+                }
+                else
                 {
                     vObj.Node.Scale = new Vector3D(vObj.Prim.Scale.X * scaleFactor, vObj.Prim.Scale.Z * scaleFactor, vObj.Prim.Scale.Y * scaleFactor);
                 }
@@ -764,7 +767,7 @@ namespace OpenViewer.Managers
                 if (op == Operations.ADD)
                 {
                     // disable grabbing objects that are not touchable/sitable
-                    //if (vObj.Prim.ClickAction == ClickAction.Sit || ((vObj.Prim.Flags & PrimFlags.Touch) != 0))
+                    if (vObj.Prim.ClickAction == ClickAction.Sit || ((vObj.Prim.Flags & PrimFlags.Touch) != 0))
                     {
                         TriangleSelector trisel = Reference.SceneManager.CreateTriangleSelector(vObj.Mesh, vObj.Node);
                         vObj.Node.TriangleSelector = trisel;
@@ -782,7 +785,8 @@ namespace OpenViewer.Managers
                 //vObj.Mesh.Drop();
             }
 
-            if (vObj.Prim.ParentID != 0 && parentObj.Prim.AngularVelocity != Vector3.Zero && workNode != ParentNode)            {
+            if (vObj.Prim.ParentID != 0 && parentObj.Prim.AngularVelocity != Vector3.Zero && workNode != ParentNode)
+            {
                 if (workNode.Name != "animated")
                 {
                     Animator ani =
